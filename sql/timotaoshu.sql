@@ -12,7 +12,7 @@ File Encoding         : 65001
 
 Date: 2019-09-19 23:36:39
 */
-
+USE timotaoshu;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -32,6 +32,21 @@ CREATE TABLE `book` (
   `bookType` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '小说类型\r\n直接爬\r\n都市言情\r\n玄幻小说\r\n…….\r\n',
   `reptileType` int(10) DEFAULT '1' COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool2表里的id\r\n\r\n\r\n\r\n0表示来源本站',
   `isJin` int(10) NOT NULL DEFAULT '1' COMMENT '1、启用\r\n2、禁用\r\n\r\n默认1\r\n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ----------------------------
+-- Table structure for email
+-- ----------------------------
+DROP TABLE IF EXISTS `email`;
+CREATE TABLE `email` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邮箱',
+  `bizName` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司',
+  `fromSite` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源网站',
+  `fromUrl` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源网址',
+  `fromKeywords` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '关键词',
+  `sendStatus` int(10) NOT NULL DEFAULT '1' COMMENT '类型\r\n1：未发送 默认\r\n2：已发送\r\n3：发送失败',
+  `reptileTime` datetime DEFAULT NULL COMMENT '爬取时间\r\n',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -175,6 +190,7 @@ INSERT INTO `reptiletool2` VALUES ('18', 'utf-8', '笔趣趣', 'http://www.biquq
 INSERT INTO `reptiletool2` VALUES ('19', 'utf-8', '书叶小说网', 'http://m.shuyexs.com', 'utf-8', 'http://m.shuyexs.com/search.html?searchkey=${name}', '.book-ol .book-li', '0', '0', '.book-title、html', '.book-layout、attrhref', '.book-author、text', '.tag-small-group .tag-small:eq(1)、html', '', '#book-detail、html', '.book-cell .book-meta:eq(0) a、html', '.book-cell .book-meta:eq(2)、html、split、时间：、1', '.book-cell .book-meta:eq(1) a、text', '是', '.page .right a、attrhref', '.page .right a、attrhref、split、?page=、1、split、&sort=、0', '.page .right a:eq(1)、attrhref、split、?page=、1、split、&sort=、0', '2', 'mobile', '.novel-text-list li', '', '', '.book-cover、attrsrc', '.book-summary、html', '#rd-txt、html', '2', '.novel-header-r a、attrhref', 'a、text', 'a、attrhref', '该来源渠道网速过慢且错误太多');
 INSERT INTO `reptiletool2` VALUES ('20', 'utf-8', '笔趣馆', 'https://www.biquguan.com/', 'utf-8', 'https://sou.xanbhx.com/search?siteid=biquguancom&q=${name}', '#search-main ul>li', '1', '0', '.s2>a、allHtml', '.s2>a、attrhref', '.s4、allHtml', '.s7、allHtml', '.s6、allHtml', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.footer_cont p、html、split、文笔俱佳的、1、split、小说，笔趣馆、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-1', '', '#fmimg>img、attrsrc', '#intro、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
 
+INSERT INTO `email` VALUES ('1','hey0311@qq.com','heyong','ebay','www.ebay.com','hello keywords','1','2022-06-14');
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------

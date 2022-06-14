@@ -26,13 +26,9 @@
                         <Option v-for="item in bookStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
 
-                    <Checkbox :value="fromMe" @click.prevent.native="handleCheckAll">来源本站</Checkbox>
                 </Col>
                 <Col span="12" class="tr">
                     <Button type="primary" :disabled="loading" @click="onClickSearch">搜索</Button>
-                    <Button type="primary" :disabled="loading" @click="onClickUpdateBookisJin">批量启用</Button>
-                    <Button type="primary" :disabled="loading" @click="onClickOneKeyUpdateNewCatalog">一键全部更新至最新章节</Button>
-                    <Button type="primary" :disabled="loading" @click="onclickOneKeyGetAllBookImg">一键更新全部图片</Button>
                 </Col>
             </Row>
         </Card>
@@ -73,233 +69,65 @@
                         width: 60,
                         align: 'center'
                     },
+                    // {
+                    //     title: 'id',
+                    //     key: 'id',
+                    //     render: (h, params) => {
+                    //         return h('div', [
+                    //             h('a', {
+                    //                 attrs:{
+                    //                     href:"javascript:void(0);"
+                    //                 },
+                    //                 on: {
+                    //                     click: (e) => {
+                    //                         this.$router.push("/catalog?bookId=" + params.row.id);
+                    //                         e.stopPropagation();
+                    //                         e.preventDefault();
+                    //                     }
+                    //                 }
+                    //             },params.row.id),
+                    //             h('a', {
+                    //                 attrs:{
+                    //                     href:"javascript:void(0);",
+                    //                     style:"margin-left:5px;" + "color:" + (params.row.isJin == 2 && "red;")
+                    //                 },
+                    //                 on: {
+                    //                     click: (e) => {
+                    //                         this.onClickUpdateBookisJin(params.row.id, params.row.isJin == "2" ? "1" : "2", params.row.name);
+                    //                     }
+                    //                 }
+                    //             },params.row.isJin == 1 ? "(禁用)" : "(启用)")
+                    //         ])
+                    //     }
+                    // },
                     {
-                        title: 'id',
-                        key: 'id',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('a', {
-                                    attrs:{
-                                        href:"javascript:void(0);"
-                                    },
-                                    on: {
-                                        click: (e) => {
-                                            this.$router.push("/catalog?bookId=" + params.row.id);
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                        }
-                                    }
-                                },params.row.id),
-                                h('a', {
-                                    attrs:{
-                                        href:"javascript:void(0);",
-                                        style:"margin-left:5px;" + "color:" + (params.row.isJin == 2 && "red;")
-                                    },
-                                    on: {
-                                        click: (e) => {
-                                            this.onClickUpdateBookisJin(params.row.id, params.row.isJin == "2" ? "1" : "2", params.row.name);
-                                        }
-                                    }
-                                },params.row.isJin == 1 ? "(禁用)" : "(启用)")
-                            ])
-                        }
-                    },
-                    {
-                        title: '书名',
-                        key: 'name',
+                        title: '邮箱',
+                        key: 'email',
                         // width:200
                     },
                     {
-                        title: '小说类型',
-                        key: 'bookType'
+                        title: '公司',
+                        key: 'bizName'
                     },
                     {
-                        title: '作者',
-                        key: 'author'
-                    },
-                    {
-                        title: '来源名称',
-                        key: 'reptileType',
-                        render: (h, params) => {
-                            return  h("a", {
-                                attrs: {
-                                    href: "javascript:void(0);",
-                                    target: "_blank"
-                                },
-                                on:{
-                                    click: (e) =>{
-                                        if(params.row.reptileType){
-                                            this.$router.push("/reptile-tool/channel");
-                                        }
-                                    }
-                                },
-                            }, params.row.reptileType ? this.reptileList[params.row.reptileType].name : "本站")
-                        }
+                        title: '网站来源',
+                        key: 'fromSite'
                     },
                     {
                         title: '来源地址',
-                        key: 'OriginUrl',
-                        render: (h, params) => {
-                            return h('a', {
-                                attrs: {
-                                    href:params.row.reptileType ? params.row.OriginUrl : "javascript:void(0);",
-                                    target:"_blank"
-                                }
-                            },params.row.reptileType ? params.row.OriginUrl : "本站")
-                        }
+                        key: 'fromUrl',
                     },
                     {
-                        title: '图片地址',
-                        key: 'imgUrl',
-                        render: (h, params) => {
-                            return h('img', {
-                                attrs: {
-                                    src: config.apiUrl + '/images/' + params.row.id,
-                                    style:'max-width:50px; max-height:50px;display:block;margin:2px;'
-                                },
-                                on: {
-                                    mouseenter: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        this.bigImg.url = e.target.src;
-                                    },
-                                    mousemove: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        // console.log(e.screenX,e.screenY);   //相对于屏幕
-                                        // console.log(e.clientX,e.clientY);   //相对于浏览器
-                                        this.bigImg.right = document.activeElement.clientWidth - e.clientX;
-                                        this.bigImg.top = e.clientY;
-                                    },
-                                    mouseleave: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        this.bigImg.url = "";
-                                        this.bigImg.right = 0;
-                                        this.bigImg.top = 0;
-                                    }
-                                }
-                            })
-                        }
+                        title: '邮件发送状态',
+                        key: 'sendStatus',
                     },
                     {
-                        title: '爬取状态',
-                        key: 'type',
-                        render: (h, params) => {
-                            return h('span', {
-                                attrs: {
-                                    style:'color:' + ((params.row.type != 3 && params.row.type != 4) && "red;")
-                                }
-                            },params.row.type == 4 ? "来源本站": (params.row.type == 3 ? "已爬取":"未爬取"))
-                        }
+                        title: '关键词',
+                        key: 'fromKeywords',
                     },
                     {
-                        title: '小说状态',
-                        key: 'bookStatus',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('span', {
-                                    attrs: {
-                                        style:'color:' + ((params.row.bookStatus == 2 || params.row.bookStatus == 4) && "red;")
-                                    }
-                                },(params.row.bookStatus == 1 || params.row.bookStatus == 3) ? "连载":"完本"),
-                                h('a', {
-                                    attrs: {
-                                        href:'javascript:void(0);',
-                                        style:"color:" + ((params.row.bookStatus == 1 || params.row.bookStatus == 3) && "red;")
-                                    },
-                                    on:{
-                                        click: () => {
-                                            if(params.row.bookStatus == 1 || params.row.bookStatus == 2) {
-                                                this.onClickUpdateBookStatus(params.row.id, params.row.bookStatus == 1 ? 2:1, params)
-                                            } else if(params.row.bookStatus == 3 || params.row.bookStatus == 4) {
-                                                this.onClickUpdateBookStatus(params.row.id, params.row.bookStatus == 3 ? 4:3, params)
-                                            }
-
-                                        },
-                                    }
-                                },(params.row.bookStatus == 1 || params.row.bookStatus == 3) ? "(转完本)":"(转连载)")
-
-                            ]);
-                        }
-                    },
-                    {
-                        title: '更新时间',
-                        key: 'updateTime',
-                        render: (h, params) => {
-                            return h('span', {
-                            }, util.timeChange(params.row.updateTime))
-                        }
-                    },
-                    {
-                        title: '操作',
-                        key: 'handle',
-                        // width: 280,
-                        render: (h, params) => {
-                            return h('div', [
-                                h('a', {
-                                    attrs:{
-                                        href:'javascript:void(0);'
-                                    },
-                                    on:{
-                                        click: () => {
-                                            this.onClickUpdateBookInfo(params.row.id);
-                                        }
-                                    }
-                                }, `更新小说基本信息`),
-                                h('a', {
-                                    attrs:{
-                                        href:'javascript:void(0);',
-                                        style:`margin-left:10px;`
-                                    },
-                                    on:{
-                                        click: () => {
-                                            if(params.row.bookStatus != "1" ) {
-                                                this.$Message.info("已经是最新章节")
-                                                return;
-                                            }
-                                            this.onClickUpdateNewCatalog(params.row.id, params.row.name)
-                                            // this.onClickUpdateBookInfo(params.row.id);
-                                        }
-                                    }
-                                }, params.row.bookStatus == "1" ? `更新到最新章节`:`已经是最新章节`),
-                                h("a", {
-                                    attrs: {
-                                        href:"javascript:void(0);",
-                                        style:`margin-left:10px;`
-                                    },
-                                    on:{
-                                        click: (e) =>{
-                                            // this.$router.push("/reptile-tool/channel");
-                                            this.showEdit(params.row);
-                                        }
-                                    },
-                                }, `编辑`),
-                                h('a', {
-                                    attrs:{
-                                        href:'javascript:void(0);',
-                                        style:`margin-left:10px;`
-                                    },
-                                    on:{
-                                        click: () => {
-                                            this.onClickDelBook(params.row.id, params.row.name)
-                                        }
-                                    }
-                                }, `删除`),
-                            ])
-                        }
-                    },
-                    {
-                        title:'描述',
-                        type: 'expand',
-                        width: 70,
-                        render: (h, params) => {
-                            return h(description, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
+                        title: '爬取时间',
+                        key: 'reptileTime',
                     },
                 ],
                 books:[],
@@ -432,7 +260,7 @@
 
                 this.loading = true;
                 this.$router.replace({path:'/home', query:Object.assign({}, obj.params)});
-                util.post.books.book(obj).then((data) => {
+                util.post.books.email(obj).then((data) => {
                     this.books = data.book;
                     this.total = data.count;
                     this.loading = false;
@@ -497,34 +325,6 @@
                     this.getBooks();
                 }).catch((err) => {
                     this.getBooks();
-                    this.loading = false;
-                });
-            },
-            onClickOneKeyUpdateNewCatalog(){
-                if(this.loading) return;
-                this.loading = true;
-                let obj = {
-                    params:{
-                    }
-                };
-                util.post.books.oneKeyUpdateNewCatalog(obj).then((data) =>{
-                    this.loading = false;
-                    this.getBooks();
-                }).catch((err) => {
-                    this.getBooks();
-                    this.loading = false;
-                });
-            },
-            onclickOneKeyGetAllBookImg(){
-                if(this.loading) return;
-                this.loading = true;
-                let obj = {
-                    params:{
-                    }
-                };
-                util.post.common.oneKeyGetAllBookImg(obj).then(() =>{
-                    this.loading = false;
-                }).catch((err) => {
                     this.loading = false;
                 });
             },
@@ -602,44 +402,6 @@
             },
             onClickSelect(selection){       //check选择框选中
                 this.selection = selection;
-            },
-            onClickUpdateBookisJin(bookId, isJin, bookName) {
-                let obj = {
-
-                }
-                if(!isJin) {
-                    let bookIds = [];   //批量
-                    this.selection.forEach((value, index) => {
-                        bookIds.push(value.id);
-                    });
-                    obj = {
-                        params:{
-                            bookIds:bookIds.join(','),
-                            isJin:1
-                        }
-                    }
-                } else {
-                    obj = {
-                        params: {
-                            bookId: bookId,
-                            isJin: isJin
-                        }
-                    }
-                }
-
-
-                this.loading = true;
-
-                util.post.books.updateBookIsJin(obj).then((data) => {
-                    this.$Message.success(data);
-                    this.loading = false;
-                    this.getBooks();
-                }).catch((err) => {
-                    this.loading = false;
-                    if(isJin == 1) {
-                        this.$router.push("/reptile-tool/progress-error?bookName=" + bookName);
-                    }
-                });
             },
             getReptileList() {  //获取配置列表
                 let obj = {
