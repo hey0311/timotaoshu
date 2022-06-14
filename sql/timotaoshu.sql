@@ -132,6 +132,16 @@ CREATE TABLE `reptiletool` (
   `imgUrl` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图片地址爬虫',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ----------------------------
+-- Table structure for keywords
+-- ----------------------------
+DROP TABLE IF EXISTS `keywords`;
+CREATE TABLE `keywords` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
+  `keywords` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键词\r\n',
+  `reptileStatus` int(10) NOT NULL DEFAULT '1' COMMENT '1、未爬取\r\n2、已爬取\r\n默认2\r\n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of reptiletool
@@ -191,6 +201,7 @@ INSERT INTO `reptiletool2` VALUES ('19', 'utf-8', '书叶小说网', 'http://m.s
 INSERT INTO `reptiletool2` VALUES ('20', 'utf-8', '笔趣馆', 'https://www.biquguan.com/', 'utf-8', 'https://sou.xanbhx.com/search?siteid=biquguancom&q=${name}', '#search-main ul>li', '1', '0', '.s2>a、allHtml', '.s2>a、attrhref', '.s4、allHtml', '.s7、allHtml', '.s6、allHtml', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.footer_cont p、html、split、文笔俱佳的、1、split、小说，笔趣馆、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-1', '', '#fmimg>img、attrsrc', '#intro、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
 
 INSERT INTO `email` VALUES ('1','hey0311@qq.com','heyong','ebay','www.ebay.com','hello keywords','1','2022-06-14');
+INSERT INTO `keywords` VALUES ('1','desk','1');
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------

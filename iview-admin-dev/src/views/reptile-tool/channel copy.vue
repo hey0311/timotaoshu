@@ -50,22 +50,47 @@
             return {
                 columns: [
                     {
-                        title: 'Id',
-                        key: 'id'
+                        title: '配置Id',
+                        key: 'reptileTypeId'
                     },
                     {
-                        title: '关键词',
-                        key: 'keywords'
+                        title: '字符编码',
+                        key: 'code'
                     },
                     {
-                        title: '爬取状态',
-                        key: 'reptileStatus'
+                        title: '网址',
+                        key: 'baseUrl',
+                        render: (h, params) => {
+                            return h('a', {
+                                attrs: {
+                                    href: params.row.baseUrl,
+                                    target: '_blank',
+                                }
+                            }, params.row.baseUrl)
+                        }
+                    },
+                    {
+                        title: '备注',
+                        key: 'name'
                     },
                     {
                         title: '操作',
                         key: 'handle',
                         render: (h, params) => {
                             return h('div', [
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            this.onClickShowModal('look', params.row)
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '查看'),
                                 h('a', {
                                     attrs: {
                                         href: 'javascript:void(0);',
@@ -80,6 +105,35 @@
                                         }
                                     }
                                 }, '编辑'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            this.onClickShowModal('copyAdd', params.row);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '复制新增'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;${params.row.isSearch == 2 ? '' : 'color:red;'}`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            // this.$router.push("/catalog?bookId=" + params.row.id);
+                                            this.onClickToggleUse(params.row.reptileTypeId, (params.row.isSearch == 2 ? 1 : 2), params.row.reason);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, `${params.row.isSearch == 2 ? '启用' : '禁用'}`),
                                 h('a', {
                                     attrs: {
                                         href: 'javascript:void(0);',
@@ -154,8 +208,8 @@
                     }
                 };
                 this.loading = true;
-                util.post.keywords.list(obj).then((data) => {
-                    this.reptileList = data.list;
+                util.post.reptile.list(obj).then((data) => {
+                    this.reptileList = data.reptileList;
                     this.total = data.count;
                     this.loading = false;
                 }).catch((err) => {
