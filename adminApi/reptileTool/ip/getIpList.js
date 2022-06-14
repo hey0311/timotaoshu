@@ -323,7 +323,7 @@ async function getIpList6(page) {
 module.exports = async (page) => {
     return new Promise((resolve, reject) => {
         Promise.all([
-            getIpList(page),
+            //getIpList(page),
             getIpList2(page),
             getIpList5(page),
             getIpList6(page)
