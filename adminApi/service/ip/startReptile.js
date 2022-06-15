@@ -8,10 +8,10 @@ async function startReptile(startPage, endPage) {
 
         let nowDateTime = new Date().getTime();
 
-        // if(nowDateTime - global.lastReptileTime <= 30*60*1000){
-        //     reject(`半个小时内，不允许再次爬取代理IP`);
-        //     return;
-        // }
+        if(nowDateTime - global.lastReptileTime <= 30*60*1000){
+            reject(`半个小时内，不允许再次爬取代理IP`);
+            return;
+        }
 
         if(global.removeRepeat) {
             reject(`代理IP正在去重中，请稍后再试`);
