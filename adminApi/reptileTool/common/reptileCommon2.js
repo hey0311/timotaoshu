@@ -258,9 +258,7 @@ function domCommon(dom, rule, $) {
 
 async function reptileCommon2(reptileType) {
     let rules = await reptileConfig.getReptileRule();
-    console.log(rules)
-    reptileType='2'
-    let rule = rules['undefined'][reptileType];
+    let rule = rules[reptileType];
 
     let returnObj = null;
     if (rule) {
@@ -419,7 +417,6 @@ async function reptileCommon2(reptileType) {
                 };
             },
             getCatalogContent: ($) => {
-                // console.log('$',$.html)
                 let content = domCommon(null, rule.catalogContent, $) || "";
                 content = content.replace(/\n/g, "").replace(/<p>/g, "<br>").replace(/<\/p>/g, "<br>");
                 content = tool.filterHtmlOrContainer(content || "");  // 除br之外，其他标签全部过滤
