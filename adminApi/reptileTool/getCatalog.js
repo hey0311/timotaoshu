@@ -28,17 +28,17 @@ async function getCatalog_common(bookId, originUrl, bookName, catalog, noIsRepea
             async function startRpFn(){
                 return new Promise(async (resolve2, reject2) => {
                     start++;
-                    let uri = "";
+                    let uri = "https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=desk&_sacat=0";
                     // 用小说目录的url地址做章节url前缀    默认 1
                     // 用小说主站url地址做章节url前缀   2
                     // 不使用前缀，3
-                    if(catalog.reptileAddress && catalog.reptileAddress.indexOf("http") == 0) {
-                        uri = catalog.reptileAddress;
-                    } else if(reptileCommon.originUrlBefore == 2) {
-                        uri = reptileCommon.baseUrl + catalog.reptileAddress;
-                    } else {
-                        uri = originUrl + catalog.reptileAddress;
-                    }
+                    // if(catalog.reptileAddress && catalog.reptileAddress.indexOf("http") == 0) {
+                    //     uri = catalog.reptileAddress;
+                    // } else if(reptileCommon.originUrlBefore == 2) {
+                    //     uri = reptileCommon.baseUrl + catalog.reptileAddress;
+                    // } else {
+                    //     uri = originUrl + catalog.reptileAddress;
+                    // }
                     let option = {
                         uri:uri,
                         userAgent: reptileCommon.userAgent,
@@ -47,7 +47,9 @@ async function getCatalog_common(bookId, originUrl, bookName, catalog, noIsRepea
                             // return cheerio.load(iconv.decode(body, "gbk"), {decodeEntities: false});
                             // return [cheerio.load(iconv.decode(body, "utf-8"), {decodeEntities: false}),iconv.decode(body, "utf-8")];
                             // console.log(iconv.decode(body, reptileCommon.code));
-                            return [cheerio.load(iconv.decode(body, reptileCommon.code), {decodeEntities: false}),iconv.decode(body, reptileCommon.code)];
+                            // console.log('response',response)
+                            const result = [cheerio.load(iconv.decode(body, reptileCommon.code), {decodeEntities: false}),iconv.decode(body, reptileCommon.code)];
+                            return result
                         },
                         timeout: timeout || 10000
                     };
@@ -83,6 +85,7 @@ async function getCatalog_common(bookId, originUrl, bookName, catalog, noIsRepea
                             // console.log(`成功响应，开始时间${startTime},结束时间${endTime},耗时${endTime-startTime}毫秒`);
                         }
                     }catch(err){
+                        console.log(err)
                         if(start >= 2) {
                             global.reptileCatalog--;
                             // console.log(`catch：现在有${global.reptileCatalog}条章节正在爬取`)
@@ -123,6 +126,7 @@ async function getCatalog_common(bookId, originUrl, bookName, catalog, noIsRepea
 // }
 
 async function saveContent(originUrl, bookId, bookName, catalog, noIsRepeat, content,reptileType,uri, tiType) {
+    console.log('content',content)
     // let filePath = "";
     try {
         // if (noIsRepeat) {

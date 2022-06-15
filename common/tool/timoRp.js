@@ -53,9 +53,11 @@ const timoRp = function(options) {
         /*
         * user-agent end
         * */
+       delete reqOptions.proxy;
 
         delete reqOptions.userAgent;        // 请求之前，删除多余的东西
         delete reqOptions.transform;        // 请求之前，删除多余的东西
+        console.log('req',reqOptions)
         var req = request(reqOptions, function (error, response, body) {
             chaoshi = false;
             if (!error && response.statusCode == 200) {

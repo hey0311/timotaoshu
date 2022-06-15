@@ -55,6 +55,20 @@ CREATE TABLE `email` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for searchItems
+-- ----------------------------
+DROP TABLE IF EXISTS `searchResult`;
+CREATE TABLE `searchResult` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
+  `keywords` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '章节名',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '章节名',
+  `order` int(10) NOT NULL COMMENT '章节序号\r\n章节序号可以重复\r\n\r\n第一章 我的世界\r\n',
+  `page` int(10) NOT NULL DEFAULT '1' COMMENT '类型\r\n1： 普通，章节名前有序号\r\n2： 特殊，章节名前没序号\r\n默认1\r\n',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
+  PRIMARY KEY (`id`),
+  KEY `keywords` (`keywords`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ----------------------------
 -- Table structure for catalog
 -- ----------------------------
 DROP TABLE IF EXISTS `catalog`;
