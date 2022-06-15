@@ -39,9 +39,6 @@ export default {
         delCatalog: '/writer/delCatalog',
         editBook: '/writer/editBook',
     },
-    keywords: {
-        list: '/keywords'
-    },
     reptile: {
         list: '/reptile',
         getUrl: '/reptile/getUrl',
