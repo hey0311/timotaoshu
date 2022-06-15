@@ -16,7 +16,6 @@ export default {
         delStaff: '/permission/delStaff'
     },
     books: {
-        email: 'email',
         book: '/book',
         catalogList: '/book/catalogList',
         catalog: '/book/catalog',
