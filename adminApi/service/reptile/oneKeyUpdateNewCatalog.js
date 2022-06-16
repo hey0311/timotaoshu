@@ -17,6 +17,7 @@ let oneKeyUpdateNewCatalog = async (bookListFromId) => {
             global.isUpdateReptile = true;
         }
 
+            console.log("🚀 ~ file: oneKeyUpdateNewCatalog.js ~ line 17 ~ returnnewPromise ~ bookList", bookList)
         let i = 0, length = bookList.length;
         let sucCount = 0, errCount = 0;
 

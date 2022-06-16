@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
-  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '书名',
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '书名 - keywords',
   `author` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者',
   `description` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '描述',
   `originUrl` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源网址',
@@ -35,6 +35,7 @@ CREATE TABLE `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `book` VALUES ('1', 'table', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=desk','','2','2022-06-15','1','1','2','1');
 -- ----------------------------
 -- Records of book
 -- ----------------------------
@@ -53,7 +54,7 @@ CREATE TABLE `catalog` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   `isJin` int(10) NOT NULL DEFAULT '2' COMMENT '是否禁用\r\n1：禁用，页面上不显示该章节\r\n2：不禁用，页面上显示该章节\r\n默认2\r\n',
   `isReptileTool` int(10) NOT NULL DEFAULT '2' COMMENT '是否是爬取来的\r\n1：不是爬取的，后来新增的\r\n2：爬取的，就算后来改了这个章节，也没事。这里是做连载的标识\r\n\r\n默认2\r\n',
-  `reptileAddress` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
+  `reptileAddress` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
   PRIMARY KEY (`id`),
   KEY `bookId` (`bookId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -72,6 +73,8 @@ CREATE TABLE `catalogcontent` (
   `bookId` int(11) DEFAULT NULL COMMENT '小说id',
   `num` int(11) DEFAULT NULL COMMENT '序号',
   `catalogId` int(11) DEFAULT NULL COMMENT '章节id',
+  `shopUrl` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catalogId` (`catalogId`) USING BTREE,
   KEY `bookId` (`bookId`) USING BTREE
@@ -88,10 +91,10 @@ DROP TABLE IF EXISTS `progresserror`;
 CREATE TABLE `progresserror` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一 错误id',
   `reptileType` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
-  `originUrl` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源网址',
+  `originUrl` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源网址',
   `bookId` int(40) NOT NULL COMMENT '小说id',
   `catalogId` int(40) NOT NULL COMMENT '章节id',
-  `reptileAddress` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
+  `reptileAddress` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
   `Isjin` int(10) NOT NULL DEFAULT '2' COMMENT '1、允许爬取\r\n2、禁止爬取（错误没解决之前都是禁止爬取.）\r\n默认2\r\n',
   `bookName` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '书名',
   `catalogName` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '章节名称',
@@ -168,12 +171,7 @@ CREATE TABLE `reptiletool2` (
 -- ----------------------------
 -- Records of reptiletool2
 -- ----------------------------
-INSERT INTO `reptiletool2` VALUES ('2', 'gbk', '笔趣阁5200', 'https://www.biquge5200.cc/', 'utf-8', 'https://www.biquge5200.cc/modules/article/search.php?searchkey=${name}', '.grid>tbody>tr', '1', '0', 'td>a、html', 'td>a、attrhref', 'td:nth-child(3)、html', 'td:nth-child(6)、html', 'td:nth-child(5)、html', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.con_top、html、split、>、9、split、<、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-2', '', '#fmimg>img、attrsrc', '#intro>p、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
-INSERT INTO `reptiletool2` VALUES ('12', 'gbk', '全书网', 'http://www.quanshuwang.com/', 'gbk', 'http://www.quanshuwang.com/modules/article/search.php?searchkey=+${name}&searchtype=articlename&searchbuttom.x=51&searchbuttom.y=15', '.seeWell>li', '', '', '.stitle、html', 'a、attrhref', 'span>a:nth-child(2)、html', '', '', '.b-info>h1、html', '.bookso>dd、html', '.ulnav>li、html、split、[、1、split、]、0', '.main-index>a:nth-child(2)、html', '', '', '', '', '1', 'pc', '.dirconone>li>a', '', '', '.detail>a.mr11>img、attrsrc', '#waa、html、split、介绍:&nbsp;&nbsp;&nbsp;&nbsp;、1', '#content、html', '1', '.reader、attrhref', '、html', '、attrhref', '小说没有分类\n小说又有分类了~~');
-INSERT INTO `reptiletool2` VALUES ('14', 'utf-8', '新笔趣岛', 'https://www.biqudao.com', 'utf-8', 'https://www.biqudao.com/searchbook.php?keyword=${name}', '#main ul>li', '1', '0', '.s2>a、html', '.s2>a、attrhref', '.s4、html', '.s7、html', '.s6、html', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.footer_cont p、html、split、文笔俱佳的、1、split、小说，笔趣岛、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-1', '', '#fmimg>img、attrsrc', '#intro、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
-INSERT INTO `reptiletool2` VALUES ('18', 'utf-8', '笔趣趣', 'http://www.biququ.info/', 'utf-8', 'http://www.biququ.info/search.php?keyword=${name}', '#search-main ul>li', '1', '0', '.s2>a、allHtml', '.s2>a、attrhref', '.s4、allHtml', '.s7、allHtml', '.s6、allHtml', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(3)、html、split、：、1', '.footer_cont p、html、split、文笔俱佳的、1、split、小说，笔趣趣、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-1', '', '#fmimg>img、attrsrc', '#intro、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
-INSERT INTO `reptiletool2` VALUES ('19', 'utf-8', '书叶小说网', 'http://m.shuyexs.com', 'utf-8', 'http://m.shuyexs.com/search.html?searchkey=${name}', '.book-ol .book-li', '0', '0', '.book-title、html', '.book-layout、attrhref', '.book-author、text', '.tag-small-group .tag-small:eq(1)、html', '', '#book-detail、html', '.book-cell .book-meta:eq(0) a、html', '.book-cell .book-meta:eq(2)、html、split、时间：、1', '.book-cell .book-meta:eq(1) a、text', '是', '.page .right a、attrhref', '.page .right a、attrhref、split、?page=、1、split、&sort=、0', '.page .right a:eq(1)、attrhref、split、?page=、1、split、&sort=、0', '2', 'mobile', '.novel-text-list li', '', '', '.book-cover、attrsrc', '.book-summary、html', '#rd-txt、html', '2', '.novel-header-r a、attrhref', 'a、text', 'a、attrhref', '该来源渠道网速过慢且错误太多');
-INSERT INTO `reptiletool2` VALUES ('20', 'utf-8', '笔趣馆', 'https://www.biquguan.com/', 'utf-8', 'https://sou.xanbhx.com/search?siteid=biquguancom&q=${name}', '#search-main ul>li', '1', '0', '.s2>a、allHtml', '.s2>a、attrhref', '.s4、allHtml', '.s7、allHtml', '.s6、allHtml', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.footer_cont p、html、split、文笔俱佳的、1、split、小说，笔趣馆、0', '', '', '', '', '1', 'pc', '#list a', '#list>dl>dt:eq(1)、index-1', '', '#fmimg>img、attrsrc', '#intro、html', '#content、html', '1', '', '、html', '、attrhref、split、/、length-1', '');
+INSERT INTO `reptiletool2` VALUES ('2', 'gbk', 'ebay', 'https://www.ebay.co.uk/', 'utf-8', 'https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=${name}', '.srp-results.srp-list.clearfix', '1', '0', 'td>a、html', 'td>a、attrhref', 'td:nth-child(3)、html', 'td:nth-child(6)、html', 'td:nth-child(5)、html', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.con_top、html、split、>、9、split、<、0', '', '', '', '', '1', 'pc', '.srp-river-results .s-item__link', '#list>dl>dt:eq(1)、index-2', '', '#fmimg>img、attrsrc', '#intro>p、html', '.ux-seller-section__item--seller、text', '1', '.srp-river-results .s-item__link、attrhref', '.s-item__title、text', '、attrhref', '');
 
 -- ----------------------------
 -- Table structure for role

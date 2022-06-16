@@ -80,6 +80,7 @@ async function getBook(obj, callback) {
 }
 
 async function startBook(bookId, author, reptileType, catalog, originUrl, bookName, callback) {
+    console.log('%cgetBooksFromJson.js line:83 catalog', 'color: #007acc;', catalog);
     let responseCount = 0, sucCount = 0, errCount = 0, i = 0, length = catalog.length;
     for (i; i < length; i++) {
         // let f = i;

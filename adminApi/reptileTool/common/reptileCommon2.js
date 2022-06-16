@@ -93,9 +93,11 @@ function handleRule(ruleSplit, startIndex, result) {
 *
 * */
 function domCommon(dom, rule, $) {
+    if(!rule) return ''
     let ruleSplit = rule.split("、");
     // let ruleLength = ruleSplit.length;
     let type = ruleSplit[1];
+    if(!type) return ''
     let findDom = null;
     if (ruleSplit[0]) {
         findDom = handleEq(dom, ruleSplit[0], $);
@@ -326,9 +328,11 @@ async function reptileCommon2(reptileType) {
                 return domCommon(null, rule.bookAuthor, $);
             },
             getUpdateTime: ($) => {
-                return domCommon(null, rule.updateTime, $);
+                return '2022-06-15'
+                // return domCommon(null, rule.updateTime, $);
             },
             getCatalogListUrl: ($) => {
+                rule.catalogListUrl = '.srp-river-results .s-item__link、attrhref'
                 if (rule.catalogListUrl) {
                     let catalogListUrl = domCommon(null, rule.catalogListUrl, $);
                     if(catalogListUrl.indexOf('http') !== 0) {
@@ -387,7 +391,8 @@ async function reptileCommon2(reptileType) {
                 if (!rule.firstCatalogList) {
                     return 0
                 } else {
-                    return domCommon(null, rule.firstCatalogList, $);
+                    return 0
+                    // return domCommon(null, rule.firstCatalogList, $);
                 }
             },
             getBookImgUrl($) {
@@ -415,6 +420,12 @@ async function reptileCommon2(reptileType) {
                     // href: "/" + catalog.attr("href").split("/")[catalog.attr("href").split("/").length - 1],
                     type: type,
                 };
+            },
+            getShopUrl: ($) => {
+                return domCommon(null, '.ux-seller-section__item--seller a、attrhref', $);
+            },
+            getEmail: ($) => {
+                return domCommon(null, '#email~span、text', $);
             },
             getCatalogContent: ($) => {
                 let content = domCommon(null, rule.catalogContent, $) || "";

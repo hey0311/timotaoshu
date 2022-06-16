@@ -39,10 +39,12 @@ async function getCatalogList({ $, reptileCommon, callback, book: { title, autho
         * 更新的长度
         * */
         let upDateLength = catalogStr.length;
+        console.log("🚀 ~ file: getCatalogList.js ~ line 43 ~ getCatalogList ~ upDateLength", upDateLength)
         /*
          * sql里存储的长度
          * */
         let nowLength = (await db.query(`select count(*) from catalog where bookId=${sqlBook.id} and isReptileTool=2`))[0]["count(*)"];
+        console.log("🚀 ~ file: getCatalogList.js ~ line 47 ~ getCatalogList ~ nowLength", nowLength)
         let book = Object.assign({},sqlBook);
         book.updateTime = book.updateTime.getTime();
         /*
@@ -68,6 +70,7 @@ async function getCatalogList({ $, reptileCommon, callback, book: { title, autho
             let ii = nowLength;
             for (ii; ii < upDateLength; ii++) {
                 let value = reptileCommon.getCatalog($, catalogStr, ii);
+                console.log("🚀 ~ file: getCatalogList.js ~ line 73 ~ getCatalogList ~ value", value)
                 catalogSql += `(${book.id},"${value.title}",${ii*2},${value.type}, now(),"${value.href}")`;
                 if (ii == upDateLength - 1) {
                     // catalogSql += `(${value})`;

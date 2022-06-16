@@ -238,7 +238,7 @@ let reptileCommon = [
             return date;
         },
         getCatalogList: ($) => {
-            return $("#list a");
+            return $(".s-item__link");
         },
         getCatalogFirstNum: ($) => {
             if($("#list>dl>dt").length == 1) {

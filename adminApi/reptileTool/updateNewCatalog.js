@@ -49,28 +49,35 @@ async function updateBookNewCatalog_common(sqlBook, reptileType, end) {
                     encoding: null,
                     transform: function (body) {
                         // let body2 = iconv.decode(body, "gbk");  //用来查看页面
-                        return cheerio.load(iconv.decode(body, reptileCommon.code), {decodeEntities: false, xmlMode: true});
+                        const result = cheerio.load(iconv.decode(body, reptileCommon.code), {decodeEntities: false, xmlMode: true});
+                        return result;
                     },
                     timeout:10000
                 };
                 let catalogListUrl = null;
                 try{
                     let $ = await timoRp(option);
-                    catalogListUrl = reptileCommon.getCatalogListUrl($);
+                    console.log(111)
+                    catalogListUrl = reptileCommon.getCatalogListUrl($); // get null
+                    console.log(333)
                     let updateTime = new Date(reptileCommon.getUpdateTime($)).getTime();
+                        console.log("🚀 ~ file: updateNewCatalog.js ~ line 65 ~ startRp ~ catalogListUrl", catalogListUrl)
                     if(catalogListUrl) {        //小说目录
                         let option2 = {
-                            uri: catalogListUrl,
+                            // uri: catalogListUrl,
+                    uri: sqlBook.originUrl,
                             userAgent: reptileCommon.userAgent,
                             encoding: null,
                             transform: function (body) {
                                 // let body2 = iconv.decode(body, "gbk");  //用来查看页面
+                                console.log('into transform')
                                 return cheerio.load(iconv.decode(body, reptileCommon.code), {decodeEntities: false});
                             }
                         }
                         try{
                             let $2 = await timoRp(option2);
                             result = await getCatalogList({$:$2, reptileCommon, book:{}, updateNewCatalog:{sqlBook, updateTime, end, resolve, reptileType}});
+                            console.log("🚀 ~ file: updateNewCatalog.js ~ line 79 ~ startRp ~ result", result)
                         }catch(err){
                             throw new Error(`访问目录页面错误，错误原因：${err}，失败地址：${catalogListUrl},代理地址：${option2.proxy}`);
                         }
@@ -82,7 +89,7 @@ async function updateBookNewCatalog_common(sqlBook, reptileType, end) {
                     if(err.toString().indexOf('Error: 访问目录页面错误') === 0) {
                         log.error(err);
                     } else {
-                        log.error(`第${start}次爬取失败：${err}。失败地址：${catalogListUrl}，body：${bodyTest}`);
+                        log.error(`第${start}次爬取失败：${err}。失败地址：${sqlBook.originUrl}，body：${option}`);
                     }
                     error = err;
                     result = null;

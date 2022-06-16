@@ -72,9 +72,9 @@
                 this.$refs.body.innerHTML = '';
             },
             startReptile(){
-                if(this.loading || this.btnTitle =='正在爬取') {
-                    return;
-                }
+                // if(this.loading || this.btnTitle =='正在爬取') {
+                //     return;
+                // }
                 let obj = {
                     params:{
                     }

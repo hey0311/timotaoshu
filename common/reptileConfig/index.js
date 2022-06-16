@@ -3,7 +3,7 @@ const { oauth, tool, db, log } = require("../tool/require");
 
 async function getReptileList(){
     let count = await tool.redisData.reptileList.getReptileCount();
-    if(!count) {
+    // if(!count) {
         /*
         * 以后弄一个common服务，专门弄一个定时任务。。
         * 下面这种写法，目测没问题，但是并发量上去了则会出现一些不可控的bug
@@ -12,7 +12,7 @@ async function getReptileList(){
         let allData = await db.query(`select * from reptiletool2`);
         // tool.redisData.reptileList.setReptileList(allData);
         tool.redisData.reptileList.updateReptileList(allData);
-    }
+    // }
 
     count = await tool.redisData.reptileList.getReptileCount();
     // reptileList = await tool.redisData.reptileList.getReptileList((page-1)*limit, page*limit-1);
