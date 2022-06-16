@@ -33,7 +33,7 @@ router.use("", oauth(), async function (req, res, next) {
   res.send(tool.toJson("", "", 1000));
 });
 
-function sendMail() {
+async function sendMail() {
   let transporter = nodemailer.createTransport({
     host: "smtp.exmail.qq.com",
     // service: "qq",

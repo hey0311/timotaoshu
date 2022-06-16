@@ -102,6 +102,7 @@ export const appRouter = [
         children: [
             { path: 'ipList', title: '代理IP', access:["2000"], name: 'reptile-tool_ipList', component: () => import('@/views/reptile-tool/ipList.vue') },
             { path: 'channel', title: '来源渠道', access:["4000"], name: 'reptile-tool_index', component: () => import('@/views/reptile-tool/channel.vue') },
+            { path: 'email', title: '邮箱', access:["4000"], name: 'reptile-tool_index1', component: () => import('@/views/reptile-tool/email.vue') },
             { path: 'progress-error', title: '爬取错误/遗漏', access:["4000"], name: 'reptile-tool-error', component: () => import('@/views/reptile-tool/progress-error.vue') },
             { path: 'progress', title: '爬书进度', access:["4000"], name: 'reptile-tool_progress', component: () => import('@/views/reptile-tool/progress.vue') },
             { path: 'book', title: '搜书爬取', access:["4000"], name: 'reptile-tool_book', component: () => import('@/views/reptile-tool/book.vue') }
