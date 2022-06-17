@@ -105,18 +105,15 @@
                         }
                     },
                     {
-                        title: '书名',
+                        title: '关键词',
                         key: 'name',
                         // width:200
                     },
-                    {
-                        title: '小说类型',
-                        key: 'bookType'
-                    },
-                    {
-                        title: '作者',
-                        key: 'author'
-                    },
+                    // {
+                    //     title: '关键词',
+                    //     key: 'name',
+                    //     // width:200
+                    // },
                     {
                         title: '来源名称',
                         key: 'reptileType',
@@ -149,40 +146,6 @@
                         }
                     },
                     {
-                        title: '图片地址',
-                        key: 'imgUrl',
-                        render: (h, params) => {
-                            return h('img', {
-                                attrs: {
-                                    src: config.apiUrl + '/images/' + params.row.id,
-                                    style:'max-width:50px; max-height:50px;display:block;margin:2px;'
-                                },
-                                on: {
-                                    mouseenter: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        this.bigImg.url = e.target.src;
-                                    },
-                                    mousemove: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        // console.log(e.screenX,e.screenY);   //相对于屏幕
-                                        // console.log(e.clientX,e.clientY);   //相对于浏览器
-                                        this.bigImg.right = document.activeElement.clientWidth - e.clientX;
-                                        this.bigImg.top = e.clientY;
-                                    },
-                                    mouseleave: (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        this.bigImg.url = "";
-                                        this.bigImg.right = 0;
-                                        this.bigImg.top = 0;
-                                    }
-                                }
-                            })
-                        }
-                    },
-                    {
                         title: '爬取状态',
                         key: 'type',
                         render: (h, params) => {
@@ -191,36 +154,6 @@
                                     style:'color:' + ((params.row.type != 3 && params.row.type != 4) && "red;")
                                 }
                             },params.row.type == 4 ? "来源本站": (params.row.type == 3 ? "已爬取":"未爬取"))
-                        }
-                    },
-                    {
-                        title: '小说状态',
-                        key: 'bookStatus',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('span', {
-                                    attrs: {
-                                        style:'color:' + ((params.row.bookStatus == 2 || params.row.bookStatus == 4) && "red;")
-                                    }
-                                },(params.row.bookStatus == 1 || params.row.bookStatus == 3) ? "连载":"完本"),
-                                h('a', {
-                                    attrs: {
-                                        href:'javascript:void(0);',
-                                        style:"color:" + ((params.row.bookStatus == 1 || params.row.bookStatus == 3) && "red;")
-                                    },
-                                    on:{
-                                        click: () => {
-                                            if(params.row.bookStatus == 1 || params.row.bookStatus == 2) {
-                                                this.onClickUpdateBookStatus(params.row.id, params.row.bookStatus == 1 ? 2:1, params)
-                                            } else if(params.row.bookStatus == 3 || params.row.bookStatus == 4) {
-                                                this.onClickUpdateBookStatus(params.row.id, params.row.bookStatus == 3 ? 4:3, params)
-                                            }
-
-                                        },
-                                    }
-                                },(params.row.bookStatus == 1 || params.row.bookStatus == 3) ? "(转完本)":"(转连载)")
-
-                            ]);
                         }
                     },
                     {
@@ -237,16 +170,6 @@
                         // width: 280,
                         render: (h, params) => {
                             return h('div', [
-                                h('a', {
-                                    attrs:{
-                                        href:'javascript:void(0);'
-                                    },
-                                    on:{
-                                        click: () => {
-                                            this.onClickUpdateBookInfo(params.row.id);
-                                        }
-                                    }
-                                }, `更新小说基本信息`),
                                 h('a', {
                                     attrs:{
                                         href:'javascript:void(0);',

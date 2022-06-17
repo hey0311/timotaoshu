@@ -35,7 +35,7 @@ CREATE TABLE `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `book` VALUES ('1', 'table', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=desk','','2','2022-06-15','1','1','2','1');
+INSERT INTO `book` VALUES ('1', 'table', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_nkw=vintage+wooden+desk+tidy&_sop=12','','2','2022-06-15','1','1','2','1');
 -- ----------------------------
 -- Records of book
 -- ----------------------------
