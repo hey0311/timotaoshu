@@ -20,16 +20,8 @@ let getCatalogList = require("../reptileTool/getCatalogList");
  * @returns
  */
 module.exports = async (sqlBook) => {
+  // 找到对应的网站
   var reptileType = parseInt(sqlBook.reptileType);
-  // if (reptileType === 0) {
-  //     return updateBookNewCatalog(sqlBook, reptileType);
-  // } else if (reptileType === 1) {
-  //     return updateBookNewCatalog1(sqlBook, reptileType);
-  // } else if (reptileType === 2) {
-  //     return updateBookNewCatalog2(sqlBook, reptileType);
-  // } else if (reptileType === 3) {
-  //     return updateBookNewCatalog3(sqlBook, reptileType);
-  // }
   // 记录当前正在爬取的关键词列表
   if (!global.updateBookIds) {
     global.updateBookIds = [];
@@ -56,7 +48,7 @@ async function updateBookNewCatalog_common(sqlBook, reptileType, end) {
       start++;
       let result = null;
       let error = null;
-      while (!result && start <= 5) {
+      while (!result && start <= 2) {
         let option = {
           uri: sqlBook.originUrl,
           userAgent: reptileCommon.userAgent,

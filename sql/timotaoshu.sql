@@ -72,11 +72,9 @@ CREATE TABLE `catalogcontent` (
   `content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bookId` int(11) DEFAULT NULL COMMENT '小说id',
   `num` int(11) DEFAULT NULL COMMENT '序号',
-  `catalogId` int(11) DEFAULT NULL COMMENT '章节id',
   `shopUrl` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `catalogId` (`catalogId`) USING BTREE,
   KEY `bookId` (`bookId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

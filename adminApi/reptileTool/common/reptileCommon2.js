@@ -254,9 +254,9 @@ async function reptileCommon2(reptileType) {
         rule.catalogListUrl = ".srp-river-results .s-item__link、attrhref";
         if (rule.catalogListUrl) {
           let catalogListUrl = domCommon(null, rule.catalogListUrl, $);
-          if (catalogListUrl.indexOf("http") !== 0) {
-            catalogListUrl = rule.baseUrl + catalogListUrl;
-          }
+          // if (catalogListUrl.indexOf("http") !== 0) {
+          //   catalogListUrl = rule.baseUrl + catalogListUrl;
+          // }
           return catalogListUrl;
         } else {
           return null;
@@ -276,10 +276,6 @@ async function reptileCommon2(reptileType) {
         rule.nextPage = ".pagination__next、attrhref";
         if (rule.nextPage) {
           let url = domCommon(null, rule.nextPage, $);
-          console.log(
-            "🚀 ~ file: reptileCommon2.js ~ line 402 ~ reptileCommon2 ~ url",
-            url
-          );
           if (!url) {
             return null;
           }
@@ -301,7 +297,10 @@ async function reptileCommon2(reptileType) {
         }
       },
       isLastPage: ($) => {
-        return $('.pagination__item[aria-current="page"]').parent().next().length === 0;
+        return (
+          $('.pagination__item[aria-current="page"]').parent().next().length ===
+          0
+        );
       },
       getAllPage: ($) => {
         // 总目录页数
@@ -344,7 +343,7 @@ async function reptileCommon2(reptileType) {
       },
       getCatalog: ($, catalogStr, i) => {
         //规则暂时有问题，目前先这样
-        let catalog = $(catalogStr[i]);
+        let catalog = $(catalogStr);
         // let title = catalog.html();
         let title = domCommon(catalog, rule.catalogTitle);
         let type = 1; //1带章节

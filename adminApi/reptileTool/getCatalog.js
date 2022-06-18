@@ -68,20 +68,7 @@ async function getCatalog_common(
       async function startRpFn() {
         return new Promise(async (resolve2, reject2) => {
           start++;
-          let uri = "";
-          // 用小说目录的url地址做章节url前缀    默认 1
-          // 用小说主站url地址做章节url前缀   2
-          // 不使用前缀，3
-          if (
-            catalog.reptileAddress &&
-            catalog.reptileAddress.indexOf("http") == 0
-          ) {
-            uri = catalog.reptileAddress;
-          } else if (reptileCommon.originUrlBefore == 2) {
-            uri = reptileCommon.baseUrl + catalog.reptileAddress;
-          } else {
-            uri = originUrl + catalog.reptileAddress;
-          }
+          let uri = catalog.reptileAddress;
           let option = {
             uri: uri,
             userAgent: reptileCommon.userAgent,
@@ -103,13 +90,17 @@ async function getCatalog_common(
             let data = await timoRp(option);
             let $ = data[0];
             // let body = data[1];
-            let content = "";
+            let bizName = "";
             global.reptileCatalog--;
             try {
-              content = reptileCommon.getCatalogContent($);
+              bizName = reptileCommon.getCatalogContent($);
               const shopUrl = reptileCommon.getShopUrl($);
               // 这里再去拿邮箱吧
               if (shopUrl) {
+                console.log(
+                  "🚀 ~ file: getCatalog.js ~ line 98 ~ returnnewPromise ~ shopUrl",
+                  shopUrl
+                );
                 let option2 = {
                   uri: shopUrl,
                   userAgent: reptileCommon.userAgent,
@@ -138,13 +129,17 @@ async function getCatalog_common(
                   // 有邮箱才保存
                   // TODO: 去重
                   if (email) {
+                    console.log(
+                      "🚀 ~ file: getCatalog.js ~ line 129 ~ returnnewPromise ~ email",
+                      email
+                    );
                     let saveSuccess = await saveContent(
                       originUrl,
                       bookId,
                       bookName,
                       catalog,
                       noIsRepeat,
-                      content,
+                      bizName,
                       reptileType,
                       uri,
                       tiType,
@@ -232,100 +227,37 @@ async function getCatalog_common(
   });
 }
 
-// function hasDir(bookName) {
-//     try{
-//         tool.hasDir(fs, path.join(__dirname, "../../books/" + bookName))
-//         return bookName;
-//     }catch(err) {
-//         bookName = tool.jiami(bookName);
-//         tool.hasDir(fs, path.join(__dirname, "../../books/" + bookName))
-//         return bookName;
-//     }
-// }
-
 async function saveContent(
   originUrl,
   bookId,
   bookName,
   catalog,
   noIsRepeat,
-  content,
+  bizName,
   reptileType,
   uri,
   tiType,
   shopUrl,
   email
 ) {
-  // let filePath = "";
   try {
-    // if (noIsRepeat) {
-    //     filePath = path.join(__dirname, "../../books/" + bookId + "/" + catalog.id + ".txt");
-    // } else {
-    //     filePath = tool.isRepeat(fs, path.join(__dirname, "../../books/" + bookId + "/" + catalog.id + ".txt"));
-    // }
-
-    let contentSection = tool.handleContent(content);
-    // log.info(contentSection.length);
-    if (contentSection.length <= 0) {
-      let type2 = (
-        await db.query(`select type from catalog where id=${catalog.id}`)
-      )[0].type;
-      let type = tiType
-        ? (await db.query(`select type from catalog where id=${catalog.id}`))[0]
-            .type == 2
-          ? true
-          : false
-        : false;
-      if (type) {
-        //titype为true且为特殊章节
-        contentSection[0] = `提莫淘书，淘你喜欢。提莫淘书，讨你喜欢。<br>来源地址：<a href="${uri}">${catalog.name}</a>`;
-      } else {
-        await db.query(
-          `INSERT INTO progresserror (reptileType, originUrl, bookId, catalogId, reptileAddress, bookName, catalogName) VALUES (${reptileType}, "${originUrl}", ${bookId}, ${catalog.id}, "${catalog.reptileAddress}", "${bookName}", "${catalog.name}")`
-        );
-
-        log.error("爬取失败，失败原因：没有内容");
-        return false;
-      }
+    // 先判断是否和表中的重复
+    let sql = `select COUNT(*) from catalogcontent where email="${email}"`;
+    let result = tool.getData(await db.query(sql));
+    if (result) {
+      //如果数据库里有这本书
+      console.log(`${email}在数据库已存在`);
+      return;
     }
-    let insertSql = `INSERT INTO catalogcontent${await tool.getCatalogNum(
-      catalog.id
-    )} (catalogId, content, bookId, num, shopUrl, email) VALUES `;
-    contentSection.forEach((value, index) => {
-      insertSql += `(${catalog.id},"${tool.toSql(
-        value
-      )}", ${bookId},${index},"${shopUrl}","${email}"),`;
-    });
-    insertSql = insertSql.slice(0, insertSql.length - 1);
-    console.log(
-      "🚀 ~ file: getCatalog.js ~ line 155 ~ saveContent ~ insertSql",
-      insertSql
-    );
-    // log.info(insertSql);
-    // if(noIsRepeat) {
-    //     await db.query(`delete from catalogcontent${await tool.getCatalogNum(catalog.id)} where catalogId=${catalog.id}`);
-    // } else {}
-    await db.query(
-      `delete from catalogcontent${await tool.getCatalogNum(
-        catalog.id
-      )} where catalogId=${catalog.id}`
-    );
+    let insertSql = `INSERT INTO catalogcontent (content, bookId, num, shopUrl, email) VALUES `;
+    insertSql += `("${tool.toSql(
+      bizName
+    )}", ${bookId},1,"${shopUrl}","${email}")`;
     await db.query(insertSql);
-    // fs.writeFileSync(filePath, content);
-    // wss.broadcast(bookName + "---" + catalog.name + ".txt");
     wss.broadcast(bookName + "---" + catalog.name + "存取成功");
     return true;
   } catch (err) {
     log.error(err);
     return false;
-    // let title = tool.jiami(catalog.id);
-    // let filePath = "";
-    // if(noIsRepeat) {
-    //     filePath = path.join(__dirname, "../../books/"+ bookId +"/" + title + ".txt");
-    // } else {
-    //     filePath = tool.isRepeat(fs, path.join(__dirname, "../../books/"+ bookId +"/" + title + ".txt"));
-    // }
-    // fs.writeFileSync(filePath, content);
-    // wss.broadcast(bookName + "---" + catalog.name + ".txt");
   }
 }

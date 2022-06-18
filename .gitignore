@@ -13,3 +13,4 @@ urlLog.log
 /adminApi/log
 /adminApi/upload
 /adminApi/public/img
+/mock
