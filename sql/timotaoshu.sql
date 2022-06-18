@@ -35,11 +35,26 @@ CREATE TABLE `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `book` VALUES ('1', 'table', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_nkw=vintage+wooden+desk+tidy&_sop=12','','2','2022-06-15','1','1','2','1');
 -- ----------------------------
 -- Records of book
 -- ----------------------------
 
+INSERT INTO `book` VALUES ('1', 'fish food', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_nkw=vintage+wooden+desk+tidy&_sop=12','','2','2022-06-15','1','1','2','1');
+INSERT INTO `book` VALUES ('2', 'phone grass', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_nkw=vintage+wooden+desk+tidy&_sop=12','','2','2022-06-15','1','1','2','1');
+
+-- ----------------------------
+-- Table structure for progresserror
+-- ----------------------------
+DROP TABLE IF EXISTS `keywordresult`;
+CREATE TABLE `keywordresult` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一 错误id',
+  `bookId` int(40) NOT NULL COMMENT '小说id',
+  `reptileType` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
+  `emailCount` int(109) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
+  `isFinished` int(10) NOT NULL DEFAULT '1' COMMENT '1、允许爬取\r\n2、禁止爬取（错误没解决之前都是禁止爬取.）\r\n默认2\r\n',
+  PRIMARY KEY (`id`),
+  KEY `bookId` (`bookId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- ----------------------------
 -- Table structure for catalog
 -- ----------------------------

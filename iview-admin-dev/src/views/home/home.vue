@@ -331,7 +331,7 @@
                 let obj = {
                     params: {
                         page: this.params.page,
-                        limit: this.params.limit,
+                        limit: 10 //this.params.limit,
                     }
                 };
                 if(this.selectName && this.inputValue) {

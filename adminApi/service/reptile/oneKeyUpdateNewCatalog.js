@@ -11,7 +11,7 @@ let oneKeyUpdateNewCatalog = async (bookListFromId) => {
     if (bookListFromId) {
       bookList = bookListFromId;
     } else {
-      bookList = await db.query(`select * from book where bookStatus=1`);
+      bookList = await db.query(`select * from book`);
       global.isUpdateReptile = true;
     }
 

@@ -21,7 +21,10 @@ module.exports = async (
   catalog,
   noIsRepeat,
   timeout,
-  tiType
+  tiType,
+  keyword,
+  page,
+  order
 ) => {
   return getCatalog_common(
     bookId,
@@ -31,7 +34,10 @@ module.exports = async (
     noIsRepeat,
     parseInt(reptileType),
     parseInt(timeout),
-    tiType
+    tiType,
+    keyword,
+    page,
+    order
   );
 };
 
@@ -43,14 +49,17 @@ async function getCatalog_common(
   noIsRepeat,
   reptileType,
   timeout,
-  tiType
+  tiType,
+  keyword,
+  page,
+  order
 ) {
   return new Promise(async (resolve, reject) => {
-    let reptileCommon = await reptileCommon2(reptileType);
+    let reptileCommon = await reptileCommon2(reptileType, keyword);
     let start = 0;
     let startTime = new Date().getTime();
     global.reptileCatalog++;
-    console.log(`当前有${global.reptileCatalog}条章节正在爬取`);
+    // console.log(`当前有${global.reptileCatalog}条章节正在爬取`);
     await startRp();
 
     async function startRp() {
@@ -95,12 +104,11 @@ async function getCatalog_common(
             try {
               bizName = reptileCommon.getCatalogContent($);
               const shopUrl = reptileCommon.getShopUrl($);
+              log.info(
+                `第${page}页第${order}个搜索项页面爬取完成,爬取到店铺:${shopUrl}`
+              );
               // 这里再去拿邮箱吧
               if (shopUrl) {
-                console.log(
-                  "🚀 ~ file: getCatalog.js ~ line 98 ~ returnnewPromise ~ shopUrl",
-                  shopUrl
-                );
                 let option2 = {
                   uri: shopUrl,
                   userAgent: reptileCommon.userAgent,
@@ -126,13 +134,12 @@ async function getCatalog_common(
                   let shopData = await timoRp(option2);
                   let $1 = shopData[0];
                   let email = reptileCommon.getEmail($1);
+                  log.info(
+                    `第${page}页第${order}个搜索项页面爬取完成,爬取到邮箱:${email}}`
+                  );
                   // 有邮箱才保存
                   // TODO: 去重
                   if (email) {
-                    console.log(
-                      "🚀 ~ file: getCatalog.js ~ line 129 ~ returnnewPromise ~ email",
-                      email
-                    );
                     let saveSuccess = await saveContent(
                       originUrl,
                       bookId,
@@ -157,6 +164,8 @@ async function getCatalog_common(
                 } catch (err) {
                   console.log(err);
                 }
+              } else {
+                resolve2(); // TODO: 这里应该重爬
               }
             } catch (err) {
               // log.error("我只是看个问题" + bookName + "_" + book.title);
@@ -246,14 +255,15 @@ async function saveContent(
     let result = tool.getData(await db.query(sql));
     if (result) {
       //如果数据库里有这本书
-      console.log(`${email}在数据库已存在`);
-      return;
+      log.info(`${email}在数据库已存在`);
+      return true;
     }
     let insertSql = `INSERT INTO catalogcontent (content, bookId, num, shopUrl, email) VALUES `;
     insertSql += `("${tool.toSql(
       bizName
     )}", ${bookId},1,"${shopUrl}","${email}")`;
     await db.query(insertSql);
+    log.info(`${email}已入库`);
     wss.broadcast(bookName + "---" + catalog.name + "存取成功");
     return true;
   } catch (err) {

@@ -171,9 +171,22 @@ function domCommon(dom, rule, $) {
   return handleRule(ruleSplit, 2, result);
 }
 
-async function reptileCommon2(reptileType) {
+async function reptileCommon2(reptileType, keyword) {
   let rules = await reptileConfig.getReptileRule();
   let rule = rules[reptileType];
+  // let rules = await reptileConfig.getReptileList();
+  // // 这里随便取一个没爬取过的网站
+  // let rule = null;
+  // for (let i = 0; i < rules.length; i++) {
+  //   // TODO: 未完成也要加
+  //   const keywordResult = await db.query(
+  //     `select * from keywordresult where bookId=${keyword.id} and reptileType=${rules[i].reptileTypeId}`
+  //   );
+  //   if (keywordResult && keywordResult.length === 0) {
+  //     rule = rules[i];
+  //     break;
+  //   }
+  // }
 
   let returnObj = null;
   if (rule) {
@@ -184,23 +197,10 @@ async function reptileCommon2(reptileType) {
       codeTransform: rule.codeTransform,
       originUrlBefore: rule.originUrlBefore, // url前缀
       userAgent: rule.userAgent, // pc或者mobile
-      searchUrl: (bookName) => {
-        /*返回搜索地址*/
-        let transformName = "";
-        switch (rule.codeTransform) {
-          case "gbk":
-            transformName = tool.encodeURIComponent_GBK(bookName);
-            break;
-          case "utf-8":
-            transformName = tool.url_encode(bookName);
-            break;
-          default:
-            //默认utf-8
-            transformName = tool.url_encode(bookName);
-            break;
-        }
-        return rule.searchUrl.replace("${name}", transformName);
-      },
+      searchUrl: rule.searchUrl.replace(
+        "${name}",
+        keyword.name.split(" ").join("+")
+      ),
       getBookList: ($, url, bookName) => {
         let list = [];
         if (bookName && returnObj.searchUrl(bookName).indexOf(url) == -1) {
@@ -276,6 +276,7 @@ async function reptileCommon2(reptileType) {
         rule.nextPage = ".pagination__next、attrhref";
         if (rule.nextPage) {
           let url = domCommon(null, rule.nextPage, $);
+          log.info(`下一页地址:${url}`);
           if (!url) {
             return null;
           }

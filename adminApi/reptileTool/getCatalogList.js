@@ -11,7 +11,24 @@ const {
 } = require("../tool/require2");
 const getNextPage = require("./getNextPage");
 const getCatalog = require("./getCatalog");
-
+async function pushCatalogQueue(params) {
+  return new Promise((resolve, reject) => {
+    tool.catalogQueue.push({
+      params,
+      pro: getCatalog,
+      result: async (data) => {
+        // sucCount++;
+        // end();
+        resolve();
+      },
+      error: async (data) => {
+        // errCount++;
+        // end();
+        reject();
+      },
+    });
+  });
+}
 async function getCatalogList({
   $,
   reptileCommon,
@@ -30,12 +47,12 @@ async function getCatalogList({
     reptileType,
   },
   updateNewCatalog,
+  keyword,
 }) {
-  console.log("🚀 ~ file: getCatalogList.js ~ line 34 ~ id", id);
   // let catalogStr = []; // 目录列表
   if (reptileCommon.getIsPage($)) {
     // 有分页的目录
-    !updateNewCatalog && log.info(`爬取${title}目录中`);
+    // !updateNewCatalog && log.info(`爬取${title}目录中`);
     let page = 1;
     do {
       log.info(`获取第${page}页数据`);
@@ -51,30 +68,20 @@ async function getCatalogList({
             name: "2",
             reptileAddress: catalog.href,
           };
+          await pushCatalogQueue([
+            id || "1", //bookId
+            2,
+            "",
+            title,
+            value,
+            true,
+            "",
+            "",
+            keyword,
+            page,
+            i + 1,
+          ]);
           // getCatalog(reptileType, book.originUrl, book.title, value, true);
-          tool.catalogQueue.push({
-            params: [
-              id || "1",
-              // reptileType,
-              2,
-              // reptileCommon.originUrlBefore == 2
-              //   ? reptileCommon.baseUrl
-              //   : originUrl,
-              "",
-              title,
-              value,
-              true,
-            ],
-            pro: getCatalog,
-            result: async (data) => {
-              // sucCount++;
-              // end();
-            },
-            error: async (data) => {
-              // errCount++;
-              // end();
-            },
-          });
         }
         // 但是要更新关键词爬取到的页数
         page++;
