@@ -78,10 +78,17 @@ import tinymce from 'tinymce';
             this.$on('reset', (type,data) => {
                 console.log(data);
                 console.log("初始化");
+                switch(type){
+                    case 'add':
+                        this.id=''
+                    break;
+                    case 'edit':
                 this.id=data.id;
                 this.subject=data.subject;
                 this.remark=data.remark;
                 tinymce.get('tinymceEditer').setContent(data.content);
+                        break;
+                }
             });
         },
         beforeDestroy() {

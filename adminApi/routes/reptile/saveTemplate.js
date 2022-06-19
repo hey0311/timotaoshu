@@ -14,11 +14,18 @@ router.use("", oauth(4004), async function (req, res, next) {
   let subject = tool.getParams(req, "subject");
   let remark = tool.getParams(req, "remark");
   let data = null;
-  content.replace(/"/g, "");
+  content = content.replace(/"/g, "");
   try {
-    let allData = await db.query(
-      `update emailtemplate set content="${content}",subject="${subject}",remark="${remark}" where id=${id}`
-    );
+    let allData = {};
+    if (id) {
+      allData = await db.query(
+        `update emailtemplate set content="${content}",subject="${subject}",remark="${remark}" where id=${id}`
+      );
+    } else {
+      allData = await db.query(
+        `insert into emailtemplate (content,subject,remark,forbidden) values ("${content}","${subject}","${remark}",1)`
+      );
+    }
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 

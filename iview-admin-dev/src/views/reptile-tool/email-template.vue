@@ -1,6 +1,10 @@
 <template>
     <Layout>
         <Card shadow>
+            <div class="header">
+                <h3>邮件模板</h3>
+                <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
+            </div>
             <Table border highlight-row :loading="loading" :columns="columns" :data="reptileList" ref="table"></Table>
         </Card>
         <Card shadow>
@@ -15,6 +19,12 @@
     .upload {
         display: inline-block;
         vertical-align: top;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
     }
 </style>
 <script>
@@ -229,13 +239,13 @@
             onClickShowModal(type, data) {
                 switch (type) {
                     case "add":
-                        this.$refs.editCannel.$emit('reset', 'add', null);
+                        this.$refs.editTemplate.$emit('reset', 'add', null);
                         break;
                     case "look":
-                        this.$refs.editCannel.$emit('reset', 'look', data);
+                        this.$refs.editTemplate.$emit('reset', 'look', data);
                         break;
                     case "copyAdd":
-                        this.$refs.editCannel.$emit('reset', 'copyAdd', data);
+                        this.$refs.editTemplate.$emit('reset', 'copyAdd', data);
                         break;
                     case "edit":
                         this.$refs.editTemplate.$emit('reset', 'edit', data);
