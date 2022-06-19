@@ -13,7 +13,7 @@ let queue = async.queue(function (obj, cb) {
       obj.error && (await obj.error(err));
       await cb(err);
     });
-}, 3);
+}, 1);
 
 queue.empty = function () {
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");

@@ -3,6 +3,7 @@ const md5 = require("./md5.js");
 const ipQueue = require("./ipQueue.js");
 const catalogQueue = require("./catalogQueue.js");
 const shopQueue = require("./shopQueue");
+const searchQueue = require("./searchQueue");
 const queue = require("./queue.js");
 const permissionList = require("./permissionList.js");
 const iconv = require("iconv-lite");

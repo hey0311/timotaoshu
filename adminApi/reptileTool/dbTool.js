@@ -1,14 +1,7 @@
 const { fs, rp, timoRp, path, tool, log, db } = require("../tool/require");
 const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 
-async function insertEmail(
-  {
-  keyword,
-  bizName,
-  shopUrl,
-  email
-  }
-) {
+async function insertEmail({ keyword, bizName, shopUrl, email }) {
   try {
     // 先判断是否和表中的重复
     let sql = `select COUNT(*) from catalogcontent where email="${email}"`;
@@ -19,9 +12,9 @@ async function insertEmail(
       return true;
     }
     let insertSql = `INSERT INTO catalogcontent (content, bookId, num, shopUrl, email) VALUES `;
-    insertSql += `("${tool.toSql(
-      bizName
-    )}", ${keyword.id},1,"${shopUrl}","${email}")`;
+    insertSql += `("${tool.toSql(bizName)}", ${
+      keyword.id
+    },1,"${shopUrl}","${email}")`;
     await db.query(insertSql);
     log.info(`${email}已入库`);
     // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
@@ -44,7 +37,18 @@ async function insertErrorTask(keyword, reptileType, reptileAddress, pageType) {
     return false;
   }
 }
+async function deleteErrorTask(id) {
+  try {
+    await db.query(`delete from errortask where id=${id}`);
+    log.info(`删除errortask成功`);
+    return true;
+  } catch (err) {
+    log.error(err);
+    return false;
+  }
+}
 module.exports = {
   insertEmail,
   insertErrorTask,
+  deleteErrorTask,
 };
