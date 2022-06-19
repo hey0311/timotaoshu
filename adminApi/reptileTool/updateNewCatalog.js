@@ -22,7 +22,7 @@ let getCatalogList = require("../reptileTool/getCatalogList");
  */
 module.exports = async (sqlBook) => {
   // 找到对应的网站
-  var reptileType = parseInt(sqlBook.reptileType);
+  // var reptileType = parseInt(sqlBook.reptileType);
   // 记录当前正在爬取的关键词列表
   if (!global.updateBookIds) {
     global.updateBookIds = [];
@@ -35,21 +35,13 @@ module.exports = async (sqlBook) => {
   // 这里随便取一个没爬取过的网站
   let rule = null;
   for (let i = 0; i < rules.length; i++) {
-    console.log(
-      "🚀 ~ file: updateNewCatalog.js ~ line 38 ~ module.exports= ~ rules",
-      rules[i]
-    );
     // TODO: 未完成也要加
     const keywordResult = await db.query(
       `select * from keywordresult where bookId=${sqlBook.id} and reptileType=${rules[i].reptileTypeId}`
     );
-    console.log(
-      "🚀 ~ file: updateNewCatalog.js ~ line 43 ~ module.exports= ~ keywordResult",
-      keywordResult
-    );
     if (keywordResult && keywordResult.length === 0) {
       rule = rules[i];
-      await updateBookNewCatalog_common(sqlBook, rules[i].reptileTypeId, end);
+      await updateBookNewCatalog_common(sqlBook, rules[i], end);
     }
   }
 
@@ -60,9 +52,9 @@ module.exports = async (sqlBook) => {
   }
 };
 
-async function updateBookNewCatalog_common(sqlBook, reptileType, end) {
+async function updateBookNewCatalog_common(sqlBook, rule, end) {
   // 这里应该取ebay还是其他什么 的
-  let reptileCommon = await reptileCommon2(reptileType, sqlBook);
+  let reptileCommon = await reptileCommon2(rule.reptileTypeId, sqlBook);
   return new Promise(async (resolve, reject) => {
     let start = 0;
     await startRp();
@@ -92,24 +84,17 @@ async function updateBookNewCatalog_common(sqlBook, reptileType, end) {
             `已爬取${reptileCommon.name},关键词${sqlBook.name},网址${reptileCommon.searchUrl}`
           );
           // 能获取到搜索条目的网址列表,继续循环拿店铺网址
-          let updateTime = new Date(reptileCommon.getUpdateTime($)).getTime();
+          // 这里应该拿到宝贝地址 + 下一页地址,分两个queue
+          // let updateTime = new Date(reptileCommon.getUpdateTime($)).getTime();
           result = await getCatalogList({
             $,
             reptileCommon,
-            book: sqlBook,
-            updateNewCatalog: {
-              sqlBook,
-              updateTime,
-              end,
-              resolve,
-              reptileType,
-            },
             keyword: sqlBook,
           });
           if (result) {
             log.info(`${reptileCommon.name}},关键词${sqlBook.name}},爬取完成`);
             await db.query(
-              `INSERT INTO keywordresult (reptileType, bookId,emailCount,isFinished) VALUES (${reptileType}, "${sqlBook.id}", 0, 2)`
+              `INSERT INTO keywordresult (reptileType, bookId,emailCount,isFinished) VALUES (${rule.reptileTypeId}, "${sqlBook.id}", 0, 2)`
             );
             resolve();
           }

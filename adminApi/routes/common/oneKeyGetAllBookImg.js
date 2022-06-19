@@ -4,6 +4,11 @@ const { oauth, tool, db, log, fs, path } = require("../../tool/require");
 const getImg = require("../../reptileTool/getImg.js");
 let reptileCommon = require("../../reptileTool/common/reptileCommon");
 const nodemailer = require("nodemailer");
+const {
+  reptileService,
+  ipReptileService,
+  logService,
+} = require("../../service");
 
 let lastTime = 0;
 router.use("", oauth(), async function (req, res, next) {
@@ -28,9 +33,9 @@ router.use("", oauth(), async function (req, res, next) {
   // })
   // res.send(tool.toJson('', '', 1000));
   //   let testAccount = await nodemailer.createTestAccount();
-
+  const data = await reptileService.oneKeyRestartCatalog();
   // create reusable transporter object using the default SMTP transport
-  res.send(tool.toJson("", "", 1000));
+  res.send(tool.toJson(data, "", 1000));
 });
 
 async function sendMail() {

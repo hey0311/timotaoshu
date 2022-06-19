@@ -61,7 +61,7 @@ const timoRp = function (options) {
     delete reqOptions.userAgent; // 请求之前，删除多余的东西
     delete reqOptions.transform; // 请求之前，删除多余的东西
     // delete reqOptions.proxy;
-    reqOptions.proxy = "http://127.0.0.1:8888";
+    // reqOptions.proxy = "http://127.0.0.1:8888";
     var req = request(
       reqOptions,
       function (error, response, body) {

@@ -191,6 +191,7 @@ async function reptileCommon2(reptileType, keyword) {
   let returnObj = null;
   if (rule) {
     returnObj = {
+      reptileTypeId: rule.reptileTypeId,
       code: rule.code,
       name: rule.name,
       baseUrl: rule.baseUrl,
