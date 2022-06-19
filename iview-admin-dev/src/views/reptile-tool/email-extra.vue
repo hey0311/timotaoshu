@@ -39,23 +39,11 @@
                         key: 'email'
                     },
                     {
-                        title: '名字',
-                        key: 'content'
+                        title: '类型',
+                        key: 'type'
                     },
                     {
-                        title: '店铺网址',
-                        key: 'shopUrl',
-                        render: (h, params) => {
-                            return h('a', {
-                                attrs: {
-                                    href: params.row.shopUrl,
-                                    target: '_blank',
-                                }
-                            }, params.row.shopUrl)
-                        }
-                    },
-                    {
-                        title: '发送状态',
+                        title: '启用状态',
                         key: 'name'
                     },
                     // {
@@ -137,7 +125,7 @@
                     }
                 };
                 this.loading = true;
-                util.post.reptile.email(obj).then((data) => {
+                util.post.reptile.emailextra(obj).then((data) => {
                     this.reptileList = data.list;
                     this.total = data.count;
                     this.loading = false;

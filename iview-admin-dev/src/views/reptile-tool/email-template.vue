@@ -7,7 +7,8 @@
             <Page :current="params.page" :page-size="params.limit" :total="total" show-total show-elevator
                   @on-change="getList"></Page>
         </Card>
-        <edit-channel :modal="modal" ref="editCannel"></edit-channel>
+        <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
+        <edit-template :modal="modal" ref="editTemplate" @save="saveTemplate"></edit-template>
     </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -20,6 +21,7 @@
     import util from 'util';
     // import reptileConfig from './components/reptileConfig';
     import editChannel from 'modal/reptile-tool/editChannel.vue';
+    import editTemplate from 'modal/reptile-tool/editTemplate.vue';
     import uploadMixins from '@/mixins/uploadMixins';
     import config from '../../libs/config';
     import Cookies from 'js-cookie';
@@ -29,86 +31,100 @@
         name: 'reptile',
         components: {
             // reptileConfig,
-            editChannel
+            editChannel,
+            editTemplate
         },
         data() {
             return {
                 columns: [
                     {
-                        title: '邮箱',
-                        key: 'email'
+                        title: 'id',
+                        key: 'id'
                     },
                     {
-                        title: '名字',
+                        title: '模板内容',
                         key: 'content'
                     },
                     {
-                        title: '店铺网址',
-                        key: 'shopUrl',
+                        title: '操作',
+                        key: 'handle',
                         render: (h, params) => {
-                            return h('a', {
-                                attrs: {
-                                    href: params.row.shopUrl,
-                                    target: '_blank',
-                                }
-                            }, params.row.shopUrl)
+                            return h('div', [
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            this.onClickShowModal('look', params.row)
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '查看'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            console.log("🚀 ~ file: email-template.vue ~ line 75 ~ data ~ params", params)
+                                            this.onClickShowModal('edit', params.row)
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '编辑'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            this.onClickShowModal('copyAdd', params.row);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '复制新增'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;${params.row.isSearch == 2 ? '' : 'color:red;'}`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            // this.$router.push("/catalog?bookId=" + params.row.id);
+                                            this.onClickToggleUse(params.row.reptileTypeId, (params.row.isSearch == 2 ? 1 : 2), params.row.reason);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, `${params.row.isSearch == 2 ? '启用' : '禁用'}`),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;color:red;`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            // this.$router.push("/catalog?bookId=" + params.row.id);
+                                            this.onClickDelete(params.row.reptileTypeId);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, `删除`),
+                            ])
                         }
                     },
-                    {
-                        title: '发送状态',
-                        key: 'name'
-                    },
-                    // {
-                    //     title: '操作',
-                    //     key: 'handle',
-                    //     render: (h, params) => {
-                    //         return h('div', [
-                    //             h('a', {
-                    //                 attrs: {
-                    //                     href: 'javascript:void(0);',
-                    //                     target: '_blank',
-                    //                     style: `margin-left:10px;color:red;`
-                    //                 },
-                    //                 on: {
-                    //                     click: (e) => {
-                    //                         // this.$router.push("/catalog?bookId=" + params.row.id);
-                    //                         this.onClickDelete(params.row.reptileTypeId);
-                    //                         e.stopPropagation();
-                    //                         e.preventDefault();
-                    //                     }
-                    //                 }
-                    //             }, `删除`),
-                    //         ])
-                    //     }
-                    // },
-                    // {
-                    //     title:'配置',
-                    //     type: 'expand',
-                    //     width: 70,
-                    //     render: (h, params) => {
-                    //         return h(reptileConfig, {
-                    //             props: {
-                    //                 row: params.row
-                    //             }
-                    //         })
-                    //     }
-                    // },
-                    // {
-                    //     title:'书名标志',
-                    //     key:'bookName'
-                    // },
-                    // {
-                    //     title:'作者名标志',
-                    //     key:'author'
-                    // },
-                    // {
-                    //     title:'封面图片标志',
-                    //     key:'imgUrl'
-                    // },
-                    // {
-                    //     title:'章节内容标志',
-                    //     key:'content'
-                    // },
                 ],
                 loading: false,
                 params: {
@@ -129,6 +145,20 @@
         },
         computed: {},
         methods: {
+            saveTemplate(data){
+                util.post.reptile.saveTemplate({
+                    params:{
+                    id:data.id,
+                    content:data.content
+                    }
+                }).then((data) => {
+                    this.reptileList = data.list;
+                    this.total = data.count;
+                    this.loading = false;
+                }).catch((err) => {
+                    this.loading = false;
+                });
+            },
             getList(page) {
                 let obj = {
                     params: {
@@ -137,7 +167,7 @@
                     }
                 };
                 this.loading = true;
-                util.post.reptile.email(obj).then((data) => {
+                util.post.reptile.emailTemplate(obj).then((data) => {
                     this.reptileList = data.list;
                     this.total = data.count;
                     this.loading = false;
@@ -192,7 +222,7 @@
                         this.$refs.editCannel.$emit('reset', 'copyAdd', data);
                         break;
                     case "edit":
-                        this.$refs.editCannel.$emit('reset', 'edit', data);
+                        this.$refs.editTemplate.$emit('reset', 'edit', data);
                         break;
                     default:
                         return;
@@ -311,6 +341,7 @@
             this.$on('reset', () => {
                 this.onClickUpdate();
             });
+                                            this.onClickShowModal('edit', {})
         },
         activated() {
 

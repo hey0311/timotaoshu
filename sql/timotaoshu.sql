@@ -92,7 +92,43 @@ CREATE TABLE `catalogcontent` (
   PRIMARY KEY (`id`),
   KEY `bookId` (`bookId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ----------------------------
+-- Table structure for catalogcontent
+-- ----------------------------
+DROP TABLE IF EXISTS `emailbox`;
+CREATE TABLE `emailbox` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `emailbox` VALUES ('1', 'info@buyshiphere.com', 1);
+-- ----------------------------
+-- Table structure for catalogcontent
+-- ----------------------------
+DROP TABLE IF EXISTS `emailextra`;
+CREATE TABLE `emailextra` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` int(11) DEFAULT NULL COMMENT '黑还是白',
+  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `emailextra` VALUES ('1', 'hey0311@qq.com', 1,1);
+INSERT INTO `emailextra` VALUES ('2', 'test@qq.com', 2,1);
+-- ----------------------------
+-- Table structure for catalogcontent
+-- ----------------------------
+DROP TABLE IF EXISTS `emailtemplate`;
+CREATE TABLE `emailtemplate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `emailtemplate` VALUES ('1', '123', 1);
 -- ----------------------------
 -- Records of catalogcontent
 -- ----------------------------
@@ -238,5 +274,5 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', '火炎', '7c4a8d09ca3762af61e59520943dc26494f8941b', '123456', '1');
-INSERT INTO `users` VALUES ('2', '冰中焱', '7c4a8d09ca3762af61e59520943dc26494f8941b', '1234567', '1');
+INSERT INTO `users` VALUES ('1', 'fangcuizhu', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'fangcuizhu123', '1');
+INSERT INTO `users` VALUES ('2', 'heyong', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'heyong123', '1');

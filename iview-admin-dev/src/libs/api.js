@@ -41,6 +41,10 @@ export default {
   reptile: {
     list: "/reptile",
     email: "/reptile/email",
+    emailbox: "/reptile/emailbox",
+    emailextra: "/reptile/emailextra",
+    emailTemplate: "/reptile/emailTemplate",
+    saveTemplate: "/reptile/saveTemplate",
     getUrl: "/reptile/getUrl",
     getBookJson: "/reptile/getBookJson",
     startReptile: "/reptile/startReptile",
