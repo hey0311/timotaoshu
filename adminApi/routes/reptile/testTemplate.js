@@ -1,4 +1,5 @@
 var express = require("express");
+const { sendEmail } = require("../../reptileTool/emailTool");
 var router = express.Router();
 const { oauth, tool, db, log, reptileConfig } = require("../../tool/require");
 
@@ -10,25 +11,28 @@ const { oauth, tool, db, log, reptileConfig } = require("../../tool/require");
  * */
 router.use("", oauth(4004), async function (req, res, next) {
   let id = tool.getParams(req, "id");
-  let content = tool.getParams(req, "content");
-  let subject = tool.getParams(req, "subject");
-  let remark = tool.getParams(req, "remark");
+  console.log("🚀 ~ file: saveTemplate.js ~ line 13 ~ id", id);
+
   let data = null;
-  content.replace(/"/g, "");
   try {
-    let allData = await db.query(
-      `update emailtemplate set content="${content}",subject="${subject}",remark="${remark}" where id=${id}`
+    let templateArray = await db.query(
+      `select * from emailtemplate where id=${id}`
     );
+    let template = templateArray[0];
+    console.log("🚀 ~ file: testTemplate.js ~ line 22 ~ template", template);
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 
     // reptileList.forEach((value, index) => {
     //     reptileList[index] = JSON.parse(value);
     // })
+    await sendEmail({
+      subject: template.subject,
+      content: template.content,
+    });
 
     data = {
-      list: allData,
-      count: allData.length,
+      success: true,
     };
     res.send(tool.toJson(data, "", 1000));
   } catch (err) {

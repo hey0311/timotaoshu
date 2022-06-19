@@ -14,7 +14,7 @@ router.use("", oauth(4004), async function (req, res, next) {
 
   let data = null;
   try {
-    let allData = await db.query(`select * from emailextra`);
+    let allData = await db.query(`select * from emailblack`);
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 

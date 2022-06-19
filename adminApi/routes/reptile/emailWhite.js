@@ -9,16 +9,12 @@ const { oauth, tool, db, log, reptileConfig } = require("../../tool/require");
  *
  * */
 router.use("", oauth(4004), async function (req, res, next) {
-  let id = tool.getParams(req, "id");
-  let content = tool.getParams(req, "content");
-  let subject = tool.getParams(req, "subject");
-  let remark = tool.getParams(req, "remark");
+  let page = tool.getParams(req, "page") || 1;
+  let limit = tool.getParams(req, "limit") || 10;
+
   let data = null;
-  content.replace(/"/g, "");
   try {
-    let allData = await db.query(
-      `update emailtemplate set content="${content}",subject="${subject}",remark="${remark}" where id=${id}`
-    );
+    let allData = await db.query(`select * from emailwhite`);
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 

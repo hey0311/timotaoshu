@@ -5,7 +5,15 @@
         <Modal v-model="modal.showModal" :closable='false' :mask-closable='true' :width="1000" @on-cancel="onClickCancel">
             <h3 slot="header" class="modal-header-color">模板</h3>
             <div>
+                <div class="subject">
+                    <span>主题:</span>
+                    <Input v-model="subject" placeholder="输入主题" style="width:850px"/>
+                </div>
                 <text-editor></text-editor>
+                <div class="subject">
+                    <span>备注:</span>
+                    <Input v-model="remark" placeholder="输入备注" style="width:850px"/>
+                </div>
             </div>
             <div slot="footer">
                 <Button type="text" @click="onClickCancel">取消</Button>
@@ -16,7 +24,15 @@
 </template>
 
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
-
+.subject{
+    display: flex;
+    margin-left: 20px;
+    align-items: center;
+    width: 100%;
+    span{
+        width: 50px;
+    }
+}
 </style>
 <script type="text/ecmascript-6">
     import textEditor from '../../views/my-components/text-editor/text-editor.vue';
@@ -32,6 +48,8 @@ import tinymce from 'tinymce';
         data() {
             return {
                 id:'',
+                subject:'',
+                remark:'',
                 loading:false,
             }
         },
@@ -43,6 +61,8 @@ import tinymce from 'tinymce';
             onClickSave(){
                 this.$emit('save',{
                     id:this.id,
+                    subject:this.subject,
+                    remark:this.remark,
                     content:tinymce.get('tinymceEditer').getContent()
                 });
                 this.modal.showModal = false;
@@ -59,6 +79,8 @@ import tinymce from 'tinymce';
                 console.log(data);
                 console.log("初始化");
                 this.id=data.id;
+                this.subject=data.subject;
+                this.remark=data.remark;
                 tinymce.get('tinymceEditer').setContent(data.content);
             });
         },

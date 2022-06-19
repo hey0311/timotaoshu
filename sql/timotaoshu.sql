@@ -107,28 +107,40 @@ INSERT INTO `emailbox` VALUES ('1', 'info@buyshiphere.com', 1);
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
-DROP TABLE IF EXISTS `emailextra`;
-CREATE TABLE `emailextra` (
+DROP TABLE IF EXISTS `emailblack`;
+CREATE TABLE `emailblack` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type` int(11) DEFAULT NULL COMMENT '黑还是白',
   `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `emailextra` VALUES ('1', 'hey0311@qq.com', 1,1);
-INSERT INTO `emailextra` VALUES ('2', 'test@qq.com', 2,1);
+INSERT INTO `emailblack` VALUES ('1', 'test@qq.com', 1);
+-- ----------------------------
+-- Table structure for catalogcontent
+-- ----------------------------
+DROP TABLE IF EXISTS `emailwhite`;
+CREATE TABLE `emailwhite` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `emailwhite` VALUES ('2', 'hey0311@qq.com', 1);
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
 DROP TABLE IF EXISTS `emailtemplate`;
 CREATE TABLE `emailtemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-INSERT INTO `emailtemplate` VALUES ('1', '123', 1);
+INSERT INTO `emailtemplate` VALUES ('1', '111','123','remark', 1);
 -- ----------------------------
 -- Records of catalogcontent
 -- ----------------------------

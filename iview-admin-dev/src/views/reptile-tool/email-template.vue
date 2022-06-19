@@ -42,8 +42,12 @@
                         key: 'id'
                     },
                     {
-                        title: '模板内容',
-                        key: 'content'
+                        title: '主题',
+                        key: 'subject'
+                    },
+                    {
+                        title: '备注',
+                        key: 'remark'
                     },
                     {
                         title: '操作',
@@ -78,6 +82,20 @@
                                         }
                                     }
                                 }, '编辑'),
+                                h('a', {
+                                    attrs: {
+                                        href: 'javascript:void(0);',
+                                        target: '_blank',
+                                        style: `margin-left:10px;`
+                                    },
+                                    on: {
+                                        click: (e) => {
+                                            this.onClickShowModal('sendToTest', params.row);
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }, '发送到测试邮箱'),
                                 h('a', {
                                     attrs: {
                                         href: 'javascript:void(0);',
@@ -145,18 +163,16 @@
         },
         computed: {},
         methods: {
-            saveTemplate(data){
+            saveTemplate(params){
                 util.post.reptile.saveTemplate({
-                    params:{
-                    id:data.id,
-                    content:data.content
-                    }
+                    params
                 }).then((data) => {
-                    this.reptileList = data.list;
-                    this.total = data.count;
-                    this.loading = false;
+                    // this.reptileList = data.list;
+                    // this.total = data.count;
+                    // this.loading = false;
+                    this.getList();
                 }).catch((err) => {
-                    this.loading = false;
+                    // this.loading = false;
                 });
             },
             getList(page) {
@@ -223,6 +239,15 @@
                         break;
                     case "edit":
                         this.$refs.editTemplate.$emit('reset', 'edit', data);
+                        break;
+                    case "sendToTest":
+                util.post.reptile.testTemplate({params:{id:data.id}}).then((data) => {
+                    this.loading = false;
+                    // this.reptileList = data.reptileList;
+                    // this.total = data.count;
+                }).catch((err) => {
+                    this.loading = false;
+                });
                         break;
                     default:
                         return;
@@ -341,7 +366,6 @@
             this.$on('reset', () => {
                 this.onClickUpdate();
             });
-                                            this.onClickShowModal('edit', {})
         },
         activated() {
 

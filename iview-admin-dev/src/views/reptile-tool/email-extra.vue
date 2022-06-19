@@ -1,19 +1,42 @@
 <template>
     <Layout>
         <Card shadow>
+            <div class="header">
+                <h3>黑名单</h3>
+                <Button type="primary" :disabled="loading" @click="onClickShowModal('addBlackEmail')">添加</Button>
+            </div>
             <Table border highlight-row :loading="loading" :columns="columns" :data="reptileList" ref="table"></Table>
         </Card>
         <Card shadow>
             <Page :current="params.page" :page-size="params.limit" :total="total" show-total show-elevator
                   @on-change="getList"></Page>
         </Card>
-        <edit-channel :modal="modal" ref="editCannel"></edit-channel>
+        <Card shadow style="margin-top:30px">
+            <div class="header">
+                <h3>白名单</h3>
+                <Button type="primary" :disabled="loading" @click="onClickShowModal('addWhiteEmail')">添加</Button>
+            </div>
+            <Table border highlight-row :loading="loading" :columns="columnsWhite" :data="reptileList2" ref="table"></Table>
+        </Card>
+        <Card shadow>
+            <Page :current="params.page" :page-size="params.limit" :total="total2" show-total show-elevator
+                  @on-change="getList"></Page>
+        </Card>
+        <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
+        <add-black-email :modal="modal" ref="addBlackEmail" @save="saveBlackEmail"></add-black-email>
+        <add-black-email :modal="modal" ref="addWhiteEmail" @save="saveWhiteEmail"></add-black-email>
     </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
     .upload {
         display: inline-block;
         vertical-align: top;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
     }
 </style>
 <script>
@@ -23,13 +46,15 @@
     import uploadMixins from '@/mixins/uploadMixins';
     import config from '../../libs/config';
     import Cookies from 'js-cookie';
+    import addBlackEmail from 'modal/reptile-tool/addBlackEmail.vue';
 
     export default {
         mixins: [uploadMixins],
         name: 'reptile',
         components: {
             // reptileConfig,
-            editChannel
+           addBlackEmail,
+           editChannel
         },
         data() {
             return {
@@ -39,64 +64,19 @@
                         key: 'email'
                     },
                     {
-                        title: '类型',
-                        key: 'type'
+                        title: '启用状态',
+                        key: 'name'
+                    },
+                ],
+                columnsWhite: [
+                    {
+                        title: '邮箱',
+                        key: 'email'
                     },
                     {
                         title: '启用状态',
                         key: 'name'
                     },
-                    // {
-                    //     title: '操作',
-                    //     key: 'handle',
-                    //     render: (h, params) => {
-                    //         return h('div', [
-                    //             h('a', {
-                    //                 attrs: {
-                    //                     href: 'javascript:void(0);',
-                    //                     target: '_blank',
-                    //                     style: `margin-left:10px;color:red;`
-                    //                 },
-                    //                 on: {
-                    //                     click: (e) => {
-                    //                         // this.$router.push("/catalog?bookId=" + params.row.id);
-                    //                         this.onClickDelete(params.row.reptileTypeId);
-                    //                         e.stopPropagation();
-                    //                         e.preventDefault();
-                    //                     }
-                    //                 }
-                    //             }, `删除`),
-                    //         ])
-                    //     }
-                    // },
-                    // {
-                    //     title:'配置',
-                    //     type: 'expand',
-                    //     width: 70,
-                    //     render: (h, params) => {
-                    //         return h(reptileConfig, {
-                    //             props: {
-                    //                 row: params.row
-                    //             }
-                    //         })
-                    //     }
-                    // },
-                    // {
-                    //     title:'书名标志',
-                    //     key:'bookName'
-                    // },
-                    // {
-                    //     title:'作者名标志',
-                    //     key:'author'
-                    // },
-                    // {
-                    //     title:'封面图片标志',
-                    //     key:'imgUrl'
-                    // },
-                    // {
-                    //     title:'章节内容标志',
-                    //     key:'content'
-                    // },
                 ],
                 loading: false,
                 params: {
@@ -105,6 +85,8 @@
                 },
                 total: 0,
                 reptileList: [],
+                total2: 0,
+                reptileList2: [],
                 modal: {
                     showModal: false
                 },
@@ -117,6 +99,33 @@
         },
         computed: {},
         methods: {
+            saveWhiteEmail(email){
+                console.log("🚀 ~ file: email-extra.vue ~ line 103 ~ saveWhiteEmail ~ email", email)
+                this.loading = true;
+                util.post.reptile.saveWhiteEmail({
+                    params:{
+                        email
+                    }
+                }).then((data) => {
+                    this.loading = false;
+                    this.getList();
+                }).catch((err) => {
+                    this.loading = false;
+                });
+            },
+            saveBlackEmail(email){
+                this.loading = true;
+                util.post.reptile.saveBlackEmail({
+                    params:{
+                        email
+                    }
+                }).then((data) => {
+                    this.loading = false;
+                    this.getList();
+                }).catch((err) => {
+                    this.loading = false;
+                });
+            },
             getList(page) {
                 let obj = {
                     params: {
@@ -125,9 +134,16 @@
                     }
                 };
                 this.loading = true;
-                util.post.reptile.emailextra(obj).then((data) => {
+                util.post.reptile.emailBlack(obj).then((data) => {
                     this.reptileList = data.list;
                     this.total = data.count;
+                    this.loading = false;
+                }).catch((err) => {
+                    this.loading = false;
+                });
+                util.post.reptile.emailWhite(obj).then((data) => {
+                    this.reptileList2 = data.list;
+                    this.total2 = data.count;
                     this.loading = false;
                 }).catch((err) => {
                     this.loading = false;
@@ -181,6 +197,12 @@
                         break;
                     case "edit":
                         this.$refs.editCannel.$emit('reset', 'edit', data);
+                        break;
+                    case "addBlackEmail":
+                        this.$refs.addBlackEmail.$emit('reset');
+                        break;
+                    case "addWhiteEmail":
+                        this.$refs.addWhiteEmail.$emit('reset');
                         break;
                     default:
                         return;
