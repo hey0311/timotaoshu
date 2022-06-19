@@ -14,12 +14,8 @@ const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 const { insertEmail, insertErrorTask } = require("./dbTool");
 // let reptileCommon = require("./common/reptileCommon")
 const reptileCommon2 = require("./common/reptileCommon2");
-const { addShopToQueue } = require("./queueTool");
-const shopHandler = require("./shopHandler");
 // catalog = searchItem
-module.exports = async ({ keyword, rule, reptileAddress, page, order }) => {
-  // reptileType = parseInt(reptileType);
-  // timeout = parseInt(timeout);
+module.exports = async ({ keyword, rule, shopUrl, page, order, bizName }) => {
   let timeout = 10000;
   return new Promise(async (resolve, reject) => {
     // let reptileCommon = await reptileCommon2(reptileType, keyword);
@@ -45,60 +41,60 @@ module.exports = async ({ keyword, rule, reptileAddress, page, order }) => {
       async function startRpFn() {
         return new Promise(async (resolve2, reject2) => {
           start++;
-          let uri = reptileAddress;
-          let option = {
-            uri: uri,
-            userAgent: reptileCommon.userAgent,
-            encoding: null,
-            transform: function (body, response, resolveWithFullResponse) {
-              // return cheerio.load(iconv.decode(body, "gbk"), {decodeEntities: false});
-              // return [cheerio.load(iconv.decode(body, "utf-8"), {decodeEntities: false}),iconv.decode(body, "utf-8")];
-              // console.log(iconv.decode(body, reptileCommon.code));
-              return [
-                cheerio.load(iconv.decode(body, reptileCommon.code), {
-                  decodeEntities: false,
-                }),
-                iconv.decode(body, reptileCommon.code),
-              ];
-            },
-            timeout: timeout || 10000,
-          };
           try {
-            let data = await timoRp(option);
-            let $ = data[0];
-            // let body = data[1];
-            let bizName = "";
-            global.reptileCatalog--;
             try {
-              bizName = reptileCommon.getCatalogContent($);
-              const shopUrl = reptileCommon.getShopUrl($);
-              log.info(
-                `第${page}页第${order}个搜索项页面爬取完成,地址${reptileAddress},爬取到店铺:${shopUrl}`
-              );
               // 这里再去拿邮箱吧
-              if (shopUrl) {
-                // push queue
-                await addShopToQueue(
-                  {
-                    keyword,
-                    rule,
-                    shopUrl,
-                    page,
-                    order,
-                    bizName,
-                  },
-                  shopHandler
+              // push queue
+              let option2 = {
+                uri: shopUrl,
+                userAgent: reptileCommon.userAgent,
+                encoding: null,
+                transform: function (body, response, resolveWithFullResponse) {
+                  // return cheerio.load(iconv.decode(body, "gbk"), {decodeEntities: false});
+                  // return [cheerio.load(iconv.decode(body, "utf-8"), {decodeEntities: false}),iconv.decode(body, "utf-8")];
+                  // console.log(iconv.decode(body, reptileCommon.code));
+                  return [
+                    cheerio.load(iconv.decode(body, reptileCommon.code), {
+                      decodeEntities: false,
+                    }),
+                    iconv.decode(body, reptileCommon.code),
+                  ];
+                },
+                timeout: timeout || 10000,
+              };
+              try {
+                let shopData = await timoRp(option2);
+                let $1 = shopData[0];
+                let email = reptileCommon.getEmail($1);
+                log.info(
+                  `第${page}页第${order}个搜索项页面爬取完成,爬取到邮箱:${email}}`
                 );
-                resolve2();
-              } else {
-                // await insertErrorTask(
-                //   keyword,
-                //   // reptileType,
-                //   rule.reptileTypeId,
-                //   reptileAddress,
-                //   ERROR_TASK_PAGE_TYPE.ITEM_PAGE
-                // );
-                resolve2(); // TODO: 这里应该重爬
+                // 有邮箱才保存
+                if (email) {
+                  let saveSuccess = await insertEmail({
+                    keyword,
+                    bizName,
+                    shopUrl,
+                    email,
+                  });
+                  if (saveSuccess) {
+                    resolve2();
+                  } else {
+                    resolve2("错误：存取失败");
+                  }
+                } else {
+                  resolve2();
+                }
+              } catch (err) {
+                console.log(err);
+                await insertErrorTask(
+                  keyword,
+                  // reptileType,
+                  rule.reptileTypeId,
+                  shopUrl,
+                  ERROR_TASK_PAGE_TYPE.SHOP_PAGE
+                );
+                resolve2(); //TODO: 虫爬
               }
             } catch (err) {
               // log.error("我只是看个问题" + bookName + "_" + book.title);

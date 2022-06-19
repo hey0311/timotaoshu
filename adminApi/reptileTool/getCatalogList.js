@@ -9,6 +9,7 @@ const {
   db,
   log,
 } = require("../tool/require2");
+const getCatalog = require("./getCatalog");
 const getNextPage = require("./getNextPage");
 const { addSearchItemToQueue } = require("./queueTool");
 
@@ -22,36 +23,17 @@ async function getCatalogList({ $, reptileCommon, keyword }) {
       for (let i = 0; i < 3; i++) {
         let catalogDom = catalogList[i];
         let catalog = reptileCommon.getCatalog($, catalogDom, i);
-        // 别存了,直接爬
-        let value = {
-          id: "1",
-          name: "2",
-          reptileAddress: catalog.href,
-        };
-
-        await addSearchItemToQueue({
-          keyword,
-          rule: reptileCommon,
-          reptileAddress: catalog.href,
-          page,
-          order: i + 1,
-        });
-        // await addSearchItemToQueue([
-        //   keyword.id || "1", //bookId
-        //   2,
-        //   "",
-        //   keyword.title,
-        //   value,
-        //   true,
-        //   "",
-        //   "",
-        //   keyword,
-        //   page,
-        //   i + 1,
-        // ]);
-        // getCatalog(reptileType, book.originUrl, book.title, value, true);
+        await addSearchItemToQueue(
+          {
+            keyword,
+            rule: reptileCommon,
+            reptileAddress: catalog.href,
+            page,
+            order: i + 1,
+          },
+          getCatalog
+        );
       }
-      // 但是要更新关键词爬取到的页数
       page++;
     } else {
       throw new Error("章节分页目录请求出错");

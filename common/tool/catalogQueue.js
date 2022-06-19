@@ -2,7 +2,7 @@ let async = require("async");
 
 let catalogQueue = async.queue((obj, cb) => {
   obj.pro
-    .call(this, obj.params)
+    .apply(this, [obj.params])
     .then(async (data) => {
       if (typeof data == "string" && data.indexOf("错误：") == 0) {
         obj.error && (await obj.error(data));

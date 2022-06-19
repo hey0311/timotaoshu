@@ -2,7 +2,7 @@ let async = require("async");
 
 let queue = async.queue(function (obj, cb) {
   obj.pro
-    .apply(this, obj.params)
+    .apply(this, [obj.params])
     .then(async (data) => {
       obj.result && (await obj.result.apply(this, data));
       await cb();

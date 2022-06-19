@@ -2,17 +2,12 @@ const { fs, rp, timoRp, path, tool, log, db } = require("../tool/require");
 const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 
 async function insertEmail(
-  originUrl,
-  bookId,
-  bookName,
-  catalog,
-  noIsRepeat,
+  {
+  keyword,
   bizName,
-  reptileType,
-  uri,
-  tiType,
   shopUrl,
   email
+  }
 ) {
   try {
     // 先判断是否和表中的重复
@@ -26,7 +21,7 @@ async function insertEmail(
     let insertSql = `INSERT INTO catalogcontent (content, bookId, num, shopUrl, email) VALUES `;
     insertSql += `("${tool.toSql(
       bizName
-    )}", ${bookId},1,"${shopUrl}","${email}")`;
+    )}", ${keyword.id},1,"${shopUrl}","${email}")`;
     await db.query(insertSql);
     log.info(`${email}已入库`);
     // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
