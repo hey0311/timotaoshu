@@ -120,6 +120,13 @@ export const appRouter = [
         component: () => import("@/views/home/home.vue"),
       },
       {
+        path: "keyword",
+        title: "关键词",
+        access: ["2000"],
+        name: "reptile-tool_keyword",
+        component: () => import("@/views/reptile-tool/keyword.vue"),
+      },
+      {
         path: "ipList",
         title: "代理IP",
         access: ["2000"],

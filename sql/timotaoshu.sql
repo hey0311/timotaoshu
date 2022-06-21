@@ -43,17 +43,35 @@ INSERT INTO `book` VALUES ('1', 'fish food', '作者', '描述', 'https://www.eb
 INSERT INTO `book` VALUES ('2', 'phone grass', '作者', '描述', 'https://www.ebay.co.uk/sch/i.html?_nkw=vintage+wooden+desk+tidy&_sop=12','','2','2022-06-15','1','1','2','1');
 
 -- ----------------------------
+-- Table structure for keyword
+-- ----------------------------
+DROP TABLE IF EXISTS `keywords`;
+CREATE TABLE `keywords` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键词',
+  `able` int(10) NOT NULL DEFAULT '1' COMMENT '1、启用\r\n2、禁用\r\n\r\n默认1\r\n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+insert into `keywords` values ('1','fish food',1);
+insert into `keywords` values ('2','grass cup',1);
+
+-- ----------------------------
 -- Table structure for progresserror
 -- ----------------------------
-DROP TABLE IF EXISTS `keywordresult`;
-CREATE TABLE `keywordresult` (
+DROP TABLE IF EXISTS `keywordsprogress`;
+CREATE TABLE `keywordsprogress` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一 错误id',
-  `bookId` int(40) NOT NULL COMMENT '小说id',
-  `reptileType` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
-  `emailCount` int(109) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
-  `isFinished` int(10) NOT NULL DEFAULT '1' COMMENT '1、允许爬取\r\n2、禁止爬取（错误没解决之前都是禁止爬取.）\r\n默认2\r\n',
+  `keywordsId` int(40) NOT NULL COMMENT '关键词id',
+  `keywords` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键词名称',
+  `ruleId` int(10) DEFAULT NULL COMMENT '规则id',
+  `ruleName` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '规则名称',
+  `totalPage` int(10) DEFAULT NULL COMMENT '总页数',
+  `currentPage` int(10) DEFAULT NULL COMMENT '爬取完的页数',
+  `emailCount` int(109) DEFAULT NULL COMMENT '爬取完的邮箱',
+  `finished` int(10) NOT NULL DEFAULT '0' COMMENT '是否完成',
   PRIMARY KEY (`id`),
-  KEY `bookId` (`bookId`) USING BTREE
+  KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- ----------------------------
 -- Table structure for catalog
@@ -95,11 +113,20 @@ CREATE TABLE `catalogcontent` (
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
+DROP TABLE IF EXISTS `email`;
+CREATE TABLE `email` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ----------------------------
+-- Table structure for catalogcontent
+-- ----------------------------
 DROP TABLE IF EXISTS `emailbox`;
 CREATE TABLE `emailbox` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  `able` int(11) DEFAULT '2' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -111,7 +138,7 @@ DROP TABLE IF EXISTS `emailblack`;
 CREATE TABLE `emailblack` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  `able` int(11) DEFAULT '2' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -123,7 +150,7 @@ DROP TABLE IF EXISTS `emailwhite`;
 CREATE TABLE `emailwhite` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  `able` int(11) DEFAULT '2' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -137,7 +164,7 @@ CREATE TABLE `emailtemplate` (
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `forbidden` int(11) DEFAULT NULL COMMENT '是否禁用',
+  `able` int(11) DEFAULT '2' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 INSERT INTO `emailtemplate` VALUES ('1', '111','123','remark', 1);

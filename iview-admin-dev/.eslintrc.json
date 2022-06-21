@@ -11,14 +11,16 @@
     },
     "plugins": [ "html", "standard" ],
     "rules": {
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-console": ["error"],
+        "indent": ["error", 2, { "SwitchCase": 1 }],
+        // "quotes": ["error", "single"],
+        // "semi": ["error", "always"],
+        "space-before-function-paren":0,
+        "no-console": 0,
         "no-empty": 2,
         "no-eq-null": 2,
         "no-new": 0,
         "no-fallthrough": 0,
-        "no-unreachable": 0
+        "no-unreachable": 0,
+        "handle-callback-err":0
     }
 }

@@ -23,7 +23,7 @@ router.use("", oauth(4004), async function (req, res, next) {
       );
     } else {
       allData = await db.query(
-        `insert into emailtemplate (content,subject,remark,forbidden) values ("${content}","${subject}","${remark}",1)`
+        `insert into emailtemplate (content,subject,remark,able) values ("${content}","${subject}","${remark}",2)`
       );
     }
     // let reptileList = await reptileConfig.getReptileList();

@@ -38,6 +38,19 @@ export default {
     delCatalog: "/writer/delCatalog",
     editBook: "/writer/editBook",
   },
+  keyword: {
+    list: "/keyword/list",
+    save: "/keyword/save",
+    able: "/keyword/able",
+    delete: "/keyword/delete",
+  },
+  template: {
+    list: "/template/list",
+    save: "/template/save",
+    able: "/template/able",
+    test: "/template/test",
+    delete: "/template/delete",
+  },
   reptile: {
     list: "/reptile",
     email: "/reptile/email",
@@ -47,6 +60,8 @@ export default {
     emailTemplate: "/reptile/emailTemplate",
     saveTemplate: "/reptile/saveTemplate",
     testTemplate: "/reptile/testTemplate",
+    ableTemplate: "/reptile/ableTemplate",
+    deleteTemplate: "/reptile/deleteTemplate",
     saveBlackEmail: "/reptile/saveBlackEmail",
     saveWhiteEmail: "/reptile/saveWhiteEmail",
     getUrl: "/reptile/getUrl",
