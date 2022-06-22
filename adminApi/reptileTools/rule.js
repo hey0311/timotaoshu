@@ -182,10 +182,12 @@ function getRule(ruleConfig, keywords) {
   return {
     id: ruleConfig.id,
     name: ruleConfig.name,
-    searchUrl: ruleConfig.searchUrl.replace(
-      "${name}",
-      keywords.name.split(" ").join("+")
-    ),
+    // searchUrl:
+    getSearchUrl: (page) => {
+      return ruleConfig.searchUrl
+        .replace("${name}", keywords.name.split(" ").join("+"))
+        .replace("${page}", page);
+    },
     getSearchItemUrl: ($, searchItem, index) => {
       // return domCommon(null, ruleConfig.searchItemUrl, $);
       // let searchItem = $(ruleConfig.searchItemUrl);

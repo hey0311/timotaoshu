@@ -32,7 +32,7 @@ router.use("", oauth(), async function (req, res, next) {
   // })
   // res.send(tool.toJson('', '', 1000));
   //   let testAccount = await nodemailer.createTestAccount();
-  const data = await reptileService.oneKeyRestartCatalog();
+  const data = await reptileService.startErrorTasks();
   // create reusable transporter object using the default SMTP transport
   res.send(tool.toJson(data, "", 1000));
 });

@@ -68,12 +68,20 @@ async function updateKeywordsProgress({
  * @param {*} pageType
  * @returns
  */
-async function insertErrorTask({ keywords, ruleConfig, uri, pageType }) {
+async function insertErrorTask({
+  keywords,
+  ruleConfig,
+  uri,
+  pageType,
+  page = 0,
+  order = 0,
+}) {
   try {
     const records = await db.query(
       `select * from errortask where uri="${uri}"`
     );
     if (records.length !== 0) {
+      //更新记录,retryCount
       await db.query(
         `update errortask set retryCount=${
           records[0].retryCount + 1
@@ -82,8 +90,9 @@ async function insertErrorTask({ keywords, ruleConfig, uri, pageType }) {
         } and pageType=${pageType}`
       );
     } else {
+      // 新记录
       await db.query(
-        `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType) VALUES (${keywords.id}, "${ruleConfig.id}", "${uri}", 0, ${pageType})`
+        `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${ruleConfig.id}, "${uri}", 0, ${pageType},${page},${order})`
       );
     }
     log.info(`插入errortask成功`);

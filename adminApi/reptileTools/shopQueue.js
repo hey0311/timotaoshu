@@ -18,7 +18,7 @@ let shopQueue = async.queue((obj, cb) => {
       obj.error && (await obj.error("错误：" + err));
       await cb(err);
     });
-}, 3);
+}, 1);
 
 shopQueue.empty = function () {
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");
@@ -33,21 +33,21 @@ shopQueue.drain = function () {
   // console.log("当所有任务都执行完时，会调用drain函数");
 };
 async function addShopToQueue(params, pro) {
-  return new Promise((resolve, reject) => {
-    shopQueue.push({
-      params,
-      pro,
-      result: async (data) => {
-        // sucCount++;
-        // end();
-        resolve();
-      },
-      error: async (data) => {
-        // errCount++;
-        // end();
-        reject();
-      },
-    });
+  // return new Promise((resolve, reject) => {
+  shopQueue.push({
+    params,
+    pro,
+    result: async (data) => {
+      // sucCount++;
+      // end();
+      // resolve();
+    },
+    error: async (data) => {
+      // errCount++;
+      // end();
+      // reject();
+    },
+    // });
   });
 }
 

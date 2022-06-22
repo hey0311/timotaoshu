@@ -53,8 +53,8 @@ CREATE TABLE `keywords` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-insert into `keywords` values ('1','fish food',1);
-insert into `keywords` values ('2','grass cup',1);
+insert into `keywords` values ('1','vintage wooden desk tidy',1);
+insert into `keywords` values ('2','vintage wooden desk a',1);
 
 -- ----------------------------
 -- Table structure for progresserror
@@ -179,13 +179,15 @@ CREATE TABLE `errortask` (
   `uri` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
   `retryCount` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
   `pageType` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
+  `page` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
+  `sequence` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
   PRIMARY KEY (`id`),
   KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `errortask` VALUES ('1', '1', '1', 'https://www.ebay.de/sch/i.html?_from=R40&_nkw=phone&_sacat=0&_pgn=4', 0,1);
-INSERT INTO `errortask` VALUES ('2', '2', '2', 'https://www.ebay.co.uk/itm/293003136667?hash=item4438590e9b:g:TQUAAOSwZbJe3SlN&amdata=enc%3AAQAHAAAA4KnDnOqS%2BbMQ%2Bq4LiYsIjD1F9HucD4gn7kgDKMqRFfF1IUU6jPbgkzrK%2BiDZsJDqUIXjP277tmbKEA9WCQzbtlcn21KBXuzBikPSdt6zQFFuFYzsTZMXdQaTCuOrVZLEH%2FtljPBn30GN00J9UiB97LyWhf3j1%2Bk4h0vKiDmYcN4F%2FsLaKkfxJcPK%2B2waeKiDrfLqo4IrpLE%2FKhmL9ZoMWHWBSJT9lRqdJvrWf46Akkm9tQLx4Yc%2FvkWZgA8E2c7QmqGbk0OMLdO%2BlWhFq9BzYNEujfJXEAiu603ufKHnJmmC%7Ctkp%3ABFBMyJCU9a5g', 0,2);
-INSERT INTO `errortask` VALUES ('3', '1', '2', 'https://www.ebay.co.uk/usr/the-aqua-shack?_trksid=p2047675.m3561.l2559', 0,3);
+-- INSERT INTO `errortask` VALUES ('1', '1', '1', 'https://www.ebay.de/sch/i.html?_from=R40&_nkw=phone&_sacat=0&_pgn=4', 0,1,2,3);
+-- INSERT INTO `errortask` VALUES ('2', '2', '2', 'https://www.ebay.co.uk/itm/293003136667?hash=item4438590e9b:g:TQUAAOSwZbJe3SlN&amdata=enc%3AAQAHAAAA4KnDnOqS%2BbMQ%2Bq4LiYsIjD1F9HucD4gn7kgDKMqRFfF1IUU6jPbgkzrK%2BiDZsJDqUIXjP277tmbKEA9WCQzbtlcn21KBXuzBikPSdt6zQFFuFYzsTZMXdQaTCuOrVZLEH%2FtljPBn30GN00J9UiB97LyWhf3j1%2Bk4h0vKiDmYcN4F%2FsLaKkfxJcPK%2B2waeKiDrfLqo4IrpLE%2FKhmL9ZoMWHWBSJT9lRqdJvrWf46Akkm9tQLx4Yc%2FvkWZgA8E2c7QmqGbk0OMLdO%2BlWhFq9BzYNEujfJXEAiu603ufKHnJmmC%7Ctkp%3ABFBMyJCU9a5g', 0,2,4,5);
+-- INSERT INTO `errortask` VALUES ('3', '1', '2', 'https://www.ebay.co.uk/usr/the-aqua-shack?_trksid=p2047675.m3561.l2559', 0,3,8,3);
 -- ----------------------------
 -- Table structure for progresserror
 -- ----------------------------

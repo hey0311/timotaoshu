@@ -30,9 +30,16 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         ruleConfig: rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+        page,
+        order,
       });
+      resolve();
     }
     const shopUrl = rule.getShopUrl($);
+    console.log(
+      "🚀 ~ file: reptileSearchItem.js ~ line 39 ~ returnnewPromise ~ shopUrl",
+      shopUrl
+    );
     if (shopUrl) {
       await addShopToQueue(
         {
@@ -52,6 +59,8 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         ruleConfig: rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+        page,
+        order,
       });
     }
     resolve();

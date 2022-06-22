@@ -18,7 +18,7 @@ let searchItemQueue = async.queue((obj, cb) => {
       obj.error && (await obj.error("错误：" + err));
       await cb(err);
     });
-}, 3);
+}, 100);
 
 searchItemQueue.empty = function () {
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");
@@ -34,25 +34,55 @@ searchItemQueue.drain = function () {
 };
 
 async function addSearchItemToQueue(params, pro) {
+  // return new Promise((resolve, reject) => {
+  searchItemQueue.push({
+    params,
+    pro,
+    result: async (data) => {
+      // sucCount++;
+      // end();
+      // resolve();
+    },
+    error: async (data) => {
+      // errCount++;
+      // end();
+      // reject();
+    },
+    // });
+  });
+}
+async function batchAddSearchItemToQueue(paramsList, pro) {
   return new Promise((resolve, reject) => {
-    searchItemQueue.push({
-      params,
-      pro,
-      result: async (data) => {
-        // sucCount++;
-        // end();
-        resolve();
-      },
-      error: async (data) => {
-        // errCount++;
-        // end();
-        reject();
-      },
-    });
+    let resultCount = 0;
+    for (let i = 0; i < paramsList.length; i++) {
+      searchItemQueue.push({
+        params: paramsList[i],
+        pro,
+        result: async (data) => {
+          // sucCount++;
+          // end();
+          // resolve();
+          resultCount++;
+          if (resultCount === paramsList.length) {
+            resolve();
+          }
+        },
+        error: async (data) => {
+          // errCount++;
+          // end();
+          // reject();
+          resultCount++;
+          if (resultCount === paramsList.length) {
+            resolve();
+          }
+        },
+      });
+    }
   });
 }
 
 module.exports = {
   searchItemQueue,
   addSearchItemToQueue,
+  batchAddSearchItemToQueue,
 };

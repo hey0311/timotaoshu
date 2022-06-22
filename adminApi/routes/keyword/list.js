@@ -14,7 +14,7 @@ router.use("", oauth(4004), async function (req, res, next) {
 
   let data = null;
   try {
-    let allData = await db.query(`select * from book`);
+    let allData = await db.query(`select * from keywords`);
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 

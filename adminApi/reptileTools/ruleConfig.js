@@ -6,7 +6,8 @@ function getRuleConfigList() {
       id: 1,
       name: "ebay德国",
       baseUrl: "https://www.ebay.de/",
-      searchUrl: "https://www.ebay.de/sch/i.html?_from=R40&rt=nc&_nkw=${name}",
+      searchUrl:
+        "https://www.ebay.de/sch/i.html?_from=R40&rt=nc&_nkw=${name}&_pgn=${page}",
       nextPage: ".pagination__next、attrhref",
       lastPage: '.pagination__item[aria-current="page"]',
       nowPage: "",
@@ -26,7 +27,7 @@ function getRuleConfigList() {
       name: "ebay英国",
       baseUrl: "https://www.ebay.co.uk/",
       searchUrl:
-        "https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=${name}",
+        "https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=${name}&_pgn=${page}",
       nextPage: ".pagination__next、attrhref",
       lastPage: '.pagination__item[aria-current="page"]',
       nowPage: "",

@@ -27,7 +27,11 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
         ruleConfig: rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
+        page,
+        order,
       });
+      resolve();
+      return;
     }
     const email = rule.getEmail($);
     console.log(
