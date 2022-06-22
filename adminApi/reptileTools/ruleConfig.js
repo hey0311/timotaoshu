@@ -15,7 +15,10 @@ function getRuleConfigList() {
       searchItemUrl: "、attrhref",
       searchItemTitle: ".s-item__title、text",
       shopName: ".ux-seller-section__item--seller、text",
-      shopUrl: ".ux-seller-section__item--seller a、attrhref",
+      shopUrl: [
+        ".ux-seller-section__item--seller a、attrhref",
+        ".si-inner .mbg a、attrhref",
+      ],
       email: "#email~span、text",
     },
     {
@@ -32,7 +35,10 @@ function getRuleConfigList() {
       searchItemUrl: "、attrhref",
       searchItemTitle: ".s-item__title、text",
       shopName: ".ux-seller-section__item--seller、text",
-      shopUrl: ".ux-seller-section__item--seller a、attrhref",
+      shopUrl: [
+        ".ux-seller-section__item--seller a、attrhref",
+        ".si-inner .mbg a、attrhref",
+      ],
       email: "#email~span、text",
     },
   ];

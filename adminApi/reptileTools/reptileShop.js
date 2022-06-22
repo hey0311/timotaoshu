@@ -1,3 +1,4 @@
+const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 const {
   fs,
   rp,
@@ -10,38 +11,41 @@ const {
   log,
   timoRp,
 } = require("../tool/require");
-const { insertEmail } = require("./dbTool");
+const { insertEmail, insertErrorTask } = require("./dbTool");
 const reptileRequest = require("./reptileRequest");
 
 module.exports = reptileShop;
 
 async function reptileShop({ keywords, rule, uri, page, order }) {
   return new Promise(async (resolve, reject) => {
+    let $ = null;
     try {
-      const $ = await reptileRequest({ uri });
-      const email = rule.getEmail($);
-      console.log(
-        "🚀 ~ file: reptileShop.js ~ line 25 ~ returnnewPromise ~ email",
-        email
-      );
-      if (email) {
-        const insertResult = await insertEmail({
-          keywords,
-          rule,
-          email,
-        });
-        if (insertResult) {
-          resolve();
-        } else {
-          resolve("错误,存取失败");
-        }
-      }
-      resolve();
+      $ = await reptileRequest({ uri });
     } catch (err) {
-      console.log(
-        "🚀 ~ file: reptileShop.js ~ line 41 ~ returnnewPromise ~ err",
-        err
-      );
+      await insertErrorTask({
+        keywords,
+        ruleConfig: rule,
+        uri,
+        pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
+      });
     }
+    const email = rule.getEmail($);
+    console.log(
+      "🚀 ~ file: reptileShop.js ~ line 25 ~ returnnewPromise ~ email",
+      email
+    );
+    if (email) {
+      const insertResult = await insertEmail({
+        keywords,
+        rule,
+        email,
+      });
+      if (insertResult) {
+        resolve();
+      } else {
+        resolve("错误,存取失败");
+      }
+    }
+    resolve();
   });
 }

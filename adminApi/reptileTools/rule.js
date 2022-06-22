@@ -180,7 +180,7 @@ function domCommon(dom, rule, $) {
  */
 function getRule(ruleConfig, keywords) {
   return {
-    ruleId: ruleConfig.id,
+    id: ruleConfig.id,
     name: ruleConfig.name,
     searchUrl: ruleConfig.searchUrl.replace(
       "${name}",
@@ -208,7 +208,14 @@ function getRule(ruleConfig, keywords) {
       return $(ruleConfig.searchItemList);
     },
     getShopUrl: ($) => {
-      return domCommon(null, ruleConfig.shopUrl, $);
+      for (let i = 0; i < ruleConfig.shopUrl.length; i++) {
+        const shopUrl = domCommon(null, ruleConfig.shopUrl[i], $);
+        if (shopUrl) {
+          return shopUrl;
+          break;
+        }
+      }
+      return "";
     },
     getEmail: ($) => {
       return domCommon(null, ruleConfig.email, $);

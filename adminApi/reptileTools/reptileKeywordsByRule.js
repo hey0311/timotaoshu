@@ -10,11 +10,12 @@ const {
   log,
   timoRp,
 } = require("../tool/require");
-const { addSearchItemToQueue } = require("./queueTool");
+const { updateKeywordsProgress } = require("./dbTool");
 const reptileRequest = require("./reptileRequest");
 const reptileSearchItem = require("./reptileSearchItem");
 
 const getRule = require("./rule");
+const { addSearchItemToQueue } = require("./searchItemQueue");
 
 module.exports = reptileKeywordsByRule;
 
@@ -30,7 +31,8 @@ async function reptileKeywordsByRule(keywords, ruleConfig) {
       });
       while ($) {
         let searchItemList = rule.getSearchItemList($).toArray();
-        for (let i = 0; i < searchItemList.length; i++) {
+        // for (let i = 0; i < searchItemList.length; i++) {
+        for (let i = 0; i < 3; i++) {
           console.log(`爬取第${page}页,第${i + 1}个`);
           const searchItem = searchItemList[i];
           const searchItemUrl = rule.getSearchItemUrl($, searchItem, i);
@@ -49,13 +51,33 @@ async function reptileKeywordsByRule(keywords, ruleConfig) {
             reptileSearchItem
           );
         }
-        $ = await reptileRequest({
-          uri: rule.getNextPage($),
-        });
+        try {
+          $ = await reptileRequest({
+            uri: rule.getNextPage($),
+          });
+          // 第page页爬完
+          await updateKeywordsProgress({
+            keywords,
+            ruleConfig,
+            page,
+            finished: !$,
+          });
+        } catch (err) {
+          // 下一页出错,停止这个关键词
+          $ = null;
+          // 记录已爬完的页面
+          await updateKeywordsProgress({
+            keywords,
+            ruleConfig,
+            page,
+            finished: false,
+          });
+        }
         page++;
       }
       resolve();
     } catch (err) {
+      // 搜索页出错
       console.log(
         "🚀 ~ file: reptileKeywordsByRule.js ~ line 57 ~ returnnewPromise ~ err",
         err

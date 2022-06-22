@@ -63,12 +63,8 @@ DROP TABLE IF EXISTS `keywordsprogress`;
 CREATE TABLE `keywordsprogress` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一 错误id',
   `keywordsId` int(40) NOT NULL COMMENT '关键词id',
-  `keywords` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键词名称',
   `ruleId` int(10) DEFAULT NULL COMMENT '规则id',
-  `ruleName` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '规则名称',
-  `totalPage` int(10) DEFAULT NULL COMMENT '总页数',
-  `currentPage` int(10) DEFAULT NULL COMMENT '爬取完的页数',
-  `emailCount` int(109) DEFAULT NULL COMMENT '爬取完的邮箱',
+  `finishPage` int(10) DEFAULT NULL COMMENT '爬取完的页数',
   `finished` int(10) NOT NULL DEFAULT '0' COMMENT '是否完成',
   PRIMARY KEY (`id`),
   KEY `keywordsId` (`keywordsId`) USING BTREE
@@ -178,13 +174,13 @@ INSERT INTO `emailtemplate` VALUES ('1', '111','123','remark', 1);
 DROP TABLE IF EXISTS `errortask`;
 CREATE TABLE `errortask` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一 错误id',
-  `bookId` int(40) NOT NULL COMMENT '小说id',
+  `keywordsId` int(40) NOT NULL COMMENT '小说id',
   `ruleId` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
-  `reptileAddress` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
+  `uri` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '爬取的地址\r\n为空则表示不是爬取来的\r\n不为空则是爬取的地址（地址里若没有http的话，那则是要跟book表的OriginUrl字段搭配）\r\n',
   `retryCount` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
   `pageType` int(10) DEFAULT NULL COMMENT '来源名称/来源类型\r\n默认1\r\n\r\n对应reptileTool表里的id\r\n',
   PRIMARY KEY (`id`),
-  KEY `bookId` (`bookId`) USING BTREE
+  KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `errortask` VALUES ('1', '1', '1', 'https://www.ebay.de/sch/i.html?_from=R40&_nkw=phone&_sacat=0&_pgn=4', 0,1);

@@ -1,3 +1,4 @@
+const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 const {
   fs,
   rp,
@@ -10,40 +11,49 @@ const {
   log,
   timoRp,
 } = require("../tool/require");
-const { addShopToQueue } = require("./queueTool");
+const { insertErrorTask } = require("./dbTool");
 const reptileRequest = require("./reptileRequest");
 const reptileShop = require("./reptileShop");
+const { addShopToQueue } = require("./shopQueue");
 
 module.exports = reptileSearchItem;
 
 async function reptileSearchItem({ keywords, rule, uri, page, order }) {
   return new Promise(async (resolve, reject) => {
+    let $ = null;
     try {
-      const $ = await reptileRequest({ uri });
-      const shopUrl = rule.getShopUrl($);
-      console.log(
-        "🚀 ~ file: reptileSearchItem.js ~ line 23 ~ returnnewPromise ~ shopUrl",
-        shopUrl
-      );
-      if (shopUrl) {
-        await addShopToQueue(
-          {
-            keywords,
-            rule,
-            uri: shopUrl,
-            page,
-            order,
-            // bizName,
-          },
-          reptileShop
-        );
-      }
-      resolve();
+      $ = await reptileRequest({ uri });
     } catch (err) {
-      console.log(
-        "🚀 ~ file: reptileSearchItem.js ~ line 43 ~ returnnewPromise ~ err",
-        err
-      );
+      // 插入错误记录
+      await insertErrorTask({
+        keywords,
+        ruleConfig: rule,
+        uri,
+        pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+      });
     }
+    const shopUrl = rule.getShopUrl($);
+    if (shopUrl) {
+      await addShopToQueue(
+        {
+          keywords,
+          rule,
+          uri: shopUrl,
+          page,
+          order,
+          // bizName,
+        },
+        reptileShop
+      );
+    } else {
+      // 不可能没shopUrl的,先存入错误记录
+      await insertErrorTask({
+        keywords,
+        ruleConfig: rule,
+        uri,
+        pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+      });
+    }
+    resolve();
   });
 }

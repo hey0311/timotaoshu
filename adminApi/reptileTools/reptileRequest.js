@@ -73,7 +73,7 @@ const reptileRequest = function (options) {
     delete reqOptions.userAgent; // 请求之前，删除多余的东西
     delete reqOptions.transform; // 请求之前，删除多余的东西
     // delete reqOptions.proxy;
-    // reqOptions.proxy = "http://127.0.0.1:8888";
+    reqOptions.proxy = "http://127.0.0.1:8888";
     var req = request(
       reqOptions,
       function (error, response, body) {
@@ -84,9 +84,9 @@ const reptileRequest = function (options) {
             resolve(options.transform(body, response));
           } else {
             // let body2 = iconv.decode(body, "gbk");  //用来查看页面
-            const result = cheerio.load(iconv.decode(body, "gbk"), {
+            const result = cheerio.load(body, {
               decodeEntities: false,
-              xmlMode: true,
+              // xmlMode: true,
             });
             resolve(result);
             // resolve({body,response});
