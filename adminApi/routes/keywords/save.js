@@ -10,20 +10,17 @@ const { oauth, tool, db, log, reptileConfig } = require("../../tool/require");
  * */
 router.use("", oauth(4004), async function (req, res, next) {
   let id = tool.getParams(req, "id");
-  let content = tool.getParams(req, "content");
-  let subject = tool.getParams(req, "subject");
-  let remark = tool.getParams(req, "remark");
+  let name = tool.getParams(req, "name");
   let data = null;
-  content = content.replace(/"/g, "");
   try {
     let allData = {};
     if (id) {
       allData = await db.query(
-        `update emailtemplate set content="${content}",subject="${subject}",remark="${remark}" where id=${id}`
+        `update keywords set name="${name}" where id=${id}`
       );
     } else {
       allData = await db.query(
-        `insert into emailtemplate (content,subject,remark,able) values ("${content}","${subject}","${remark}",2)`
+        `insert into keywords (name,active) values ("${name}",1)`
       );
     }
     // let reptileList = await reptileConfig.getReptileList();

@@ -34,10 +34,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
       return;
     }
     const email = rule.getEmail($);
-    console.log(
-      "🚀 ~ file: reptileShop.js ~ line 25 ~ returnnewPromise ~ email",
-      email
-    );
+    log.info(`第${page}页第${order}个email:${email ? email : "无"}`);
     if (email) {
       const insertResult = await insertEmail({
         keywords,

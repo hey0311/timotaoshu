@@ -9,10 +9,10 @@
       :width="500"
       @on-cancel="onClickCancel"
     >
-      <h3 slot="header" class="modal-header-color">添加邮箱</h3>
+      <h3 slot="header" class="modal-header-color">添加关键词</h3>
       <div class="email-row">
-        <span style="margin-right:10px">邮箱:</span>
-        <Input v-model="email" placeholder="输入邮箱" style="width:400px" />
+        <span style="margin-right:10px">关键词:</span>
+        <Input v-model="name" placeholder="输入关键词" style="width:400px" />
       </div>
       <div slot="footer">
         <Button type="text" @click="onClickCancel">取消</Button>
@@ -30,7 +30,7 @@
 </style>
 <script type="text/ecmascript-6">
 export default {
-  name: 'add-black-email',
+  name: 'add-keywords',
   props: {
     modal: {
       type: Object,
@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       loading: false,
-      email: ''
+      name: '',
+      id: ''
     }
   },
   computed: {},
@@ -49,7 +50,7 @@ export default {
       this.modal.showModal = false
     },
     onClickSave() {
-      this.$emit('save', this.email)
+      this.$emit('save', this.id, this.name)
       this.modal.showModal = false
     }
   },
@@ -58,9 +59,13 @@ export default {
 
   },
   mounted() {
-    this.$on('reset', (data) => {
+    this.$on('reset', (type, data) => {
       console.log(data)
       console.log('初始化')
+      if (type === 'edit') {
+        this.id = data.id;
+        this.name = data.name;
+      }
     })
   },
   beforeDestroy() {

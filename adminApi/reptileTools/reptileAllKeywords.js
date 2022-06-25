@@ -30,10 +30,6 @@ async function reptileAllKeywords() {
         const keywordsProgressList = await db.query(
           `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
         );
-        console.log(
-          "🚀 ~ file: reptileAllKeywords.js ~ line 32 ~ reptileAllKeywords ~ keywordsProgressList",
-          keywordsProgressList
-        );
         // 从第几页的进度开始
         if (
           keywordsProgressList.length === 0 ||
@@ -43,10 +39,6 @@ async function reptileAllKeywords() {
           if (keywordsProgressList[0]) {
             reptilePage = keywordsProgressList[0].finishPage + 1;
           }
-          console.log(
-            "🚀 ~ file: reptileAllKeywords.js ~ line 43 ~ reptileAllKeywords ~ reptilePage",
-            reptilePage
-          );
           await reptileKeywordsByRule(keywords, ruleConfig, reptilePage);
         }
       }

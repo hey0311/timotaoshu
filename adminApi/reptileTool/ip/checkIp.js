@@ -1,5 +1,14 @@
-const { oauth, tool, db, log, rp, cheerio, iconv,request,timoRp } = require("../../tool/require");
-
+const {
+  oauth,
+  tool,
+  db,
+  log,
+  rp,
+  cheerio,
+  iconv,
+  request,
+  timoRp,
+} = require("../../tool/require");
 
 // let started = Date.now();
 // const printTime = label => () => console.log("%d ms\t%s", Date.now() - started, label);
@@ -18,7 +27,6 @@ const { oauth, tool, db, log, rp, cheerio, iconv,request,timoRp } = require("../
 //         });
 //     });
 // };
-
 
 // async function checkIp(ipObj, target) {  //第二个参数暂时无用
 //     return new Promise((resolve, reject) => {
@@ -72,18 +80,19 @@ const { oauth, tool, db, log, rp, cheerio, iconv,request,timoRp } = require("../
 //
 
 async function checkIp(ipObj, target) {
-    return new Promise((resolve, reject) => {
-        timoRp({
-            uri: target || "https://www.baidu.com/",
-            timeout: 10000,  //10s没有返回则视为代理不行
-            proxy:`${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`
-
-        }).then(function(data){
-            resolve([ipObj, true]);
-        }).catch(function(err){
-            resolve([ipObj, false, err]);
-        });
-    });
-};
+  return new Promise((resolve, reject) => {
+    timoRp({
+      uri: target || "https://www.ebay.co.uk/" || "https://www.baidu.com/",
+      timeout: 10000, //10s没有返回则视为代理不行
+      proxy: `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`,
+    })
+      .then(function (data) {
+        resolve([ipObj, true]);
+      })
+      .catch(function (err) {
+        resolve([ipObj, false, err]);
+      });
+  });
+}
 
 module.exports = checkIp;

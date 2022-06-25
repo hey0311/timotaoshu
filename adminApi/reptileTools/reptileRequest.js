@@ -43,13 +43,13 @@ const reptileRequest = function (options) {
      * */
     if (!options.noProxy && !options.proxy) {
       if (global.server) {
-        // initOptions.proxy = global.serverProxy;
+        initOptions.proxy = global.serverProxy;
       } else {
         let ip = await redisData.ipList.getRandomIpList();
-        // if (ip) initOptions.proxy = ip;
+        if (ip) initOptions.proxy = ip;
       }
     }
-    // options.proxy = initOptions.proxy; // 借用js的对象特性，把proxy传递出去
+    options.proxy = initOptions.proxy; // 借用js的对象特性，把proxy传递出去
     /*
      * 代理ip end
      * */
@@ -72,8 +72,9 @@ const reptileRequest = function (options) {
 
     delete reqOptions.userAgent; // 请求之前，删除多余的东西
     delete reqOptions.transform; // 请求之前，删除多余的东西
+    // reqOptions.proxy = "http://23.105.136.76:8118";
     // delete reqOptions.proxy;
-    reqOptions.proxy = "http://127.0.0.1:8888";
+    // reqOptions.proxy = "http://127.0.0.1:8888";
     var req = request(
       reqOptions,
       function (error, response, body) {

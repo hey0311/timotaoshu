@@ -34,24 +34,19 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         order,
       });
       resolve();
+      return;
     }
     const shopUrl = rule.getShopUrl($);
-    console.log(
-      "🚀 ~ file: reptileSearchItem.js ~ line 39 ~ returnnewPromise ~ shopUrl",
-      shopUrl
-    );
+    log.info(`第${page}页第${order}个shopUrl:${shopUrl}`);
     if (shopUrl) {
-      await addShopToQueue(
-        {
-          keywords,
-          rule,
-          uri: shopUrl,
-          page,
-          order,
-          // bizName,
-        },
-        reptileShop
-      );
+      // emmm..这里不能用queue
+      await reptileShop({
+        keywords,
+        rule,
+        uri: shopUrl,
+        page,
+        order,
+      });
     } else {
       // 不可能没shopUrl的,先存入错误记录
       await insertErrorTask({

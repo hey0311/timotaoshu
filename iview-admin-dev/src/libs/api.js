@@ -38,11 +38,11 @@ export default {
     delCatalog: "/writer/delCatalog",
     editBook: "/writer/editBook",
   },
-  keyword: {
-    list: "/keyword/list",
-    save: "/keyword/save",
-    able: "/keyword/able",
-    delete: "/keyword/delete",
+  keywords: {
+    list: "/keywords/list",
+    save: "/keywords/save",
+    able: "/keywords/able",
+    delete: "/keywords/delete",
   },
   template: {
     list: "/template/list",

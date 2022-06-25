@@ -23,6 +23,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
   return new Promise(async (resolve, reject) => {
     // 先找到对应的rule
     let page = reptilePage || 1;
+    log.info(`开始爬取第${page}页`);
     const rule = getRule(ruleConfig, keywords);
     let $ = null;
     try {
@@ -31,7 +32,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
         uri: rule.getSearchUrl(page),
       });
     } catch (err) {
-      // 搜索页出错
+      // 爬第一页出错
       console.log(
         "🚀 ~ file: reptileKeywordsByRule.js ~ line 57 ~ returnnewPromise ~ err",
         err
@@ -44,7 +45,6 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
       let paramsList = [];
       for (let i = 0; i < searchItemList.length; i++) {
         // for (let i = 0; i < 3; i++) {
-        console.log(`爬取第${page}页,第${i + 1}个`);
         const searchItem = searchItemList[i];
         const searchItemUrl = rule.getSearchItemUrl($, searchItem, i);
         paramsList.push({

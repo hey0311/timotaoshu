@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS `keywords`;
 CREATE TABLE `keywords` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键词',
-  `able` int(10) NOT NULL DEFAULT '1' COMMENT '1、启用\r\n2、禁用\r\n\r\n默认1\r\n',
+  `active` int(10) NOT NULL DEFAULT '1' COMMENT '1、启用\r\n2、禁用\r\n\r\n默认1\r\n',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

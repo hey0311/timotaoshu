@@ -3,7 +3,7 @@
     <Card shadow>
       <div class="header">
         <h3>关键词</h3>
-        <Button type="primary" :disabled="loading" @click="onClickShowModal('addBlackEmail')">添加</Button>
+        <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
       </div>
       <Table
         border
@@ -25,8 +25,7 @@
       ></Page>
     </Card>
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <add-black-email :modal="modal" ref="addBlackEmail" @save="saveBlackEmail"></add-black-email>
-    <add-black-email :modal="modal" ref="addWhiteEmail" @save="saveWhiteEmail"></add-black-email>
+    <add-keywords :modal="modal" ref="addKeywords" @save="saveKeywords"></add-keywords>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -44,19 +43,16 @@
 <script>
 import util from 'util'
 // import reptileConfig from './components/reptileConfig';
-import editChannel from 'modal/reptile-tool/editChannel.vue'
 import uploadMixins from '@/mixins/uploadMixins'
 import config from '../../libs/config'
 import Cookies from 'js-cookie'
-import addBlackEmail from 'modal/reptile-tool/addBlackEmail.vue'
+import addKeywords from '../../modal/reptile-tool/addKeywords.vue'
 
 export default {
   mixins: [uploadMixins],
   name: 'reptile',
   components: {
-    // reptileConfig,
-    addBlackEmail,
-    editChannel
+    addKeywords
   },
   data() {
     return {
@@ -71,8 +67,45 @@ export default {
           key: 'name'
         },
         {
-          title: '启用状态',
-          key: 'isJin'
+          title: '是否启用',
+          key: 'active',
+          render: (h, params) => {
+            return h('div', {
+
+            }, params.row.active ? '启用' : '禁用')
+          }
+        },
+        {
+          title: '操作',
+          key: 'handle',
+          render: (h, params) => {
+            return h('div', [
+              h('a', {
+                attrs: {
+                  href: 'javascript:void(0);',
+                  style: `margin-left:10px;`,
+                  id: `${params.row.title}_ti${params.row.id}`
+                },
+                on: {
+                  click: () => {
+                    // this.onClickUpdate(params, 1)
+                    this.onClickShowModal('edit', params.row)
+                  }
+                }
+              }, `编辑`),
+              h('a', {
+                attrs: {
+                  href: 'javascript:void(0);',
+                  style: `margin-left:10px;`
+                },
+                on: {
+                  click: () => {
+                    this.onClickDelete(params.row.id)
+                  }
+                }
+              }, `删除`)
+            ])
+          }
         }
       ],
       loading: false,
@@ -94,25 +127,12 @@ export default {
   },
   computed: {},
   methods: {
-    saveWhiteEmail(email) {
-      console.log('🚀 ~ file: email-extra.vue ~ line 103 ~ saveWhiteEmail ~ email', email)
+    saveKeywords(id, name) {
       this.loading = true
-      util.post.reptile.saveWhiteEmail({
+      util.post.keywords.save({
         params: {
-          email
-        }
-      }).then((data) => {
-        this.loading = false
-        this.getList()
-      }).catch((err) => {
-        this.loading = false
-      })
-    },
-    saveBlackEmail(email) {
-      this.loading = true
-      util.post.reptile.saveBlackEmail({
-        params: {
-          email
+          id,
+          name
         }
       }).then((data) => {
         this.loading = false
@@ -129,7 +149,7 @@ export default {
         }
       }
       this.loading = true
-      util.post.keyword.list(obj).then((data) => {
+      util.post.keywords.list(obj).then((data) => {
         this.reptileList = data.list
         this.total = data.count
         this.loading = false
@@ -157,17 +177,12 @@ export default {
     // expandToggle(row, index) {  //触发click事件
     //     this.$refs.table.$el.getElementsByClassName("ivu-table-cell-expand")[index].click();
     // },
-    onClickDelete(reptileTypeId) {
+    onClickDelete(id) {
       if (this.loading) return
-      let obj = {
-        params: {
-          reptileTypeId: reptileTypeId
-        }
-      }
       this.loading = true
-      util.post.reptile.deleteChannel(obj).then((data) => {
+      util.post.keywords.delete({ params: { id } }).then((data) => {
         this.loading = false
-        this.onClickUpdate()
+        this.getList()
       }).catch((err) => {
         this.loading = false
       })
@@ -175,23 +190,23 @@ export default {
     onClickShowModal(type, data) {
       switch (type) {
         case 'add':
-          this.$refs.editCannel.$emit('reset', 'add', null)
+          this.$refs.addKeywords.$emit('reset', 'add', null)
           break
-        case 'look':
-          this.$refs.editCannel.$emit('reset', 'look', data)
-          break
-        case 'copyAdd':
-          this.$refs.editCannel.$emit('reset', 'copyAdd', data)
-          break
+        // case 'look':
+        //   this.$refs.editCannel.$emit('reset', 'look', data)
+        //   break
+        // case 'copyAdd':
+        //   this.$refs.editCannel.$emit('reset', 'copyAdd', data)
+        //   break
         case 'edit':
-          this.$refs.editCannel.$emit('reset', 'edit', data)
+          this.$refs.addKeywords.$emit('reset', 'edit', data)
           break
-        case 'addBlackEmail':
-          this.$refs.addBlackEmail.$emit('reset')
-          break
-        case 'addWhiteEmail':
-          this.$refs.addWhiteEmail.$emit('reset')
-          break
+        // case 'addBlackEmail':
+        //   this.$refs.addBlackEmail.$emit('reset')
+        //   break
+        // case 'addWhiteEmail':
+        //   this.$refs.addWhiteEmail.$emit('reset')
+        //   break
         default:
           return
           break

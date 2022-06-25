@@ -12,7 +12,7 @@ router.use("", oauth(4004), async function (req, res, next) {
   let id = tool.getParams(req, "id");
   let data = null;
   try {
-    let allData = await db.query(`delete from emailtemplate where id=${id}`);
+    let allData = await db.query(`delete from keywords where id=${id}`);
     // let reptileList = await reptileConfig.getReptileList();
     // let count = reptileList.length;
 
