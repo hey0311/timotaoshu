@@ -1,7 +1,7 @@
 const { fs, rp, timoRp, path, tool, log, db } = require("../tool/require");
 const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 
-async function insertEmail({ keyword, bizName, shopUrl, email }) {
+async function insertEmail({ keywords, bizName, shopUrl, email }) {
   try {
     // 先判断是否和表中的重复
     let sql = `select COUNT(*) from email where email="${email}"`;
@@ -11,11 +11,11 @@ async function insertEmail({ keyword, bizName, shopUrl, email }) {
       log.info(`${email}在数据库已存在`);
       return true;
     }
-    let insertSql = `INSERT INTO email (email) VALUES `;
+    let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName) VALUES `;
     // insertSql += `("${tool.toSql(bizName)}", ${
     //   keyword.id
     // },1,"${shopUrl}","${email}")`;
-    insertSql += `("${email}")`;
+    insertSql += `("${email}",${keywords.id},${1},${shopUrl},now(),${bizName})`;
     await db.query(insertSql);
     log.info(`${email}已入库`);
     // wss.broadcast(bookName + "---" + catalog.name + "存取成功");

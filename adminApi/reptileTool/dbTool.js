@@ -1,7 +1,7 @@
 const { fs, rp, timoRp, path, tool, log, db } = require("../tool/require");
 const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
 
-async function insertEmail({ keyword, bizName, shopUrl, email }) {
+async function insertEmail({ keywords, bizName, shopUrl, email }) {
   try {
     // 先判断是否和表中的重复
     let sql = `select COUNT(*) from catalogcontent where email="${email}"`;
@@ -13,7 +13,7 @@ async function insertEmail({ keyword, bizName, shopUrl, email }) {
     }
     let insertSql = `INSERT INTO catalogcontent (content, bookId, num, shopUrl, email) VALUES `;
     insertSql += `("${tool.toSql(bizName)}", ${
-      keyword.id
+      keywords.id
     },1,"${shopUrl}","${email}")`;
     await db.query(insertSql);
     log.info(`${email}已入库`);
@@ -24,11 +24,16 @@ async function insertEmail({ keyword, bizName, shopUrl, email }) {
     return false;
   }
 }
-async function insertErrorTask(keyword, reptileType, reptileAddress, pageType) {
+async function insertErrorTask(
+  keywords,
+  reptileType,
+  reptileAddress,
+  pageType
+) {
   try {
     const retryCount = 0;
     await db.query(
-      `INSERT INTO errortask (bookId,reptileType,reptileAddress,retryCount,pageType) VALUES (${keyword.id}, "${reptileType}", "${reptileAddress}", "${retryCount}", ${pageType})`
+      `INSERT INTO errortask (bookId,reptileType,reptileAddress,retryCount,pageType) VALUES (${keywords.id}, "${reptileType}", "${reptileAddress}", "${retryCount}", ${pageType})`
     );
     log.info(`插入errortask成功`);
     return true;

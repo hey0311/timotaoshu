@@ -17,12 +17,12 @@ const reptileCommon2 = require("./common/reptileCommon2");
 const { addShopToQueue } = require("./queueTool");
 const shopHandler = require("./shopHandler");
 // catalog = searchItem
-module.exports = async ({ keyword, rule, reptileAddress, page, order }) => {
+module.exports = async ({ keywords, rule, reptileAddress, page, order }) => {
   // reptileType = parseInt(reptileType);
   // timeout = parseInt(timeout);
   let timeout = 10000;
   return new Promise(async (resolve, reject) => {
-    // let reptileCommon = await reptileCommon2(reptileType, keyword);
+    // let reptileCommon = await reptileCommon2(reptileType, keywords);
     let reptileCommon = rule;
     let start = 0;
     let startTime = new Date().getTime();
@@ -80,7 +80,7 @@ module.exports = async ({ keyword, rule, reptileAddress, page, order }) => {
                 // push queue
                 await addShopToQueue(
                   {
-                    keyword,
+                    keywords,
                     rule,
                     shopUrl,
                     page,
@@ -92,7 +92,7 @@ module.exports = async ({ keyword, rule, reptileAddress, page, order }) => {
                 resolve2();
               } else {
                 // await insertErrorTask(
-                //   keyword,
+                //   keywords,
                 //   // reptileType,
                 //   rule.reptileTypeId,
                 //   reptileAddress,

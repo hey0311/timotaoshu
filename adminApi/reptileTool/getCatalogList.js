@@ -13,7 +13,7 @@ const getCatalog = require("./getCatalog");
 const getNextPage = require("./getNextPage");
 const { addSearchItemToQueue } = require("./queueTool");
 
-async function getCatalogList({ $, reptileCommon, keyword }) {
+async function getCatalogList({ $, reptileCommon, keywords }) {
   let page = 1;
   do {
     log.info(`获取第${page}页数据`);
@@ -25,7 +25,7 @@ async function getCatalogList({ $, reptileCommon, keyword }) {
         let catalog = reptileCommon.getCatalog($, catalogDom, i);
         await addSearchItemToQueue(
           {
-            keyword,
+            keywords,
             rule: reptileCommon,
             reptileAddress: catalog.href,
             page,

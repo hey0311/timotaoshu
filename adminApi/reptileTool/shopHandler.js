@@ -15,7 +15,7 @@ const { insertEmail, insertErrorTask } = require("./dbTool");
 // let reptileCommon = require("./common/reptileCommon")
 const reptileCommon2 = require("./common/reptileCommon2");
 // catalog = searchItem
-module.exports = async ({ keyword, rule, shopUrl, page, order, bizName }) => {
+module.exports = async ({ keywords, rule, shopUrl, page, order, bizName }) => {
   let timeout = 10000;
   return new Promise(async (resolve, reject) => {
     // let reptileCommon = await reptileCommon2(reptileType, keyword);
@@ -72,7 +72,7 @@ module.exports = async ({ keyword, rule, shopUrl, page, order, bizName }) => {
                 // 有邮箱才保存
                 if (email) {
                   let saveSuccess = await insertEmail({
-                    keyword,
+                    keywords,
                     bizName,
                     shopUrl,
                     email,
@@ -88,7 +88,7 @@ module.exports = async ({ keyword, rule, shopUrl, page, order, bizName }) => {
               } catch (err) {
                 console.log(err);
                 await insertErrorTask(
-                  keyword,
+                  keywords,
                   // reptileType,
                   rule.reptileTypeId,
                   shopUrl,

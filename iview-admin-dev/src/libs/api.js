@@ -38,6 +38,9 @@ export default {
     delCatalog: "/writer/delCatalog",
     editBook: "/writer/editBook",
   },
+  email: {
+    list: "/email/list",
+  },
   keywords: {
     list: "/keywords/list",
     save: "/keywords/save",

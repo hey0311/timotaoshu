@@ -112,8 +112,16 @@ CREATE TABLE `catalogcontent` (
 DROP TABLE IF EXISTS `email`;
 CREATE TABLE `email` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `keywordsId` int(11) DEFAULT NULL COMMENT '小说id',
+  `ruleId` int(11) DEFAULT NULL COMMENT '小说id',
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bizName` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shopUrl` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sendStatus` int(11) DEFAULT '0' COMMENT '是否已发送',
+  `reptileTime` datetime DEFAULT NULL COMMENT '小说更新时间\r\n对应被爬取网站的更新时间\r\n',
+  `sendTime` datetime DEFAULT NULL COMMENT '小说更新时间\r\n对应被爬取网站的更新时间\r\n',
+  PRIMARY KEY (`id`),
+  KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- ----------------------------
 -- Table structure for catalogcontent

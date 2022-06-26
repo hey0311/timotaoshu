@@ -9,6 +9,7 @@ const {
   cheerio,
   iconv,
 } = require("../../tool/require");
+const axios = require("axios");
 
 /*
  * 西刺
@@ -410,21 +411,99 @@ async function getIpList6(page) {
   });
 }
 
+async function getIpList7(page) {
+  return new Promise(async (resolve, reject) => {
+    const url =
+      "http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=10";
+    axios
+      .get(url)
+      .then((res) => {
+        if (res?.data?.data) {
+          resolve({
+            ipArr: res.data.data.map((item) => {
+              return {
+                protocol: "http",
+                ip: item.ip,
+                port: item.port,
+              };
+            }),
+            allPage: 100,
+          });
+        } else {
+          resolve({
+            // 为了promise.all  不进入catch状态
+            ipArr: [],
+            error: true,
+          });
+        }
+      })
+      .catch((err) => {
+        log.error(err);
+        resolve({
+          // 为了promise.all  不进入catch状态
+          ipArr: [],
+          error: true,
+        });
+      });
+    // let option = {
+    //   uri: "http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=100",
+    //   encoding: null,
+    //   //   transform: function (body, response, resolveWithFullResponse) {
+    //   //     // let body2 = iconv.decode(body, "utf-8");  //用来查看页面
+    //   //     // console.log(body2);
+    //   //     return [
+    //   //       cheerio.load(iconv.decode(body, "utf-8"), { decodeEntities: false }),
+    //   //       response.req.path,
+    //   //     ];
+    //   //   },
+    // };
+    // let ip = await tool.redisData.ipList.getRandomIpList();
+    // if(ip) option.proxy = ip;
+
+    // rp(option)
+    //   .then(function (data) {
+    //     console.log("🚀 ~ file: getIpList.js ~ line 432 ~ data", data);
+    //     const ipArr = data.data;
+    //     const allPage = 100;
+    //     resolve({
+    //       ipArr,
+    //       allPage,
+    //     });
+    //   })
+    //   .catch(function (err) {
+    //     log.error(err);
+    //     // resolve(false);
+    //     // reject();
+    //     resolve({
+    //       // 为了promise.all  不进入catch状态
+    //       ipArr: [],
+    //       error: true,
+    //     });
+    //   });
+    // fetch(url)
+    //   .then((res) => {
+    //     console.log("🚀 ~ file: getIpList.js ~ line 453 ~ fetch ~ res", res);
+    //   })
+    //   .catch((err) => {
+    //     console.log("🚀 ~ file: getIpList.js ~ line 455 ~ fetch ~ err", err);
+    //   });
+  });
+}
 // module.exports = getIpList2;
 module.exports = async (page) => {
   return new Promise((resolve, reject) => {
     Promise.all([
-      getIpList2(page),
+      //   getIpList2(page),
       //   getIpList3(page),
       //   getIpList5(page),
-      getIpList6(page),
+      getIpList7(page),
     ])
       .then((data) => {
         let allPage = 100;
         let ipArr = [];
         data.forEach((value, index) => {
           if (!value.error && allPage > value.allPage) allPage = value.allPage;
-          log.info(`获取到${value.ipArr.length}条ip`)
+          log.info(`获取到${value.ipArr.length}条ip`);
           ipArr = ipArr.concat(value.ipArr);
         });
 
