@@ -33,7 +33,7 @@ async function insertErrorTask(
   try {
     const retryCount = 0;
     await db.query(
-      `INSERT INTO errortask (bookId,reptileType,reptileAddress,retryCount,pageType) VALUES (${keywords.id}, "${reptileType}", "${reptileAddress}", "${retryCount}", ${pageType})`
+      `INSERT INTO errortask (keywordsId,reptileType,reptileAddress,retryCount,pageType) VALUES (${keywords.id}, "${reptileType}", "${reptileAddress}", "${retryCount}", ${pageType})`
     );
     log.info(`插入errortask成功`);
     return true;
