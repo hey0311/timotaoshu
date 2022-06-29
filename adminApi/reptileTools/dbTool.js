@@ -1,4 +1,4 @@
-const { fs, rp, timoRp, path, tool, log, db } = require('../tool/require')
+const { fs, rp, timoRp, path, tool, log, db, wss } = require('../tool/require')
 const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
 
 async function insertEmail({
@@ -17,7 +17,7 @@ async function insertEmail({
     let result = tool.getData(await db.query(sql))
     if (result) {
       //如果数据库里有这本书
-      log.info(`${email}在数据库已存在`)
+      wss.broadcast(`${email}在数据库已存在`)
       return true
     }
     let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
@@ -28,7 +28,7 @@ async function insertEmail({
       bizName || 'null'
     }","${firstName}","${lastName}","${phone}")`
     await db.query(insertSql)
-    log.info(`${email}已入库`)
+    wss.broadcast(`${email}已入库`)
     // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
     return true
   } catch (err) {
@@ -64,7 +64,7 @@ async function updateKeywordsProgress({
         } where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
       )
     }
-    log.info(`更新进度成功`)
+    wss.broadcast(`更新进度成功`)
     return true
   } catch (err) {
     log.error(err)
@@ -104,7 +104,7 @@ async function insertErrorTask({
         `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${ruleConfig.id}, "${uri}", 0, ${pageType},${page},${order})`
       )
     }
-    log.info(`插入errortask成功`)
+    wss.broadcast(`插入errortask成功`)
     return true
   } catch (err) {
     log.error(err)
@@ -114,7 +114,7 @@ async function insertErrorTask({
 async function deleteErrorTask(id) {
   try {
     await db.query(`delete from errortask where id=${id}`)
-    log.info(`删除errortask成功`)
+    wss.broadcast(`删除errortask成功`)
     return true
   } catch (err) {
     log.error(err)

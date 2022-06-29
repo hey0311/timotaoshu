@@ -38,7 +38,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
     const firstName = rule.getFirstName($)
     const lastName = rule.getLastName($)
     const phone = rule.getPhone($)
-    log.info(`第${page}页第${order}个email:${email ? email : '无'}`)
+    wss.broadcast(`第${page}页第${order}个email:${email ? email : '无'}`)
     if (email) {
       const insertResult = await insertEmail({
         keywords,

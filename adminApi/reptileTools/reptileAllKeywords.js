@@ -17,9 +17,10 @@ module.exports = reptileAllKeywords
 
 async function reptileAllKeywords() {
   //TODO: 应该要一个全局状态,避免重复爬取
+  wss.broadcast(`开始爬取所有关键词`)
   try {
     let keywordsList = await db.query(`select * from keywords`)
-    console.log(`共${keywordsList.length}个关键词需要爬取`)
+    wss.broadcast(`共${keywordsList.length}个关键词需要爬取`)
     const ruleConfigList = getRuleConfigList()
     for (let i = 0; i < keywordsList.length; i++) {
       const keywords = keywordsList[i]
@@ -38,7 +39,7 @@ async function reptileAllKeywords() {
           if (keywordsProgressList[0]) {
             reptilePage = keywordsProgressList[0].finishPage + 1
           }
-          log.info(
+          wss.broadcast(
             `开始爬取关键词${keywords.name},${ruleConfig.site},${ruleConfig.country}`
           )
           await reptileKeywordsByRule(keywords, ruleConfig, reptilePage)
@@ -46,9 +47,6 @@ async function reptileAllKeywords() {
       }
     }
   } catch (err) {
-    console.log(
-      '🚀 ~ file: reptileAllKeywords.js ~ line 24 ~ reptileAllKeywords ~ err',
-      err
-    )
+    wss.broadcast(`获取关键词异常,${err}`)
   }
 }

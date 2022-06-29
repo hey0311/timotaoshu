@@ -1,4 +1,4 @@
-const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
+const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
 const {
   fs,
   rp,
@@ -10,19 +10,19 @@ const {
   wss,
   log,
   timoRp,
-} = require("../tool/require");
-const { insertErrorTask } = require("./dbTool");
-const reptileRequest = require("./reptileRequest");
-const reptileShop = require("./reptileShop");
-const { addShopToQueue } = require("./shopQueue");
+} = require('../tool/require')
+const { insertErrorTask } = require('./dbTool')
+const reptileRequest = require('./reptileRequest')
+const reptileShop = require('./reptileShop')
+const { addShopToQueue } = require('./shopQueue')
 
-module.exports = reptileSearchItem;
+module.exports = reptileSearchItem
 
 async function reptileSearchItem({ keywords, rule, uri, page, order }) {
   return new Promise(async (resolve, reject) => {
-    let $ = null;
+    let $ = null
     try {
-      $ = await reptileRequest({ uri });
+      $ = await reptileRequest({ uri })
     } catch (err) {
       // 插入错误记录
       await insertErrorTask({
@@ -32,12 +32,12 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
         order,
-      });
-      resolve();
-      return;
+      })
+      resolve()
+      return
     }
-    const shopUrl = rule.getShopUrl($);
-    log.info(`第${page}页第${order}个shopUrl:${shopUrl}`);
+    const shopUrl = rule.getShopUrl($)
+    wss.broadcast(`第${page}页第${order}个shopUrl:${shopUrl}`)
     if (shopUrl) {
       // emmm..这里不能用queue
       await reptileShop({
@@ -46,7 +46,7 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         uri: shopUrl,
         page,
         order,
-      });
+      })
     } else {
       // 不可能没shopUrl的,先存入错误记录
       await insertErrorTask({
@@ -56,8 +56,8 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
         order,
-      });
+      })
     }
-    resolve();
-  });
+    resolve()
+  })
 }

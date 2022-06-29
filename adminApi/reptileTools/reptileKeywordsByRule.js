@@ -23,7 +23,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
   return new Promise(async (resolve, reject) => {
     // 先找到对应的rule
     let page = reptilePage || 1
-    log.info(`开始爬取第${page}页`)
+    wss.broadcast(`开始爬取第${page}页`)
     const rule = getRule(ruleConfig, keywords)
     let $ = null
     try {
@@ -33,10 +33,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
       })
     } catch (err) {
       // 爬第一页出错
-      console.log(
-        '🚀 ~ file: reptileKeywordsByRule.js ~ line 57 ~ returnnewPromise ~ err',
-        err
-      )
+      wss.broadcast(`爬取第1页出错,${err}`)
       resolve()
       return
     }
@@ -74,7 +71,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
           uri: rule.getNextPage($),
         })
         // 第page页爬完
-        log.info(`第${page}页爬完,开始下一页`)
+        wss.broadcast(`第${page}页爬完,开始下一页`)
         await updateKeywordsProgress({
           keywords,
           ruleConfig,
@@ -83,7 +80,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
         })
       } catch (err) {
         // 下一页出错,停止这个关键词
-        log.info(`第${page}页爬取出错,${err}`)
+        wss.broadcast(`第${page}页爬取出错,${err}`)
         $ = null
         // 记录已爬完的页面
         await updateKeywordsProgress({

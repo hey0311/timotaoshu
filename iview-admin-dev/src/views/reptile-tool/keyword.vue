@@ -84,7 +84,6 @@ export default {
                 return h('div', {}, item.rule.site + ' ' + item.rule.country + ':' + (item.finished ? '完成' : ('已爬第' + item.finishPage + '页')))
               })
             )
-            // return h('div', {}, params.row.progress.map(item => item.rule.site + item.rule.country).join('\n'))
           }
         },
         {

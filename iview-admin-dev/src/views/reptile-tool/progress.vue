@@ -4,17 +4,31 @@
       <Row>
         <Col span="12" class="lh32">
           与服务器的连接状态：
-          <span class="red">{{state}}</span>
+          <span :style="{ color: state === '已经连接' ? 'green' : 'red' }">{{
+            state
+          }}</span>
         </Col>
-        <Col span="4" class="lh32">停留人数：{{count}}</Col>
-        <Col span="8" class="tr">
+        <!-- <Col span="4" class="lh32">停留人数：{{ count }}</Col> -->
+        <Col span="12" class="tr">
           <Button type="primary" @click="clear">清除log</Button>
-          <Button type="primary" @click="startReptile" :disabled="loading">{{btnTitle}}</Button>
+          <Button type="primary" @click="startReptile" :disabled="loading">{{
+            btnTitle
+          }}</Button>
+          <Button
+            type="primary"
+            @click="startReptileErrorTasks"
+            :disabled="loading"
+            >开始爬取错误记录</Button
+          >
         </Col>
       </Row>
     </Card>
     <Card shadow>
-      <div ref="body" class="progress_log" :style="{height:tableHeight, overflowY:'auto'}"></div>
+      <div
+        ref="body"
+        class="progress_log"
+        :style="{ height: tableHeight, overflowY: 'auto' }"
+      ></div>
     </Card>
   </div>
 </template>
@@ -62,7 +76,7 @@ export default {
       list: [
         // {progress:'like'}
       ],
-      btnTitle: '开始爬取',
+      btnTitle: '开始爬取全部关键词',
       index: 1,
       scrollTop: 0
     }
@@ -73,23 +87,35 @@ export default {
       // this.list.splice(0,this.list.length);
       this.$refs.body.innerHTML = ''
     },
+    startReptileErrorTasks() { },
     startReptile() {
       // if(this.loading || this.btnTitle =='正在爬取') {
       //     return;
       // }
+      // let obj = {
+      //   params: {
+      //   }
+      // }
+      // this.loading = true
+      // util.post.reptile.startReptile(obj).then((data) => {
+      //   this.loading = false
+      //   this.$Message.info('开始爬取')
+      //   this.btnTitle = '正在爬取'
+      // }).catch((err) => {
+      //   this.loading = false
+      //   this.btnTitle = '正在爬取'
+      //   throw err
+      // })
+      if (this.loading) return
+      this.loading = true
       let obj = {
         params: {
         }
       }
-      this.loading = true
-      util.post.reptile.startReptile(obj).then((data) => {
+      util.post.reptile.startReptileKeywords(obj).then((data) => {
         this.loading = false
-        this.$Message.info('开始爬取')
-        this.btnTitle = '正在爬取'
       }).catch((err) => {
         this.loading = false
-        this.btnTitle = '正在爬取'
-        throw err
       })
     }
   },
@@ -101,6 +127,7 @@ export default {
     }
     this.ws.onmessage = (response) => {
       let data = JSON.parse(response.data)
+      console.log("🚀 ~ file: progress.vue ~ line 121 ~ created ~ data", data)
       let firstData = data[0]
       if (firstData.count >= 0) {
         this.count = firstData.count
@@ -112,7 +139,7 @@ export default {
         var html = ``
         data.forEach((value, index) => {
           this.index += index
-          html += `<span>${value.progress}</span>`
+          html += `<div>${value.progress}</div>`
         })
         this.scrollTop += 40
         this.$refs.body.innerHTML += html

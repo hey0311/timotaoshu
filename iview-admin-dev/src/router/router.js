@@ -113,11 +113,18 @@ export const appRouter = [
     component: Main,
     access: ['2000', '4000'],
     children: [
+      // {
+      //   path: 'home',
+      //   title: '首页',
+      //   name: 'home_index',
+      //   component: () => import('@/views/home/home.vue'),
+      // },
       {
-        path: 'home',
-        title: '首页',
-        name: 'home_index',
-        component: () => import('@/views/home/home.vue'),
+        path: 'progress',
+        title: '爬虫进度',
+        access: ['4000'],
+        name: 'reptile-tool_progress',
+        component: () => import('@/views/reptile-tool/progress.vue'),
       },
       {
         path: 'keyword',
@@ -153,13 +160,6 @@ export const appRouter = [
         access: ['4000'],
         name: 'reptile-tool-error',
         component: () => import('@/views/reptile-tool/progress-error.vue'),
-      },
-      {
-        path: 'progress',
-        title: '爬虫进度',
-        access: ['4000'],
-        name: 'reptile-tool_progress',
-        component: () => import('@/views/reptile-tool/progress.vue'),
       },
       {
         path: 'email-extra',
