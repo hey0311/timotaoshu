@@ -1,4 +1,4 @@
-const { ERROR_TASK_PAGE_TYPE } = require("../../common/tool/constant");
+const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
 const {
   fs,
   rp,
@@ -10,17 +10,17 @@ const {
   wss,
   log,
   timoRp,
-} = require("../tool/require");
-const { insertEmail, insertErrorTask } = require("./dbTool");
-const reptileRequest = require("./reptileRequest");
+} = require('../tool/require')
+const { insertEmail, insertErrorTask } = require('./dbTool')
+const reptileRequest = require('./reptileRequest')
 
-module.exports = reptileShop;
+module.exports = reptileShop
 
 async function reptileShop({ keywords, rule, uri, page, order }) {
   return new Promise(async (resolve, reject) => {
-    let $ = null;
+    let $ = null
     try {
-      $ = await reptileRequest({ uri });
+      $ = await reptileRequest({ uri })
     } catch (err) {
       await insertErrorTask({
         keywords,
@@ -29,24 +29,33 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
         page,
         order,
-      });
-      resolve();
-      return;
+      })
+      resolve()
+      return
     }
-    const email = rule.getEmail($);
-    log.info(`第${page}页第${order}个email:${email ? email : "无"}`);
+    const email = rule.getEmail($)
+    const bizName = rule.getBizName($)
+    const firstName = rule.getFirstName($)
+    const lastName = rule.getLastName($)
+    const phone = rule.getPhone($)
+    log.info(`第${page}页第${order}个email:${email ? email : '无'}`)
     if (email) {
       const insertResult = await insertEmail({
         keywords,
         rule,
+        shopUrl: uri,
         email,
-      });
+        bizName,
+        firstName,
+        lastName,
+        phone,
+      })
       if (insertResult) {
-        resolve();
+        resolve()
       } else {
-        resolve("错误,存取失败");
+        resolve('错误,存取失败')
       }
     }
-    resolve();
-  });
+    resolve()
+  })
 }

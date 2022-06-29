@@ -38,6 +38,9 @@ export default {
     delCatalog: '/writer/delCatalog',
     editBook: '/writer/editBook',
   },
+  site: {
+    list: '/site/list',
+  },
   email: {
     list: '/email/list',
   },

@@ -1,4 +1,5 @@
 var express = require('express')
+const { getRuleConfigList } = require('../../reptileTools/ruleConfig')
 var router = express.Router()
 const { oauth, tool, db, log, reptileConfig } = require('../../tool/require')
 
@@ -14,15 +15,14 @@ router.use('', oauth(4004), async function (req, res, next) {
 
   let data = null
   try {
-    const list = await db.query(
-      `select * from email limit ${page - 1},${limit}`
-    )
-    console.log('🚀 ~ file: list.js ~ line 18 ~ list', list)
-    const count = await db.query(`select count(*) from email`)
+    // const list = await db.query(`select * from email limit ${page},${limit}`);
+    // const count = await db.query(`select count(*) from email`);
+    const list = getRuleConfigList()
+    const count = list.length
 
     data = {
       list,
-      count: count[0]['count(*)'],
+      count,
     }
     res.send(tool.toJson(data, '', 1000))
   } catch (err) {

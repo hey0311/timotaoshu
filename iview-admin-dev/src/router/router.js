@@ -1,41 +1,41 @@
-import Main from "@/views/Main.vue";
+import Main from '@/views/Main.vue'
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
-  path: "/login",
-  name: "login",
+  path: '/login',
+  name: 'login',
   meta: {
-    title: "Login - 登录",
+    title: 'Login - 登录',
   },
-  component: () => import("@/views/login.vue"),
-};
+  component: () => import('@/views/login.vue'),
+}
 
 export const page404 = {
-  path: "/*",
-  name: "error-404",
+  path: '/*',
+  name: 'error-404',
   meta: {
-    title: "404-页面不存在",
+    title: '404-页面不存在',
   },
-  component: () => import("@/views/error-page/404.vue"),
-};
+  component: () => import('@/views/error-page/404.vue'),
+}
 
 export const page403 = {
-  path: "/403",
+  path: '/403',
   meta: {
-    title: "403-权限不足",
+    title: '403-权限不足',
   },
-  name: "error-403",
-  component: () => import("@//views/error-page/403.vue"),
-};
+  name: 'error-403',
+  component: () => import('@//views/error-page/403.vue'),
+}
 
 export const page500 = {
-  path: "/500",
+  path: '/500',
   meta: {
-    title: "500-服务端错误",
+    title: '500-服务端错误',
   },
-  name: "error-500",
-  component: () => import("@/views/error-page/500.vue"),
-};
+  name: 'error-500',
+  component: () => import('@/views/error-page/500.vue'),
+}
 
 // export const preview = {
 //     path: '/preview',
@@ -45,42 +45,42 @@ export const page500 = {
 
 //锁页面的  页面
 export const locking = {
-  path: "/locking",
-  name: "locking",
+  path: '/locking',
+  name: 'locking',
   component: () =>
-    import("@/views/main-components/lockscreen/components/locking-page.vue"),
-};
+    import('@/views/main-components/lockscreen/components/locking-page.vue'),
+}
 
 // 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里
 export const otherRouter = {
-  path: "/",
-  name: "otherRouter",
-  redirect: "/home",
+  path: '/',
+  name: 'otherRouter',
+  redirect: '/home',
   component: Main,
   children: [
     {
-      path: "catalog",
-      title: "章节",
-      name: "catalog",
-      component: () => import("@/views/home/catalog.vue"),
+      path: 'catalog',
+      title: '章节',
+      name: 'catalog',
+      component: () => import('@/views/home/catalog.vue'),
     },
     {
-      path: "bookContainer",
-      title: "内容",
-      name: "bookContainer",
-      component: () => import("@/views/home/bookContainer.vue"),
+      path: 'bookContainer',
+      title: '内容',
+      name: 'bookContainer',
+      component: () => import('@/views/home/bookContainer.vue'),
     },
     {
-      path: "ownspace",
-      title: "个人中心",
-      name: "ownspace_index",
-      component: () => import("@/views/own-space/own-space.vue"),
+      path: 'ownspace',
+      title: '个人中心',
+      name: 'ownspace_index',
+      component: () => import('@/views/own-space/own-space.vue'),
     },
     // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
     // { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
     // { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') }
   ],
-};
+}
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
@@ -106,81 +106,81 @@ export const appRouter = [
   //     ]
   // },
   {
-    path: "/reptile-tool",
-    icon: "ios-flower-outline",
-    title: "爬取配置",
-    name: "reptile-tool",
+    path: '/reptile-tool',
+    icon: 'ios-flower-outline',
+    title: '爬取配置',
+    name: 'reptile-tool',
     component: Main,
-    access: ["2000", "4000"],
+    access: ['2000', '4000'],
     children: [
       {
-        path: "home",
-        title: "首页",
-        name: "home_index",
-        component: () => import("@/views/home/home.vue"),
+        path: 'home',
+        title: '首页',
+        name: 'home_index',
+        component: () => import('@/views/home/home.vue'),
       },
       {
-        path: "keyword",
-        title: "关键词",
-        access: ["2000"],
-        name: "reptile-tool_keyword",
-        component: () => import("@/views/reptile-tool/keyword.vue"),
+        path: 'keyword',
+        title: '关键词',
+        access: ['2000'],
+        name: 'reptile-tool_keyword',
+        component: () => import('@/views/reptile-tool/keyword.vue'),
       },
       {
-        path: "ipList",
-        title: "代理IP",
-        access: ["2000"],
-        name: "reptile-tool_ipList",
-        component: () => import("@/views/reptile-tool/ipList.vue"),
+        path: 'ipList',
+        title: '代理IP',
+        access: ['2000'],
+        name: 'reptile-tool_ipList',
+        component: () => import('@/views/reptile-tool/ipList.vue'),
       },
       {
-        path: "channel",
-        title: "来源渠道",
-        access: ["4000"],
-        name: "reptile-tool_index",
-        component: () => import("@/views/reptile-tool/channel.vue"),
+        path: 'channel',
+        title: '来源渠道',
+        access: ['4000'],
+        name: 'reptile-tool_site',
+        component: () => import('@/views/reptile-tool/site.vue'),
       },
       {
-        path: "email",
-        title: "爬取邮箱",
-        access: ["4000"],
-        name: "reptile-tool_index1",
-        component: () => import("@/views/reptile-tool/email.vue"),
+        path: 'email',
+        title: '爬取邮箱',
+        access: ['4000'],
+        name: 'reptile-tool_index1',
+        component: () => import('@/views/reptile-tool/email.vue'),
       },
       {
-        path: "progress-error",
-        title: "爬取错误",
-        access: ["4000"],
-        name: "reptile-tool-error",
-        component: () => import("@/views/reptile-tool/progress-error.vue"),
+        path: 'progress-error',
+        title: '爬取错误',
+        access: ['4000'],
+        name: 'reptile-tool-error',
+        component: () => import('@/views/reptile-tool/progress-error.vue'),
       },
       {
-        path: "progress",
-        title: "爬虫进度",
-        access: ["4000"],
-        name: "reptile-tool_progress",
-        component: () => import("@/views/reptile-tool/progress.vue"),
+        path: 'progress',
+        title: '爬虫进度',
+        access: ['4000'],
+        name: 'reptile-tool_progress',
+        component: () => import('@/views/reptile-tool/progress.vue'),
       },
       {
-        path: "email-extra",
-        title: "黑白名单",
-        access: ["4000"],
-        name: "reptile-tool_email_extra",
-        component: () => import("@/views/reptile-tool/email-extra.vue"),
+        path: 'email-extra',
+        title: '黑白名单',
+        access: ['4000'],
+        name: 'reptile-tool_email_extra',
+        component: () => import('@/views/reptile-tool/email-extra.vue'),
       },
       {
-        path: "email-box",
-        title: "发件箱",
-        access: ["4000"],
-        name: "reptile-tool_email_box",
-        component: () => import("@/views/reptile-tool/email-box.vue"),
+        path: 'email-box',
+        title: '发件箱',
+        access: ['4000'],
+        name: 'reptile-tool_email_box',
+        component: () => import('@/views/reptile-tool/email-box.vue'),
       },
       {
-        path: "email-template",
-        title: "邮件模板",
-        access: ["4000"],
-        name: "reptile-tool_email_template",
-        component: () => import("@/views/reptile-tool/email-template.vue"),
+        path: 'email-template',
+        title: '邮件模板',
+        access: ['4000'],
+        name: 'reptile-tool_email_template',
+        component: () => import('@/views/reptile-tool/email-template.vue'),
       },
       //   {
       //     path: "text-editor",
@@ -248,33 +248,33 @@ export const appRouter = [
   //     ],
   //   },
   {
-    path: "/log",
-    icon: "social-buffer",
-    title: "服务器",
-    name: "urlLog",
+    path: '/log',
+    icon: 'social-buffer',
+    title: '服务器',
+    name: 'urlLog',
     component: Main,
-    access: ["3000"],
+    access: ['3000'],
     children: [
       {
-        path: "index",
-        title: "访问日志",
-        access: ["3000"],
-        name: "url_log",
-        component: () => import("@/views/log/index.vue"),
+        path: 'index',
+        title: '访问日志',
+        access: ['3000'],
+        name: 'url_log',
+        component: () => import('@/views/log/index.vue'),
       },
       {
-        path: "out",
-        title: "打印日志",
-        access: ["3000"],
-        name: "out_log",
-        component: () => import("@/views/log/out.vue"),
+        path: 'out',
+        title: '打印日志',
+        access: ['3000'],
+        name: 'out_log',
+        component: () => import('@/views/log/out.vue'),
       },
       {
-        path: "error",
-        title: "错误日志",
-        access: ["3000"],
-        name: "error_log",
-        component: () => import("@/views/log/error.vue"),
+        path: 'error',
+        title: '错误日志',
+        access: ['3000'],
+        name: 'error_log',
+        component: () => import('@/views/log/error.vue'),
       },
     ],
   },
@@ -449,7 +449,7 @@ export const appRouter = [
   //         { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/advanced-router/argument-page.vue') }
   //     ]
   // },
-];
+]
 
 // 所有上面定义的路由都要写在下面的routers里
 export const routers = [
@@ -461,4 +461,4 @@ export const routers = [
   page500,
   page403,
   page404,
-];
+]

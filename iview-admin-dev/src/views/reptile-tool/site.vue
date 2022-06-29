@@ -10,7 +10,7 @@
         ref="table"
       ></Table>
     </Card>
-    <Card shadow>
+    <!-- <Card shadow>
       <Page
         :current="params.page"
         :page-size="params.limit"
@@ -19,7 +19,7 @@
         show-elevator
         @on-change="getList"
       ></Page>
-    </Card>
+    </Card> -->
     <edit-channel :modal="modal" ref="editCannel"></edit-channel>
   </Layout>
 </template>
@@ -48,48 +48,29 @@ export default {
     return {
       columns: [
         {
-          title: '邮箱',
-          key: 'email'
+          title: 'id',
+          key: 'id',
+          width: 50
         },
         {
-          title: 'business name',
-          key: 'bizName'
+          title: '网站',
+          key: 'site'
         },
         {
-          title: 'first name',
-          key: 'firstName'
+          title: '国家',
+          key: 'country',
+          // render: (h, params) => {
+          //   return h('a', {
+          //     attrs: {
+          //       href: params.row.shopUrl,
+          //       target: '_blank'
+          //     }
+          //   }, params.row.shopUrl)
+          // }
         },
         {
-          title: 'last name',
-          key: 'lastName'
-        },
-        {
-          title: 'phone',
-          key: 'phone'
-        },
-        {
-          title: '店铺网址',
-          key: 'shopUrl',
-          render: (h, params) => {
-            return h('a', {
-              attrs: {
-                href: params.row.shopUrl,
-                target: '_blank'
-              }
-            }, '打开')
-          }
-        },
-        {
-          title: '爬取时间',
-          key: 'reptileTime'
-        },
-        {
-          title: '发送状态',
-          key: 'sendStatus'
-        },
-        {
-          title: '发送时间',
-          key: 'sendTime'
+          title: '网址',
+          key: 'baseUrl'
         },
       ],
       loading: false,
@@ -119,7 +100,7 @@ export default {
         }
       }
       this.loading = true
-      util.post.email.list(obj).then((data) => {
+      util.post.site.list(obj).then((data) => {
         this.reptileList = data.list
         this.total = data.count
         this.loading = false

@@ -8,8 +8,8 @@ const {
   iconv,
   request,
   reptileConfig,
-} = require("../tool/require2");
-const { getRuleConfigMap } = require("./ruleConfig");
+} = require('../tool/require2')
+const { getRuleConfigMap } = require('./ruleConfig')
 
 /*
  * 兼容cheerio  :eq的写法
@@ -19,35 +19,35 @@ const { getRuleConfigMap } = require("./ruleConfig");
  * 把上面报错的语法转成第二种语法
  * */
 function handleEq(dom, ruleSplit0, $) {
-  var findDom = null;
+  var findDom = null
 
-  if (ruleSplit0.indexOf(":eq(") == -1) {
+  if (ruleSplit0.indexOf(':eq(') == -1) {
     //没有eq的写法
     if (dom) {
-      findDom = dom.find(ruleSplit0);
+      findDom = dom.find(ruleSplit0)
     } else {
-      findDom = $(ruleSplit0);
+      findDom = $(ruleSplit0)
     }
   } else {
     //兼容选择器:eq写法
-    let rules = ruleSplit0.split(/:eq\(\d\)/); //这里的数组数量永远比下面多1
-    let eqs = ruleSplit0.match(/:eq\(\d\)/g); //这里的数组数量永远比上面少1
+    let rules = ruleSplit0.split(/:eq\(\d\)/) //这里的数组数量永远比下面多1
+    let eqs = ruleSplit0.match(/:eq\(\d\)/g) //这里的数组数量永远比上面少1
     if (dom) {
-      findDom = dom.find(rules[0]);
+      findDom = dom.find(rules[0])
     } else {
-      findDom = $(rules[0]);
+      findDom = $(rules[0])
     }
-    findDom = findDom.eq(eqs[0].replace(":eq(", "").replace(")", ""));
+    findDom = findDom.eq(eqs[0].replace(':eq(', '').replace(')', ''))
     let i = 1,
-      length = rules.length - 1;
+      length = rules.length - 1
     for (i; i < length; i++) {
-      findDom = findDom.find(rules[i]);
-      findDom = findDom.eq(eqs[i].replace(":eq(", "").replace(")", ""));
+      findDom = findDom.find(rules[i])
+      findDom = findDom.eq(eqs[i].replace(':eq(', '').replace(')', ''))
     }
-    findDom = rules[i] ? findDom.find(rules[i]) : findDom;
+    findDom = rules[i] ? findDom.find(rules[i]) : findDom
   }
 
-  return findDom;
+  return findDom
 }
 
 /*
@@ -63,28 +63,28 @@ function handleEq(dom, ruleSplit0, $) {
  * */
 function handleRule(ruleSplit, startIndex, result) {
   switch (ruleSplit[startIndex]) {
-    case "split":
-      let resultArr = result.split(ruleSplit[startIndex + 1]);
-      let index = 0;
+    case 'split':
+      let resultArr = result.split(ruleSplit[startIndex + 1])
+      let index = 0
       if (
         ruleSplit[startIndex + 2] &&
-        ruleSplit[startIndex + 2].indexOf("length-") == 0
+        ruleSplit[startIndex + 2].indexOf('length-') == 0
       ) {
-        let endIndex = parseInt(ruleSplit[startIndex + 2].split("length-")[1]);
-        index = resultArr.length - endIndex;
+        let endIndex = parseInt(ruleSplit[startIndex + 2].split('length-')[1])
+        index = resultArr.length - endIndex
       } else {
-        index = ruleSplit[startIndex + 2] || 0; //默认0
+        index = ruleSplit[startIndex + 2] || 0 //默认0
       }
-      result = resultArr[index] || result;
-      startIndex += 3;
-      break;
+      result = resultArr[index] || result
+      startIndex += 3
+      break
     default:
-      break;
+      break
   }
   if (startIndex + 3 <= ruleSplit.length) {
-    return handleRule(ruleSplit, startIndex, result);
+    return handleRule(ruleSplit, startIndex, result)
   } else {
-    return result && result.trim();
+    return result && result.trim()
   }
 }
 
@@ -109,67 +109,67 @@ function handleRule(ruleSplit, startIndex, result) {
  *
  * */
 function domCommon(dom, rule, $) {
-  if (!rule) return "";
-  let ruleSplit = rule.split("、");
+  if (!rule) return ''
+  let ruleSplit = rule.split('、')
   // let ruleLength = ruleSplit.length;
-  let type = ruleSplit[1];
-  if (!type) return "";
-  let findDom = null;
+  let type = ruleSplit[1]
+  if (!type) return ''
+  let findDom = null
   if (ruleSplit[0]) {
-    findDom = handleEq(dom, ruleSplit[0], $);
+    findDom = handleEq(dom, ruleSplit[0], $)
   } else {
-    findDom = dom;
+    findDom = dom
   }
 
-  let result = null;
+  let result = null
 
-  if (type == "html") {
-    result = findDom.html() && findDom.html().trim();
-  } else if (type == "fontHtml") {
+  if (type == 'html') {
+    result = findDom.html() && findDom.html().trim()
+  } else if (type == 'fontHtml') {
     result =
       findDom.html() &&
       findDom
         .html()
-        .replace(/(<\/?font.*?>)/g, "")
-        .trim(); // 过滤标签，保留内容
-  } else if (type == "spanHtml") {
+        .replace(/(<\/?font.*?>)/g, '')
+        .trim() // 过滤标签，保留内容
+  } else if (type == 'spanHtml') {
     result =
       findDom.html() &&
       findDom
         .html()
-        .replace(/(<\/?span.*?>)/g, "")
-        .trim(); // 过滤标签，保留内容
-  } else if (type == "aHtml") {
+        .replace(/(<\/?span.*?>)/g, '')
+        .trim() // 过滤标签，保留内容
+  } else if (type == 'aHtml') {
     result =
       findDom.html() &&
       findDom
         .html()
-        .replace(/(<\/?a.*?>)/g, "")
-        .trim(); // 过滤标签，保留内容
-  } else if (type == "allHtml") {
+        .replace(/(<\/?a.*?>)/g, '')
+        .trim() // 过滤标签，保留内容
+  } else if (type == 'allHtml') {
     result =
       findDom.html() &&
       findDom
         .html()
-        .replace(/(<\/?font.*?>)|(<\/?span.*?>)|(<\/?a.*?>)|"/g, "")
-        .trim();
-  } else if (type == "text") {
-    result = findDom.text() && findDom.text().trim();
-  } else if (type == "val") {
-    result = findDom.val() && findDom.val().trim();
-  } else if (type && type.indexOf("attr") == 0) {
+        .replace(/(<\/?font.*?>)|(<\/?span.*?>)|(<\/?a.*?>)|"/g, '')
+        .trim()
+  } else if (type == 'text') {
+    result = findDom.text() && findDom.text().trim()
+  } else if (type == 'val') {
+    result = findDom.val() && findDom.val().trim()
+  } else if (type && type.indexOf('attr') == 0) {
     result =
-      findDom.attr(type.split("attr")[1]) &&
-      findDom.attr(type.split("attr")[1]).trim();
-  } else if (type && type.indexOf("index") === 0) {
-    let indexCompute = parseInt(type.replace("index", "")) || 0;
+      findDom.attr(type.split('attr')[1]) &&
+      findDom.attr(type.split('attr')[1]).trim()
+  } else if (type && type.indexOf('index') === 0) {
+    let indexCompute = parseInt(type.replace('index', '')) || 0
     if (indexCompute) {
-      return findDom.index() + indexCompute;
+      return findDom.index() + indexCompute
     } else {
-      return findDom.index();
+      return findDom.index()
     }
   }
-  return handleRule(ruleSplit, 2, result);
+  return handleRule(ruleSplit, 2, result)
 }
 
 /**
@@ -184,45 +184,63 @@ function getRule(ruleConfig, keywords) {
     name: ruleConfig.name,
     // searchUrl:
     getSearchUrl: (page) => {
-      return ruleConfig.searchUrl
-        .replace("${name}", keywords.name.split(" ").join("+"))
-        .replace("${page}", page);
+      // return ruleConfig.searchUrl
+      //   .replace('${name}', keywords.name.split(' ').join('+'))
+      //   .replace('${page}', page)
+      let url = ruleConfig.baseUrl
+      const formatKeywords = keywords.name.split(' ').join('+')
+      url += `/sch/i.html?_from=R40&rt=nc&_nkw=${formatKeywords}&_pgn=${page}`
+      return url
     },
     getSearchItemUrl: ($, searchItem, index) => {
-      // return domCommon(null, ruleConfig.searchItemUrl, $);
-      // let searchItem = $(ruleConfig.searchItemUrl);
-      // let title = domCommon(searchItem, ruleConfig.searchItemTitle);
-      // console.log("🚀 ~ file: rule.js ~ line 205 ~ getRule ~ title", title);
-      let href = domCommon($(searchItem), ruleConfig.searchItemUrl, $);
-      return href;
+      let href = domCommon($(searchItem), '、attrhref', $)
+      return href
     },
     getNextPage: ($) => {
       // 获取下一页目录地址
-      return domCommon(null, ruleConfig.nextPage, $);
+      return domCommon(null, '.pagination__next、attrhref', $)
     },
     getNowPage: ($) => {
-      return null;
+      return null
     },
     isLastPage: ($) => {
-      return $(ruleConfig.lastPage).parent().next().length === 0;
+      return (
+        $('.pagination__item[aria-current="page"]').parent().next().length === 0
+      )
     },
     getSearchItemList: ($) => {
-      return $(ruleConfig.searchItemList);
+      return $('.srp-river-results .s-item__link')
     },
     getShopUrl: ($) => {
-      for (let i = 0; i < ruleConfig.shopUrl.length; i++) {
-        const shopUrl = domCommon(null, ruleConfig.shopUrl[i], $);
+      const shopUrlList = [
+        '.ux-seller-section__item--seller a、attrhref',
+        '.si-inner .mbg a、attrhref',
+      ]
+      for (let i = 0; i < shopUrlList.length; i++) {
+        const shopUrl = domCommon(null, shopUrlList[i], $)
         if (shopUrl) {
-          return shopUrl;
-          break;
+          return shopUrl
+          break
         }
       }
-      return "";
+      return ''
     },
     getEmail: ($) => {
-      return domCommon(null, ruleConfig.email, $);
+      return domCommon(null, '#email~span、text', $) || ''
     },
-  };
+    getBizName: ($) => {
+      return domCommon(null, '#business_name~span、text', $) || ''
+    },
+    getFirstName: ($) => {
+      return domCommon(null, '#first_name~span、text', $) || ''
+    },
+    getLastName: ($) => {
+      return domCommon(null, '#last_name~span、text', $) || ''
+    },
+    getPhone: ($) => {
+      return domCommon(null, '#phone_number~span、text', $) || ''
+    },
+  }
 }
 
-module.exports = getRule;
+module.exports = getRule
