@@ -3,7 +3,12 @@
     <Card shadow>
       <div class="header">
         <h3>关键词</h3>
-        <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
+        <Button
+          type="primary"
+          :disabled="loading"
+          @click="onClickShowModal('add')"
+          >添加</Button
+        >
       </div>
       <Table
         border
@@ -25,7 +30,11 @@
       ></Page>
     </Card>
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <add-keywords :modal="modal" ref="addKeywords" @save="saveKeywords"></add-keywords>
+    <add-keywords
+      :modal="modal"
+      ref="addKeywords"
+      @save="saveKeywords"
+    ></add-keywords>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -65,6 +74,18 @@ export default {
         {
           title: '关键词',
           key: 'name'
+        },
+        {
+          title: '进度',
+          key: 'progress',
+          render: (h, params) => {
+            return h('div', {},
+              params.row.progress.map(item => {
+                return h('div', {}, item.rule.site + ' ' + item.rule.country + ':' + (item.finished ? '完成' : ('已爬第' + item.finishPage + '页')))
+              })
+            )
+            // return h('div', {}, params.row.progress.map(item => item.rule.site + item.rule.country).join('\n'))
+          }
         },
         {
           title: '是否启用',

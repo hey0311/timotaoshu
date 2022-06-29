@@ -229,16 +229,32 @@ function getRule(ruleConfig, keywords) {
       return domCommon(null, '#email~span、text', $) || ''
     },
     getBizName: ($) => {
-      return domCommon(null, '#business_name~span、text', $) || ''
+      const bizName = domCommon(null, '#business_name~span、text', $) || ''
+      if (bizName && bizName.length > 50) {
+        return ''
+      }
+      return bizName
     },
     getFirstName: ($) => {
-      return domCommon(null, '#first_name~span、text', $) || ''
+      const firstName = domCommon(null, '#first_name~span、text', $) || ''
+      if (firstName && firstName.length > 30) {
+        return ''
+      }
+      return firstName
     },
     getLastName: ($) => {
-      return domCommon(null, '#last_name~span、text', $) || ''
+      const lastName = domCommon(null, '#last_name~span、text', $) || ''
+      if (lastName && lastName.length > 30) {
+        return ''
+      }
+      return lastName
     },
     getPhone: ($) => {
-      return domCommon(null, '#phone_number~span、text', $) || ''
+      const phone = domCommon(null, '#phone_number~span、text', $) || ''
+      if (phone && phone.length > 20) {
+        return ''
+      }
+      return phone
     },
   }
 }
