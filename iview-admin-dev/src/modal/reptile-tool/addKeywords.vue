@@ -10,13 +10,25 @@
       @on-cancel="onClickCancel"
     >
       <h3 slot="header" class="modal-header-color">添加关键词</h3>
-      <div class="email-row">
-        <span style="margin-right:10px">关键词:</span>
-        <Input v-model="name" placeholder="输入关键词" style="width:400px" />
+      <div style="margin-bottom: 10px">
+        {{ isAdd ? "关键词(每行一个):" : "关键词" }}
+      </div>
+      <div v-if="isAdd" class="email-row">
+        <Input
+          v-model="name"
+          placeholder="输入关键词"
+          type="textarea"
+          :rows="10"
+        />
+      </div>
+      <div v-else class="email-row">
+        <Input v-model="name" placeholder="输入关键词" />
       </div>
       <div slot="footer">
         <Button type="text" @click="onClickCancel">取消</Button>
-        <Button type="primary" :loading="loading" @click="onClickSave">保存</Button>
+        <Button type="primary" :loading="loading" @click="onClickSave"
+          >保存</Button
+        >
       </div>
     </Modal>
   </div>
@@ -41,7 +53,8 @@ export default {
     return {
       loading: false,
       name: '',
-      id: ''
+      id: '',
+      isAdd: false
     }
   },
   computed: {},
@@ -65,6 +78,9 @@ export default {
       if (type === 'edit') {
         this.id = data.id;
         this.name = data.name;
+        this.isAdd = false
+      } else if (type === 'add') {
+        this.isAdd = true
       }
     })
   },
