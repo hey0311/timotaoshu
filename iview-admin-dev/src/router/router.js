@@ -59,6 +59,13 @@ export const otherRouter = {
   component: Main,
   children: [
     {
+      path: 'home',
+      title: '首页',
+      name: 'home_index',
+      component: () => import('@/views/home/home.vue'),
+    },
+
+    {
       path: 'catalog',
       title: '章节',
       name: 'catalog',
@@ -111,7 +118,6 @@ export const appRouter = [
     title: '爬取配置',
     name: 'reptile-tool',
     component: Main,
-    access: ['2000', '4000'],
     children: [
       // {
       //   path: 'home',
@@ -122,63 +128,54 @@ export const appRouter = [
       {
         path: 'progress',
         title: '爬虫进度',
-        access: ['4000'],
         name: 'reptile-tool_progress',
         component: () => import('@/views/reptile-tool/progress.vue'),
       },
       {
         path: 'keyword',
         title: '关键词',
-        access: ['2000'],
         name: 'reptile-tool_keyword',
         component: () => import('@/views/reptile-tool/keyword.vue'),
       },
       {
         path: 'ipList',
         title: '代理IP',
-        access: ['2000'],
         name: 'reptile-tool_ipList',
         component: () => import('@/views/reptile-tool/ipList.vue'),
       },
       {
         path: 'channel',
         title: '来源渠道',
-        access: ['4000'],
         name: 'reptile-tool_site',
         component: () => import('@/views/reptile-tool/site.vue'),
       },
       {
         path: 'email',
-        title: '爬取邮箱',
-        access: ['4000'],
+        title: '已爬邮箱',
         name: 'reptile-tool_index1',
         component: () => import('@/views/reptile-tool/email.vue'),
       },
       {
         path: 'progress-error',
         title: '爬取错误',
-        access: ['4000'],
         name: 'reptile-tool-error',
         component: () => import('@/views/reptile-tool/progress-error.vue'),
       },
       {
         path: 'email-extra',
         title: '黑白名单',
-        access: ['4000'],
         name: 'reptile-tool_email_extra',
         component: () => import('@/views/reptile-tool/email-extra.vue'),
       },
       {
         path: 'email-box',
         title: '发件箱',
-        access: ['4000'],
         name: 'reptile-tool_email_box',
         component: () => import('@/views/reptile-tool/email-box.vue'),
       },
       {
         path: 'email-template',
         title: '邮件模板',
-        access: ['4000'],
         name: 'reptile-tool_email_template',
         component: () => import('@/views/reptile-tool/email-template.vue'),
       },
@@ -253,26 +250,22 @@ export const appRouter = [
     title: '服务器',
     name: 'urlLog',
     component: Main,
-    access: ['3000'],
     children: [
       {
         path: 'index',
         title: '访问日志',
-        access: ['3000'],
         name: 'url_log',
         component: () => import('@/views/log/index.vue'),
       },
       {
         path: 'out',
         title: '打印日志',
-        access: ['3000'],
         name: 'out_log',
         component: () => import('@/views/log/out.vue'),
       },
       {
         path: 'error',
         title: '错误日志',
-        access: ['3000'],
         name: 'error_log',
         component: () => import('@/views/log/error.vue'),
       },

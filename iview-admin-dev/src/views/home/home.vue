@@ -2,24 +2,11 @@
 @import "./home.less";
 </style>
 <template>
-  <Layout>
-    <card>
-      <Row>
-        <Col span="8">爬取状态:</Col>
-        <Col span="8">爬取中</Col>
-        <Col span="8">
-          <Button type="primary" :disabled="loading" @click="startReptileAllKeywords">开始爬取关键词</Button>
-        </Col>
-      </Row>
-    </card>
-    <div id="chart-container" style="width:600px;height:400px"></div>
-    <v-chart :option="eOption" style="height:400px"></v-chart>
-  </Layout>
+  <Layout> </Layout>
 </template>
 
 <script>
 import util from 'util'
-import echarts from 'echarts'
 // import config from "config"
 export default {
   name: 'home',
@@ -28,17 +15,6 @@ export default {
   data() {
     return {
       loading: false,
-      eOption: {
-        title: '1',
-        xAxis: {
-          data: ['a', 'b']
-        },
-        series: [{
-          name: '销量',
-          type: 'bar',
-          data: [1, 2]
-        }]
-      }
     }
   },
   computed: {},
@@ -60,18 +36,6 @@ export default {
   created() {
   },
   mounted() {
-    echarts.init(document.getElementById('chart-container'))
-    echarts.setOption({
-      title: '1',
-      xAxis: {
-        data: ['a', 'b']
-      },
-      series: [{
-        name: '销量',
-        type: 'bar',
-        data: [1, 2]
-      }]
-    })
   },
   activated() {
   },

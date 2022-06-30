@@ -69,6 +69,7 @@ export default {
         },
         {
           title: '店铺网址',
+          width: 90,
           key: 'shopUrl',
           render: (h, params) => {
             return h('a', {
@@ -85,6 +86,7 @@ export default {
         },
         {
           title: '发送状态',
+          width: 90,
           key: 'sendStatus'
         },
         {

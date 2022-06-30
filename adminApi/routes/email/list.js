@@ -15,7 +15,7 @@ router.use('', oauth(4004), async function (req, res, next) {
   let data = null
   try {
     const list = await db.query(
-      `select * from email limit ${page - 1},${limit}`
+      `select * from email limit ${(page - 1) * limit},${limit}`
     )
     const count = await db.query(`select count(*) from email`)
 

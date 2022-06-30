@@ -17,10 +17,9 @@ router.use('', oauth(4004), async function (req, res, next) {
   let data = null
   try {
     let allData = await db.query(
-      `select * from keywords limit ${page - 1},${limit}`
+      `select * from keywords limit ${(page - 1) * limit},${limit}`
     )
     const ruleMap = getRuleConfigMap()
-    console.log('🚀 ~ file: list.js ~ line 20 ~ allData', allData)
     for (let i = 0; i < allData.length; i++) {
       let keywords = allData[i]
       let progress = await db.query(
