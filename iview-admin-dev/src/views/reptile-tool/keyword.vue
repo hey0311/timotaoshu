@@ -68,8 +68,9 @@ export default {
       columns: [
         {
           title: 'id',
-          width: 50,
-          key: 'id'
+          width: 70,
+          key: 'id',
+          align: 'center'
         },
         {
           title: '关键词',
@@ -86,15 +87,15 @@ export default {
             )
           }
         },
-        {
-          title: '是否启用',
-          key: 'active',
-          render: (h, params) => {
-            return h('div', {
+        // {
+        //   title: '是否启用',
+        //   key: 'active',
+        //   render: (h, params) => {
+        //     return h('div', {
 
-            }, params.row.active ? '启用' : '禁用')
-          }
-        },
+        //     }, params.row.active ? '启用' : '禁用')
+        //   }
+        // },
         {
           title: '操作',
           key: 'handle',
@@ -131,7 +132,7 @@ export default {
       loading: false,
       params: {
         page: 1,
-        limit: 100
+        limit: 10
       },
       total: 0,
       reptileList: [],

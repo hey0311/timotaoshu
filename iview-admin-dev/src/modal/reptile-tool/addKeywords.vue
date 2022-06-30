@@ -80,6 +80,8 @@ export default {
         this.name = data.name;
         this.isAdd = false
       } else if (type === 'add') {
+        this.id = ''
+        this.name = ''
         this.isAdd = true
       }
     })

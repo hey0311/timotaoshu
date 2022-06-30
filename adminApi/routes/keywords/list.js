@@ -30,10 +30,12 @@ router.use('', oauth(4004), async function (req, res, next) {
       }
       keywords.progress = progress
     }
-    data = {
-      list: allData,
-      count: allData.length,
-    }
+    const countObj = await db.query(`select count(*) from keywords`)
+    const count = countObj[0]['count(*)'],
+      data = {
+        list: allData,
+        count,
+      }
     res.send(tool.toJson(data, '', 1000))
   } catch (err) {
     res.send(tool.toJson(null, err, 1002))

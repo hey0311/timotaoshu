@@ -18,6 +18,9 @@ router.use('', oauth(4004), async function (req, res, next) {
     } else {
       const nameList = name.split('\n')
       for (let i = 0; i < nameList.length; i++) {
+        if (!nameList[i]) {
+          continue
+        }
         await db.query(
           `insert into keywords (name,active) values ("${nameList[i]}",1)`
         )

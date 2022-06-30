@@ -17,12 +17,12 @@ router.use('', oauth(4004), async function (req, res, next) {
     const list = await db.query(
       `select * from email limit ${(page - 1) * limit},${limit}`
     )
-    const count = await db.query(`select count(*) from email`)
-
-    data = {
-      list,
-      count: count[0]['count(*)'],
-    }
+    const countObj = await db.query(`select count(*) from email`)
+    const count = countObj[0]['count(*)'],
+      data = {
+        list,
+        count,
+      }
     res.send(tool.toJson(data, '', 1000))
   } catch (err) {
     res.send(tool.toJson(null, err, 1002))
