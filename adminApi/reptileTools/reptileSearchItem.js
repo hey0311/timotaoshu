@@ -27,7 +27,7 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
       // 插入错误记录
       await insertErrorTask({
         keywords,
-        ruleConfig: rule,
+        rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
@@ -37,6 +37,14 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
       return
     }
     const shopUrl = rule.getShopUrl($)
+    wss.broadcast({
+      type: 'table',
+      page,
+      keywordsName: keywords.name,
+      ruleName: rule.name,
+      index: order,
+      shopUrl,
+    })
     wss.broadcast(`第${page}页第${order}个shopUrl:${shopUrl}`)
     if (shopUrl) {
       // emmm..这里不能用queue
@@ -51,7 +59,7 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
       // 不可能没shopUrl的,先存入错误记录
       await insertErrorTask({
         keywords,
-        ruleConfig: rule,
+        rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,

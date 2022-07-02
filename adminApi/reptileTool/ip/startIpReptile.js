@@ -1,7 +1,6 @@
-const { oauth, tool, db, log, rp } = require("../../tool/require");
-const getIpList = require("./getIpList");
-const checkIp = require("./checkIp");
-
+const { oauth, tool, db, log, wss, rp } = require('../../tool/require')
+const getIpList = require('./getIpList')
+const checkIp = require('./checkIp')
 /*
  * 批量爬取可用IP
  *
@@ -11,88 +10,88 @@ const checkIp = require("./checkIp");
  *
  * */
 async function startReptile(startPage, endPage, callback) {
-  endPage = parseInt(endPage) || 3;
-  let allPage = endPage || 3;
-  let current = parseInt(startPage) || 1;
-  let ipList = [];
+  endPage = parseInt(endPage) || 3
+  let allPage = endPage || 3
+  let current = parseInt(startPage) || 1
+  let ipList = []
   // for(current; current<=allPage; current++) {
   try {
-    let data = await getIpList(current);
+    let data = await getIpList(current)
     if (data) {
-      ipList = ipList.concat(data.ipArr);
+      ipList = ipList.concat(data.ipArr)
       allPage =
-        parseInt(data.allPage) >= endPage ? endPage : parseInt(data.allPage);
+        parseInt(data.allPage) >= endPage ? endPage : parseInt(data.allPage)
     }
   } catch (err) {
-    log.error(`第${current}页错误,错误信息:${err}`);
+    log.error(`第${current}页错误,错误信息:${err}`)
   }
   // await tool.sleep(3000);
   // }
 
   let i = 0,
-    length = ipList.length;
+    length = ipList.length
 
-  let list = [];
-  let overLength = 0;
-  let yu = length > 10 ? Math.ceil(length / 20) : length > 1 ? 1 : 0; //允许有几个个缺失  默认丢弃最后几个未返回的
-  let needCount = length - yu;
+  let list = []
+  let overLength = 0
+  let yu = length > 10 ? Math.ceil(length / 20) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
+  let needCount = length - yu
   for (i; i < length; i++) {
     tool.ipQueue.push(
       {
         params: [ipList[i]],
         pro: checkIp,
         result: (data, isTrue, err) => {
-          overLength++;
+          overLength++
           if (overLength > needCount) {
-            return;
+            return
           }
           if (isTrue) {
-            log.info(
+            wss.broadcast(
               `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
-            );
-            list.push(data);
+            )
+            list.push(data)
           } else {
             try {
-              log.error(
+              wss.broadcast(
                 `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
-              );
+              )
             } catch (err2) {
-              log.error(
+              wss.broadcast(
                 `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
-              );
+              )
             }
           }
-          finish();
+          finish()
         },
         error: () => {
-          log.error("由于未知原因，来到了这里，警惕");
-          overLength++;
+          log.error('由于未知原因，来到了这里，警惕')
+          overLength++
           if (overLength > needCount) {
-            return;
+            return
           }
-          finish();
+          finish()
         },
       },
       (err) => {}
-    );
+    )
   }
 
   async function finish() {
     if (overLength == needCount) {
-      end();
+      end()
     }
   }
 
   async function end() {
-    log.info(
+    wss.broadcast(
       `共检查了${length}条数据，其中有${list.length}条IP是有用的，开始保存`
-    );
-    await tool.redisData.ipList.setIpList(list);
-    log.info(`保存${list.length}条IP完毕`);
-    callback && callback();
+    )
+    await tool.redisData.ipList.setIpList(list)
+    wss.broadcast(`保存${list.length}条IP完毕`)
+    callback && callback()
   }
 }
 
 // startReptile(1,10,100);
 
-module.exports = startReptile;
+module.exports = startReptile

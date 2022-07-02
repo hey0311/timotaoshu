@@ -24,7 +24,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
     } catch (err) {
       await insertErrorTask({
         keywords,
-        ruleConfig: rule,
+        rule,
         uri,
         pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
         page,
@@ -38,6 +38,15 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
     const firstName = rule.getFirstName($)
     const lastName = rule.getLastName($)
     const phone = rule.getPhone($)
+    wss.broadcast({
+      type: 'table',
+      page,
+      keywordsName: keywords.name,
+      ruleName: rule.name,
+      index: order,
+      email: email || '空',
+      result: email ? undefined : '忽略',
+    })
     wss.broadcast(`第${page}页第${order}个email:${email ? email : '无'}`)
     if (email) {
       const insertResult = await insertEmail({
@@ -49,6 +58,8 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
         firstName,
         lastName,
         phone,
+        order,
+        page,
       })
       if (insertResult) {
         resolve()

@@ -1,11 +1,9 @@
-
-const startReptile = require("./startReptile");
-const check = require("./check");
-const removeRepeat = require("./removeRepeat");
-
+const startReptile = require('./startReptile')
+const check = require('./check')
+const removeRepeat = require('./removeRepeat')
 
 module.exports = {
-    startReptile,
-    check,
-    removeRepeat
-};
+  startReptile,
+  check,
+  removeRepeat,
+}

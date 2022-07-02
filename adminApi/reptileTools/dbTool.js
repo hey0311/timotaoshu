@@ -10,6 +10,8 @@ async function insertEmail({
   firstName,
   lastName,
   phone,
+  order,
+  page,
 }) {
   try {
     // 先判断是否和表中的重复
@@ -18,6 +20,14 @@ async function insertEmail({
     if (result) {
       //如果数据库里有这本书
       wss.broadcast(`${email}在数据库已存在`)
+      wss.broadcast({
+        type: 'table',
+        keywordsName: keywords.name,
+        ruleName: rule.name,
+        index: order,
+        page,
+        result: '重复',
+      })
       return true
     }
     let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
@@ -29,6 +39,14 @@ async function insertEmail({
     }","${firstName}","${lastName}","${phone}")`
     await db.query(insertSql)
     wss.broadcast(`${email}已入库`)
+    wss.broadcast({
+      type: 'table',
+      page,
+      keywordsName: keywords.name,
+      ruleName: rule.name,
+      index: order,
+      result: '已保存',
+    })
     // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
     return true
   } catch (err) {
@@ -41,27 +59,22 @@ async function insertEmail({
  * @param {*} param0
  * @returns
  */
-async function updateKeywordsProgress({
-  keywords,
-  ruleConfig,
-  page,
-  finished,
-}) {
+async function updateKeywordsProgress({ keywords, rule, page, finished }) {
   try {
     const records = await db.query(
-      `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
+      `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${rule.id}`
     )
     if (records.length === 0) {
       await db.query(
         `insert into keywordsprogress (keywordsId,ruleId,finishPage,finished) values (${
           keywords.id
-        },${ruleConfig.id},${page},${finished ? 1 : 0})`
+        },${rule.id},${page},${finished ? 1 : 0})`
       )
     } else {
       await db.query(
         `update keywordsprogress set finishPage=${page},finished=${
           finished ? 1 : 0
-        } where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
+        } where keywordsId=${keywords.id} and ruleId=${rule.id}`
       )
     }
     wss.broadcast(`更新进度成功`)
@@ -81,7 +94,7 @@ async function updateKeywordsProgress({
  */
 async function insertErrorTask({
   keywords,
-  ruleConfig,
+  rule,
   uri,
   pageType,
   page = 0,
@@ -95,16 +108,24 @@ async function insertErrorTask({
         `update errortask set retryCount=${
           records[0].retryCount + 1
         } where keywordsId=${keywords.id} and ruleId=${
-          ruleConfig.id
+          rule.id
         } and pageType=${pageType}`
       )
     } else {
       // 新记录
       await db.query(
-        `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${ruleConfig.id}, "${uri}", 0, ${pageType},${page},${order})`
+        `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${rule.id}, "${uri}", 0, ${pageType},${page},${order})`
       )
     }
     wss.broadcast(`插入errortask成功`)
+    wss.broadcast({
+      type: 'table',
+      keywordsName: keywords.name,
+      ruleName: rule.name,
+      page,
+      index: order,
+      result: '存入错误记录',
+    })
     return true
   } catch (err) {
     log.error(err)

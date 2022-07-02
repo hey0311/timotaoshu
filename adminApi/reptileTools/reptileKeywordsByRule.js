@@ -1,3 +1,4 @@
+const reptileIp = require('./reptileIp')
 const {
   fs,
   rp,
@@ -19,13 +20,14 @@ const { batchAddSearchItemToQueue } = require('./searchItemQueue')
 
 module.exports = reptileKeywordsByRule
 
-async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
+async function reptileKeywordsByRule(keywords, rule, reptilePage) {
   return new Promise(async (resolve, reject) => {
     // 先找到对应的rule
     let page = reptilePage || 1
     wss.broadcast(`开始爬取第${page}页`)
-    const rule = getRule(ruleConfig, keywords)
     let $ = null
+    // 这里更新一下ip
+    await reptileIp()
     try {
       // 这个是当前的搜索页
       $ = await reptileRequest({
@@ -40,8 +42,8 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
     while ($) {
       let searchItemList = rule.getSearchItemList($).toArray()
       let paramsList = []
-      // for (let i = 0; i < searchItemList.length; i++) {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < searchItemList.length; i++) {
+        // for (let i = 0; i < 3; i++) {
         const searchItem = searchItemList[i]
         const searchItemUrl = rule.getSearchItemUrl($, searchItem, i)
         paramsList.push({
@@ -51,17 +53,26 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
           page,
           order: i + 1,
         })
+        wss.broadcast({
+          type: 'table',
+          page,
+          keywordsName: keywords.name,
+          ruleName: rule.name,
+          index: i + 1,
+          itemUrl: searchItemUrl,
+        })
       }
       await batchAddSearchItemToQueue(paramsList, reptileSearchItem)
       if (rule.isLastPage($)) {
         await updateKeywordsProgress({
           keywords,
-          ruleConfig,
+          rule,
           page,
           finished: true,
         })
         break
       }
+      await reptileIp()
       try {
         console.log(
           '🚀 ~ file: reptileKeywordsByRule.js ~ line 62 ~ returnnewPromise ~ rule.getNextPage($)',
@@ -74,7 +85,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
         wss.broadcast(`第${page}页爬完,开始下一页`)
         await updateKeywordsProgress({
           keywords,
-          ruleConfig,
+          rule,
           page,
           finished: false,
         })
@@ -85,7 +96,7 @@ async function reptileKeywordsByRule(keywords, ruleConfig, reptilePage) {
         // 记录已爬完的页面
         await updateKeywordsProgress({
           keywords,
-          ruleConfig,
+          rule,
           page,
           finished: false,
         })

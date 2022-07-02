@@ -181,7 +181,7 @@ function domCommon(dom, rule, $) {
 function getRule(ruleConfig, keywords) {
   return {
     id: ruleConfig.id,
-    name: ruleConfig.name,
+    name: ruleConfig.site + '-' + ruleConfig.country,
     // searchUrl:
     getSearchUrl: (page) => {
       // return ruleConfig.searchUrl

@@ -12,6 +12,7 @@ const {
 
 const { getRuleConfigList } = require('./ruleConfig')
 const reptileKeywordsByRule = require('./reptileKeywordsByRule')
+const getRule = require('./rule')
 
 module.exports = reptileAllKeywords
 
@@ -42,7 +43,8 @@ async function reptileAllKeywords() {
           wss.broadcast(
             `开始爬取关键词${keywords.name},${ruleConfig.site},${ruleConfig.country}`
           )
-          await reptileKeywordsByRule(keywords, ruleConfig, reptilePage)
+          const rule = getRule(ruleConfig, keywords)
+          await reptileKeywordsByRule(keywords, rule, reptilePage)
         }
       }
     }
