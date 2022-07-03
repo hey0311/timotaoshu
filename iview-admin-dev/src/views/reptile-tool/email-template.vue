@@ -3,7 +3,12 @@
     <Card shadow>
       <div class="header">
         <h3>邮件模板</h3>
-        <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
+        <Button
+          type="primary"
+          :disabled="loading"
+          @click="onClickShowModal('add')"
+          >添加</Button
+        >
       </div>
       <Table
         border
@@ -25,7 +30,16 @@
       ></Page>
     </Card>
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <edit-template :modal="modal" ref="editTemplate" @save="saveTemplate"></edit-template>
+    <edit-template
+      :modal="modal"
+      ref="editTemplate"
+      @save="saveTemplate"
+    ></edit-template>
+    <set-test-email
+      :modal="setEmailModal"
+      ref="setEmailModal"
+      @save="testTemplate"
+    ></set-test-email>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -48,12 +62,14 @@ import editTemplate from 'modal/reptile-tool/editTemplate.vue'
 import uploadMixins from '@/mixins/uploadMixins'
 import config from '../../libs/config'
 import Cookies from 'js-cookie'
+import setTestEmail from 'modal/reptile-tool/setTestEmail'
 
 export default {
   mixins: [uploadMixins],
   name: 'reptile',
   components: {
     // reptileConfig,
+    setTestEmail,
     editChannel,
     editTemplate
   },
@@ -75,10 +91,10 @@ export default {
         },
         {
           title: '状态',
-          key: 'able',
+          key: 'active',
           width: 100,
           render: (h, params) => {
-            return h('div', {}, params.row.able === 1 ? '启用' : '禁用')
+            return h('div', {}, params.row.active === 1 ? '启用' : '禁用')
           }
         },
         {
@@ -138,12 +154,12 @@ export default {
                 on: {
                   click: (e) => {
                     // this.$router.push("/catalog?bookId=" + params.row.id);
-                    this.onClickToggleUse(params.row.id, params.row.able)
+                    this.onClickToggleUse(params.row.id, params.row.active)
                     e.stopPropagation()
                     e.preventDefault()
                   }
                 }
-              }, `${params.row.able === 2 ? '启用' : '禁用'}`),
+              }, `${params.row.active === 0 ? '启用' : '禁用'}`),
               h('a', {
                 attrs: {
                   href: 'javascript:void(0);',
@@ -170,6 +186,9 @@ export default {
       },
       total: 0,
       reptileList: [],
+      setEmailModal: {
+        showModal: false
+      },
       modal: {
         showModal: false
       },
@@ -182,13 +201,24 @@ export default {
   },
   computed: {},
   methods: {
+    testTemplate(params) {
+      util.post.template.test({ params }).then((data) => {
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+      })
+    },
     saveTemplate(params) {
-      util.post.reptile.saveTemplate({
+      util.post.template.save({
         params
       }).then((data) => {
+        console.log("🚀 ~ file: email-template.vue ~ line 215 ~ saveTemplate ~ data", data)
         // this.reptileList = data.list;
         // this.total = data.count;
         // this.loading = false;
+        if (data.code === 1000) {
+          console.log('ccz')
+        }
         this.getList()
       }).catch((err) => {
         // this.loading = false;
@@ -268,11 +298,8 @@ export default {
           this.modal.showModal = true
           break
         case 'sendToTest':
-          util.post.template.test({ params: { id: data.id } }).then((data) => {
-            this.loading = false
-          }).catch((err) => {
-            this.loading = false
-          })
+          this.$refs.setEmailModal.$emit('reset', data)
+          this.setEmailModal.showModal = true
           break
         default:
           break
@@ -280,7 +307,7 @@ export default {
     },
     onClickToggleUse(id, curAble) {
       this.loading = true;
-      util.post.template.able({ params: { id, able: curAble === 1 ? 2 : 1 } }).then((data) => {
+      util.post.template.active({ params: { id, active: curAble === 1 ? 0 : 1 } }).then((data) => {
         this.loading = false
         this.getList()
       }).catch((err) => {

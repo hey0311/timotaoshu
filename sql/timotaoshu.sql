@@ -180,7 +180,7 @@ DROP TABLE IF EXISTS `emailtemplate`;
 CREATE TABLE `emailtemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` varchar(9999) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `active` int(11) DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)

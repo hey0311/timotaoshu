@@ -59,7 +59,7 @@ export default {
   template: {
     list: '/template/list',
     save: '/template/save',
-    able: '/template/able',
+    active: '/template/active',
     test: '/template/test',
     delete: '/template/delete',
   },
