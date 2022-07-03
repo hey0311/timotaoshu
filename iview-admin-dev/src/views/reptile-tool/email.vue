@@ -1,5 +1,6 @@
 <template>
   <Layout>
+    <Button @click="batchSendEmail">批量发送邮件</Button>
     <Card shadow>
       <Table
         border
@@ -113,6 +114,11 @@ export default {
   },
   computed: {},
   methods: {
+    batchSendEmail() {
+      util.post.sendEmail.batch({ params: {} }).then(data => {
+
+      })
+    },
     getList(page) {
       let obj = {
         params: {

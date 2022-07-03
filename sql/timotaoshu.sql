@@ -126,6 +126,9 @@ CREATE TABLE `email` (
   PRIMARY KEY (`id`),
   KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `email` VALUES ('1', '1','1','hey0311@qq.com','bb','al','b','13','htt','0','2022-06-22' ,'2022-06-22');
+INSERT INTO `email` VALUES ('2', '1','1','hey0311@126.com','bb','al','b','13','htt','0','2022-06-22' ,'2022-06-22');
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
@@ -133,7 +136,7 @@ DROP TABLE IF EXISTS `emailbox`;
 CREATE TABLE `emailbox` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `able` int(11) DEFAULT '2' COMMENT '是否启用',
+  `active` int(11) DEFAULT '2' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -179,10 +182,13 @@ CREATE TABLE `emailtemplate` (
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `able` int(11) DEFAULT '2' COMMENT '是否启用',
+  `active` int(11) DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-INSERT INTO `emailtemplate` VALUES ('1', '111','123','remark', 1);
+INSERT INTO `emailtemplate` VALUES ('1', '111','content1','remark', 1);
+INSERT INTO `emailtemplate` VALUES ('2', '222','content2','remark', 1);
+INSERT INTO `emailtemplate` VALUES ('3', '333','content3','remark', 1);
+INSERT INTO `emailtemplate` VALUES ('4', '444','content4','remark', 1);
 -- ----------------------------
 -- Records of catalogcontent
 -- ----------------------------

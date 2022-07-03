@@ -38,6 +38,9 @@ export default {
     delCatalog: '/writer/delCatalog',
     editBook: '/writer/editBook',
   },
+  sendEmail: {
+    batch: 'sendEmail/batch',
+  },
   errorTask: {
     list: '/errorTask/list',
   },
