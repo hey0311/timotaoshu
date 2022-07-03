@@ -1,4 +1,4 @@
 export default {
-    apiServer:'http://localhost:3000',
-    wssServer: 'ws://localhost:8000'
+  apiServer: 'http://43.134.102.124:3000',
+  wssServer: 'ws://43.134.102.124:8000',
 }
