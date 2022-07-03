@@ -20,6 +20,10 @@ router.use('', oauth(4004), async function (req, res, next) {
       `select * from keywords limit ${(page - 1) * limit},${limit}`
     )
     log.info('search list')
+    log.log('this is log')
+    log.warn('this is warn')
+    log.trace('hello', 'world')
+    log.error('this is error')
     const ruleMap = getRuleConfigMap()
     for (let i = 0; i < allData.length; i++) {
       let keywords = allData[i]
