@@ -17,7 +17,7 @@ async function splice(logType) {
         break
       case 2: //  adminApi打印日志   www
         // basePath = path.join(global.__base, "log/adminApi/out");
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/www-out.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/www-out.log`)
         basePath = path.join(
           global.__base,
           'log/adminApi/out/adminApiOutLog-' +
@@ -26,7 +26,7 @@ async function splice(logType) {
         )
         break
       case 3: //  adminApi报错日志   www
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/www-error.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/www-error.log`)
         // basePath = path.join(global.__base, "log/adminApi/error");
         basePath = path.join(
           global.__base,
@@ -45,7 +45,7 @@ async function splice(logType) {
         )
         break
       case 5: //  h5打印日志  h5
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/h5-out.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/h5-out.log`)
         // basePath = path.join(global.__base, "log/h5/out");
         basePath = path.join(
           global.__base,
@@ -55,7 +55,7 @@ async function splice(logType) {
         )
         break
       case 6: //  h5报错日志  h5
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/h5-error.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/h5-error.log`)
         // basePath = path.join(global.__base, "log/h5/error");
         basePath = path.join(
           global.__base,
@@ -65,7 +65,7 @@ async function splice(logType) {
         )
         break
       case 7: //  www打印日志  server
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/server-out.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/server-out.log`)
         // basePath = path.join(global.__base, "log/www/out");
         basePath = path.join(
           global.__base,
@@ -75,7 +75,7 @@ async function splice(logType) {
         )
         break
       case 8: //  www报错日志   server
-        filePath = path.join(global.__base, `${PM2_DIR}/logs/server-error.log`)
+        filePath = path.join(global.__base, `${PM2_DIR}/server-error.log`)
         // basePath = path.join(global.__base, "log/www/error");
         basePath = path.join(
           global.__base,
