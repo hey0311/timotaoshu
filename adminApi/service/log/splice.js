@@ -1,6 +1,6 @@
 const { tool, path, fs, log } = require('../../tool/require')
 
-const PM2_DIR = '../../../root/.pm2'
+const PM2_DIR = '../../wwwlogs/pm2'
 async function splice(logType) {
   return new Promise((resolve, reject) => {
     let filePath = '' //截取的原地址
