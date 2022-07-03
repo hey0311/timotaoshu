@@ -19,15 +19,6 @@ router.use('', oauth(4004), async function (req, res, next) {
     let allData = await db.query(
       `select * from keywords limit ${(page - 1) * limit},${limit}`
     )
-    const a = {
-      x: 1,
-      y: {
-        c: '123',
-      },
-      z: [1, 2, 3, 4],
-    }
-    log.log('log log', a)
-    console.log('consolelog', a)
     const ruleMap = getRuleConfigMap()
     for (let i = 0; i < allData.length; i++) {
       let keywords = allData[i]

@@ -11,10 +11,12 @@ const scheduleObj = require('./core/schedule') //定时任务
 // const upload = require('./core/upload-mutter');     //文件上传
 const { fs, path, tool, log } = require('./tool/require')
 const hostArr = require('../common/host') //允许访问的域名
+const { REPTILE_STATUS } = require('../common/tool/constant')
 // const bodyParser = require('body-parser');
 global.server = false //如果是服务器且服务器开启了http代理(其中一种privoxy，若不熟悉请加群问群主)，改为true
 global.serverProxy = 'http://127.0.0.1:8118' //服务器的代理
 global.reptileCatalog = 0 //爬虫正在爬的数量
+global.reptileStatus = REPTILE_STATUS.STOP
 
 /*
  * 创建文件夹 start

@@ -18,6 +18,7 @@ const reptileSearchItem = require('./reptileSearchItem')
 const getRule = require('./rule')
 const { batchAddSearchItemToQueue } = require('./searchItemQueue')
 const reptileErrorTasks = require('./reptileErrorTasks')
+const checkstop = require('./tools')
 
 module.exports = reptileKeywordsByRule
 
@@ -36,14 +37,20 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
       })
     } catch (err) {
       // 爬第一页出错
-      wss.broadcast(`爬取第1页出错,${err}`)
+      wss.broadcast(`爬取第${page}页出错,${err}`)
       resolve()
       return
     }
     while ($) {
+      if (checkstop()) {
+        resolve()
+      }
       let searchItemList = rule.getSearchItemList($).toArray()
       let paramsList = []
       for (let i = 0; i < searchItemList.length; i++) {
+        if (checkstop()) {
+          resolve()
+        }
         // for (let i = 0; i < 3; i++) {
         const searchItem = searchItemList[i]
         const searchItemUrl = rule.getSearchItemUrl($, searchItem, i)

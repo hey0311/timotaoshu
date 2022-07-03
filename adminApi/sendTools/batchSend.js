@@ -4,9 +4,10 @@ const { sendEmail } = require('./sendEmail')
 
 async function batchSend() {
   // 取1000个没发过的邮箱
-  const emailList = await db.query(
-    `select * from email where sendStatus = 0 limit 0,1000`
-  )
+  //   const emailList = await db.query(
+  //     `select * from email where sendStatus = 0 limit 0,1000`
+  //   )
+  const emailList = []
   for (let i = 0; i < emailList.length; i++) {
     // 随机取一个模板
     const template = await db.query(

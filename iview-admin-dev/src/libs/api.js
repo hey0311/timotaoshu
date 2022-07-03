@@ -65,6 +65,7 @@ export default {
   },
   reptile: {
     startReptileKeywords: '/reptile/startReptileKeywords',
+    stop: '/reptile/stop',
     list: '/reptile',
     email: '/reptile/email',
     emailbox: '/reptile/emailbox',

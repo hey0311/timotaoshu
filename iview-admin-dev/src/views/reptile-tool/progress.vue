@@ -14,6 +14,9 @@
           <Button type="primary" @click="startReptile" :disabled="loading">{{
             btnTitle
           }}</Button>
+          <Button type="primary" @click="stopReptile" :disabled="loading"
+            >停止</Button
+          >
           <Button
             type="primary"
             @click="startReptileErrorTasks"
@@ -152,6 +155,18 @@ export default {
       this.$refs.body.innerHTML = ''
     },
     startReptileErrorTasks() { },
+    stopReptile() {
+      this.loading = true
+      let obj = {
+        params: {
+        }
+      }
+      util.post.reptile.stop(obj).then((data) => {
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+      })
+    },
     startReptile() {
       // if(this.loading || this.btnTitle =='正在爬取') {
       //     return;

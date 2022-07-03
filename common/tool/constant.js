@@ -10,8 +10,14 @@ const ABLE_STATUS = {
 // const COUNTRY = {
 //   GERMARY: 'GERMARY',
 // }
+const REPTILE_STATUS = {
+  ALL_KEY_WORDS: 0,
+  ERROR_TASKS: 1,
+  STOP: 2,
+}
 
 module.exports = {
   ERROR_TASK_PAGE_TYPE,
   ABLE_STATUS,
+  REPTILE_STATUS,
 }
