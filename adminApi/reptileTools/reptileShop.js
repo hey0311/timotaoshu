@@ -11,7 +11,7 @@ const {
   log,
   timoRp,
 } = require('../tool/require')
-const { insertEmail, insertErrorTask } = require('./dbTool')
+const { insertEmail, insertErrorTask, deleteErrorTask } = require('./dbTool')
 const reptileRequest = require('./reptileRequest')
 
 module.exports = reptileShop
@@ -47,7 +47,6 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
       email: email || '空',
       result: email ? undefined : '忽略',
     })
-    wss.broadcast(`第${page}页第${order}个email:${email ? email : '无'}`)
     if (email) {
       const insertResult = await insertEmail({
         keywords,

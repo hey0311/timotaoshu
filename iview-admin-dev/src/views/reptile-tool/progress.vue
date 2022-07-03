@@ -29,10 +29,8 @@
         <Col span="8">当前网站:{{ curRuleName }}</Col>
         <Col span="8">当前页数:{{ curReptilePage }}</Col>
       </Row>
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 10px"
-      >
-        <div>
+      <Row>
+        <Col span="8">
           <Table
             border
             highlight-row
@@ -42,8 +40,8 @@
             size="small"
             :row-class-name="rowClass"
           ></Table>
-        </div>
-        <div style="margin-left: 20px">
+        </Col>
+        <Col span="8">
           <Table
             border
             highlight-row
@@ -53,15 +51,15 @@
             size="small"
             :row-class-name="rowClass"
           ></Table>
-        </div>
-      </div>
-    </Card>
-    <Card shadow>
-      <div
-        ref="body"
-        class="progress_log"
-        :style="{ height: tableHeight, overflowY: 'auto' }"
-      ></div>
+        </Col>
+        <Col span="8">
+          <div
+            ref="body"
+            class="progress_log"
+            :style="{ height: tableHeight, overflowY: 'auto' }"
+          ></div>
+        </Col>
+      </Row>
     </Card>
   </div>
 </template>
@@ -197,7 +195,9 @@ export default {
       for (let i = 0; i < data.length; i++) {
         const progress = data[i].progress;
         if (typeof progress === 'object' && progress.type === 'table') {
-          if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
+          if (progress.page === 10000) {
+            this.curKeywordsName = '爬取错误记录中'
+          } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
             this.curKeywordsName = progress.keywordsName
             this.curRuleName = progress.ruleName
             this.curReptilePage = progress.page
@@ -208,13 +208,13 @@ export default {
           }
           // 插入表格
           let curIndex = -1;
-          if (progress.index < 32) {
+          if (progress.index < 31) {
             curIndex = tableList1.findIndex(item => item.index === progress.index)
           } else {
             curIndex = tableList2.findIndex(item => item.index === progress.index)
           }
           if (curIndex !== -1) {
-            if (progress.index < 32) {
+            if (progress.index < 31) {
               // Vue.set(tableList1, curIndex, Object.assign({}, tableList1[i], progress))
               tableList1[curIndex] = Object.assign({}, tableList1[curIndex], progress)
             } else {
@@ -222,7 +222,7 @@ export default {
               tableList2[curIndex] = Object.assign({}, tableList2[curIndex], progress)
             }
           } else {
-            if (progress.index < 32) {
+            if (progress.index < 31) {
               tableList1.push(progress)
             } else {
               tableList2.push(progress)
@@ -243,7 +243,9 @@ export default {
         var html = ``
         data.forEach((value, index) => {
           this.index += index
-          html += `<div>${value.progress}</div>`
+          if (typeof value.progress === 'string') {
+            html += `<div>${value.progress}</div>`
+          }
         })
         this.scrollTop += 80
         this.$refs.body.innerHTML += html

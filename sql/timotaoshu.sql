@@ -138,6 +138,14 @@ CREATE TABLE `emailbox` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `emailbox` VALUES ('1', 'info@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('2', 'sales02@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('3', 'sales03@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('4', 'sales04@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('5', 'sales05@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('6', 'sales06@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('7', 'sales07@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('8', 'sales08@buyshiphere.com', 1);
+INSERT INTO `emailbox` VALUES ('9', 'sales09@buyshiphere.com', 1);
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------

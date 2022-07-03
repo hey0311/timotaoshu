@@ -45,7 +45,6 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
       index: order,
       shopUrl,
     })
-    wss.broadcast(`第${page}页第${order}个shopUrl:${shopUrl}`)
     if (shopUrl) {
       // emmm..这里不能用queue
       await reptileShop({

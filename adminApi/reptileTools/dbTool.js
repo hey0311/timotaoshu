@@ -19,7 +19,6 @@ async function insertEmail({
     let result = tool.getData(await db.query(sql))
     if (result) {
       //如果数据库里有这本书
-      wss.broadcast(`${email}在数据库已存在`)
       wss.broadcast({
         type: 'table',
         keywordsName: keywords.name,
@@ -38,7 +37,6 @@ async function insertEmail({
       bizName || 'null'
     }","${firstName}","${lastName}","${phone}")`
     await db.query(insertSql)
-    wss.broadcast(`${email}已入库`)
     wss.broadcast({
       type: 'table',
       page,
@@ -117,7 +115,6 @@ async function insertErrorTask({
         `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${rule.id}, "${uri}", 0, ${pageType},${page},${order})`
       )
     }
-    wss.broadcast(`插入errortask成功`)
     wss.broadcast({
       type: 'table',
       keywordsName: keywords.name,
@@ -135,7 +132,6 @@ async function insertErrorTask({
 async function deleteErrorTask(id) {
   try {
     await db.query(`delete from errortask where id=${id}`)
-    wss.broadcast(`删除errortask成功`)
     return true
   } catch (err) {
     log.error(err)

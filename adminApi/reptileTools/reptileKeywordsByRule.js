@@ -17,6 +17,7 @@ const reptileSearchItem = require('./reptileSearchItem')
 
 const getRule = require('./rule')
 const { batchAddSearchItemToQueue } = require('./searchItemQueue')
+const reptileErrorTasks = require('./reptileErrorTasks')
 
 module.exports = reptileKeywordsByRule
 
@@ -63,6 +64,8 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
         })
       }
       await batchAddSearchItemToQueue(paramsList, reptileSearchItem)
+      // 爬完一页开始爬错误页面
+      await reptileErrorTasks()
       if (rule.isLastPage($)) {
         await updateKeywordsProgress({
           keywords,

@@ -34,7 +34,7 @@ const reptileRequest = function (options) {
         //     "User-Agent": 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.170 Safari/537.36', // 谷歌浏览器
       },
       // agent,   // 不支持https
-      timeout: 20000, // 默认20秒超时
+      timeout: 10000, // 默认20秒超时
     }
     let reqOptions = Object.assign(initOptions, options)
 

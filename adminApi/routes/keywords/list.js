@@ -27,6 +27,11 @@ router.use('', oauth(4004), async function (req, res, next) {
       )
       for (let j = 0; j < progress.length; j++) {
         progress[j].rule = ruleMap[progress[j].ruleId]
+        // 查一下爬了几个邮箱
+        const emailList = await db.query(
+          `select * from email where keywordsId=${keywords.id} and ruleId=${progress[j].ruleId}`
+        )
+        progress[j].emailList = emailList
       }
       keywords.progress = progress
     }

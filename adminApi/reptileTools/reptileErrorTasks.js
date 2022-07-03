@@ -14,20 +14,31 @@ const { getRuleConfigList, getRuleConfigMap } = require('./ruleConfig')
 const reptileKeywordsByRule = require('./reptileKeywordsByRule')
 const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
 const reptileSearchItem = require('./reptileSearchItem')
-const { addSearchItemToQueue } = require('./searchItemQueue')
+const {
+  addSearchItemToQueue,
+  batchAddSearchItemToQueue,
+} = require('./searchItemQueue')
 const getRule = require('./rule')
 const reptileShop = require('./reptileShop')
-const { addShopToQueue } = require('./shopQueue')
+const { addShopToQueue, batchAddShopToQueue } = require('./shopQueue')
 const { deleteErrorTask } = require('./dbTool')
 
 module.exports = reptileErrorTasks
 
 async function reptileErrorTasks() {
   try {
-    wss.broadcast(`开始爬取错误记录`)
     // 取出错误记录
-    const errorTaskRecords = await db.query(`select * from errortask`)
+    const allErrorRecords = await db.query(`select count(*) from errortask`)
+    const count = allErrorRecords[0]['count(*)']
+    const errorTaskRecords = await db.query(
+      `select * from errortask limit 0,100`
+    )
+    wss.broadcast(
+      `开始爬取错误记录,共${count}条,现在取${errorTaskRecords.length}条爬取`
+    )
     const ruleMap = getRuleConfigMap()
+    let searchItemParamsList = []
+    let shopParamsList = []
     for (let i = 0; i < errorTaskRecords.length; i++) {
       const errorTask = errorTaskRecords[i]
       // 获取关键词
@@ -40,48 +51,51 @@ async function reptileErrorTasks() {
       const rule = getRule(ruleMap[errorTask.ruleId], keywords)
       switch (errorTask.pageType) {
         case ERROR_TASK_PAGE_TYPE.ITEM_PAGE: // 搜索项
-          try {
-            const result = await addSearchItemToQueue(
-              {
-                keywords,
-                rule,
-                uri: errorTask.uri,
-                page: errorTask.page,
-                order: errorTask.sequence,
-              },
-              reptileSearchItem
-            )
-            // 删除这条记录
-            await deleteErrorTask(errorTask.id)
-          } catch (err) {
-            console.log(
-              '🚀 ~ file: reptileErrorTasks.js ~ line 64 ~ reptileErrorTasks ~ err',
-              err
-            )
-          }
+          searchItemParamsList.push({
+            keywords,
+            rule,
+            uri: errorTask.uri,
+            page: 10000,
+            order: i + 1,
+            result: async () => {
+              await deleteErrorTask(errorTask.id)
+              wss.broadcast({
+                type: 'table',
+                page: 10000,
+                keywordsName: keywords.name,
+                ruleName: rule.name,
+                index: i + 1,
+                result: '已去除',
+              })
+            },
+            error() {},
+          })
           break
         case ERROR_TASK_PAGE_TYPE.SHOP_PAGE:
-          try {
-            const result = await addShopToQueue(
-              {
-                keywords,
-                rule,
-                uri: errorTask.uri,
-                page: errorTask.sequence,
-                order: errorTask.order,
-              },
-              reptileShop
-            )
-            await deleteErrorTask(errorTask.id)
-          } catch (err) {
-            console.log(
-              '🚀 ~ file: reptileErrorTasks.js ~ line 82 ~ reptileErrorTasks ~ err',
-              err
-            )
-          }
+          shopParamsList.push({
+            keywords,
+            rule,
+            uri: errorTask.uri,
+            page: 10000,
+            order: i + 1,
+            result: async () => {
+              await deleteErrorTask(errorTask.id)
+              wss.broadcast({
+                type: 'table',
+                page: 10000,
+                keywordsName: keywords.name,
+                ruleName: rule.name,
+                index: i + 1,
+                result: '已去除',
+              })
+            },
+            error() {},
+          })
           break
       }
     }
+    await batchAddSearchItemToQueue(searchItemParamsList, reptileSearchItem)
+    await batchAddShopToQueue(shopParamsList, reptileShop)
     wss.broadcast(`错误记录爬取完成`)
   } catch (err) {
     console.log(

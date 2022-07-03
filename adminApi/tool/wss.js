@@ -72,7 +72,9 @@ let infoList = []
 
 //广播
 wss.broadcast = function (data) {
-  console.log(data)
+  if (typeof data === 'string') {
+    console.log(data)
+  }
   infoList.push({ progress: data })
 
   setInterval(function () {

@@ -82,7 +82,7 @@ export default {
           render: (h, params) => {
             return h('div', {},
               params.row.progress.map(item => {
-                return h('div', {}, item.rule.site + ' ' + item.rule.country + ':' + (item.finished ? '完成' : ('已爬第' + item.finishPage + '页')))
+                return h('div', {}, item.rule.site + ' ' + item.rule.country + ':' + (item.finished ? `完成,共${item.finishPage}页` : ('已爬第' + item.finishPage + '页')) + `,邮箱${item.emailList.length}个`)
               })
             )
           }
