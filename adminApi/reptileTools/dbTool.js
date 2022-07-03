@@ -101,6 +101,11 @@ async function insertErrorTask({
   try {
     const records = await db.query(`select * from errortask where uri="${uri}"`)
     if (records.length !== 0) {
+      // 如果重试次数超过5次,删掉
+      if (records[0].retryCount >= 5) {
+        await deleteErrorTask(records[0].id)
+        return
+      }
       //更新记录,retryCount
       await db.query(
         `update errortask set retryCount=${

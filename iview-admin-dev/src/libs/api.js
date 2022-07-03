@@ -38,6 +38,9 @@ export default {
     delCatalog: '/writer/delCatalog',
     editBook: '/writer/editBook',
   },
+  errorTask: {
+    list: '/errorTask/list',
+  },
   site: {
     list: '/site/list',
   },
