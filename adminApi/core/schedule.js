@@ -86,50 +86,50 @@ let j5 = schedule.scheduleJob(rule5, async function () {
  * 4、再一次爬取错误章节列表里的
  *
  * */
-let j6 = schedule.scheduleJob(rule6, function () {
-  log.debug('定时任务6：' + new Date().Format())
-  wss.broadcast('定时任务6：' + new Date().Format())
-  reptileService
-    .startReptileKeywords()
-    .then(() => {
-      log.debug('定时任务6：开始爬取，爬取完毕时间为：' + new Date().Format())
-      errorCatalogAgain()
-    })
-    .catch(() => {
-      errorCatalogAgain()
-    })
+// let j6 = schedule.scheduleJob(rule6, function () {
+//   log.debug('定时任务6：' + new Date().Format())
+//   wss.broadcast('定时任务6：' + new Date().Format())
+//   reptileService
+//     .startReptileKeywords()
+//     .then(() => {
+//       log.debug('定时任务6：开始爬取，爬取完毕时间为：' + new Date().Format())
+//       // errorCatalogAgain()
+//     })
+//     .catch(() => {
+//       // errorCatalogAgain()
+//     })
 
-  /*
-   * 再一次爬取错误章节  也就是爬取两次
-   * */
-  function errorCatalogAgain() {
-    errorCatalogReptile(async () => {
-      // let set = setTimeout(() => {
-      //     ipReptileService.check().then(() => {
-      //         errorCatalogReptile();
-      //     });
-      //     clearTimeout(set);
-      //     set = null;
-      // }, 1000 * 300); //5分钟  因为错误章节5分钟一次
-      await tool.sleep(1000 * 300)
-      ipReptileService.check().then(() => {
-        errorCatalogReptile()
-      })
-    })
-  }
+//   /*
+//    * 再一次爬取错误章节  也就是爬取两次
+//    * */
+//   // function errorCatalogAgain() {
+//   //   errorCatalogReptile(async () => {
+//   //     // let set = setTimeout(() => {
+//   //     //     ipReptileService.check().then(() => {
+//   //     //         errorCatalogReptile();
+//   //     //     });
+//   //     //     clearTimeout(set);
+//   //     //     set = null;
+//   //     // }, 1000 * 300); //5分钟  因为错误章节5分钟一次
+//   //     await tool.sleep(1000 * 300)
+//   //     ipReptileService.check().then(() => {
+//   //       errorCatalogReptile()
+//   //     })
+//   //   })
+//   // }
 
-  /*
-   * 爬取错误章节
-   * */
-  function errorCatalogReptile(callback) {
-    reptileService.startErrorTasks().then(() => {
-      log.debug(
-        '定时任务：错误记录开始爬取，爬取完毕时间为：' + new Date().Format()
-      )
-      callback && callback()
-    })
-  }
-})
+//   /*
+//    * 爬取错误章节
+//    * */
+//   // function errorCatalogReptile(callback) {
+//   //   reptileService.startErrorTasks().then(() => {
+//   //     log.debug(
+//   //       '定时任务：错误记录开始爬取，爬取完毕时间为：' + new Date().Format()
+//   //     )
+//   //     callback && callback()
+//   //   })
+//   // }
+// })
 
 module.exports = {
   // j,

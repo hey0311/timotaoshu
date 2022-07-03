@@ -19,7 +19,7 @@
         ref="table"
       ></Table>
     </Card>
-    <Card shadow>
+    <!-- <Card shadow>
       <Page
         :current="params.page"
         :page-size="params.limit"
@@ -28,7 +28,7 @@
         show-elevator
         @on-change="getList"
       ></Page>
-    </Card>
+    </Card> -->
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
     <edit-template
       :modal="modal"
@@ -110,7 +110,6 @@ export default {
                 },
                 on: {
                   click: (e) => {
-                    console.log('🚀 ~ file: email-template.vue ~ line 75 ~ data ~ params', params)
                     this.onClickShowModal('edit', params.row)
                     e.stopPropagation()
                     e.preventDefault()
@@ -201,27 +200,29 @@ export default {
   },
   computed: {},
   methods: {
+    /**
+     * 测试邮件
+     */
     testTemplate(params) {
+      this.loading = true
       util.post.template.test({ params }).then((data) => {
         this.loading = false
       }).catch((err) => {
         this.loading = false
       })
     },
+    /**
+     * 保存
+     */
     saveTemplate(params) {
+      this.loading = true;
       util.post.template.save({
         params
       }).then((data) => {
-        console.log("🚀 ~ file: email-template.vue ~ line 215 ~ saveTemplate ~ data", data)
-        // this.reptileList = data.list;
-        // this.total = data.count;
-        // this.loading = false;
-        if (data.code === 1000) {
-          console.log('ccz')
-        }
+        this.loading = false;
         this.getList()
       }).catch((err) => {
-        // this.loading = false;
+        this.loading = false;
       })
     },
     getList(page) {
@@ -240,27 +241,6 @@ export default {
         this.loading = false
       })
     },
-    onClickUpdate() {
-      if (this.loading) return
-      let obj = {
-        params: {
-          page: this.params.page,
-          limit: this.params.limit
-        }
-      }
-      this.loading = true
-      util.post.template.save(obj).then((data) => {
-        this.loading = false
-        this.reptileList = data.reptileList
-        this.total = data.count
-      }).catch((err) => {
-        this.loading = false
-        throw err
-      })
-    },
-    // expandToggle(row, index) {  //触发click事件
-    //     this.$refs.table.$el.getElementsByClassName("ivu-table-cell-expand")[index].click();
-    // },
     onClickDelete(id) {
       if (this.loading) return
       this.loading = true
@@ -314,63 +294,9 @@ export default {
         this.loading = false
       })
     },
-    onClickConfirmToggleUse(reptileTypeId, isSearch, reason, callback) {
-      if (this.loading) return
-      let obj = {
-        params: {
-          reptileTypeId: reptileTypeId,
-          isSearch: isSearch,
-          reason: reason
-        }
-      }
-      this.loading = true
-      util.post.reptile.updateChannelSearch(obj).then((data) => {
-        this.loading = false
-        callback()
-        this.getList()
-      }).catch((error) => {
-        this.loading = false
-      })
-    },
-    onClickExportChannel() { // 导出
-      let obj = {
-        responseType: 'blob',
-        params: {}
-      }
-      this.loading = true
-      util.post.reptile.exportChannel(obj).then((data) => {
-        this.loading = false
-
-        const content = data
-        const blob = new Blob([content])
-        const fileName = '来源渠道列表.xls'
-        /* xls下载 */
-        if ('download' in document.createElement('a')) { // 非IE下载
-          const elink = document.createElement('a')
-          elink.download = fileName
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
-        } else { // IE10+下载
-          navigator.msSaveBlob(blob, fileName)
-        }
-      }).catch((err) => {
-        this.loading = false
-        console.error(err)
-      })
-    },
-    succesFun(data) {
-      this.getList()
-    }
   },
   mounted() {
     this.getList()
-    this.$on('reset', () => {
-      this.onClickUpdate()
-    })
   },
   activated() {
 

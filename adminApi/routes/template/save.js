@@ -23,7 +23,7 @@ router.use('', oauth(4004), async function (req, res, next) {
       )
     } else {
       allData = await db.query(
-        `insert into emailtemplate (content,subject,remark,able) values ("${content}","${subject}","${remark}",2)`
+        `insert into emailtemplate (content,subject,remark,active) values ("${content}","${subject}","${remark}",0)`
       )
     }
     // let reptileList = await reptileConfig.getReptileList();
