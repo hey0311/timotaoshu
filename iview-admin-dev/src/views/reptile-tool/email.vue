@@ -1,7 +1,10 @@
 <template>
   <Layout>
-    <Button @click="batchSendEmail">批量发送邮件</Button>
     <Card shadow>
+      <div class="header">
+        <h3>已爬邮箱</h3>
+        <Button type="primary" @click="getList">刷新</Button>
+      </div>
       <Table
         border
         highlight-row
@@ -28,6 +31,12 @@
 .upload {
   display: inline-block;
   vertical-align: top;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 </style>
 <script>

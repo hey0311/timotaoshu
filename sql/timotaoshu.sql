@@ -53,9 +53,6 @@ CREATE TABLE `keywords` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-insert into `keywords` values ('1','vintage wooden desk tidy',1);
-insert into `keywords` values ('2','vintage wooden desk a',1);
-
 -- ----------------------------
 -- Table structure for progresserror
 -- ----------------------------
@@ -127,8 +124,6 @@ CREATE TABLE `email` (
   KEY `keywordsId` (`keywordsId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `email` VALUES ('1', '1','1','hey0311@qq.com','bb','al','b','13','htt','0','2022-06-22' ,'2022-06-22');
-INSERT INTO `email` VALUES ('2', '1','1','hey0311@126.com','bb','al','b','13','htt','0','2022-06-22' ,'2022-06-22');
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
@@ -160,7 +155,6 @@ CREATE TABLE `emailblack` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `emailblack` VALUES ('1', 'test@qq.com', 1);
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
@@ -172,7 +166,6 @@ CREATE TABLE `emailwhite` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `emailwhite` VALUES ('2', 'hey0311@qq.com', 1);
 -- ----------------------------
 -- Table structure for catalogcontent
 -- ----------------------------
@@ -185,10 +178,6 @@ CREATE TABLE `emailtemplate` (
   `active` int(11) DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-INSERT INTO `emailtemplate` VALUES ('1', '111','content1','remark', 1);
-INSERT INTO `emailtemplate` VALUES ('2', '222','content2','remark', 1);
-INSERT INTO `emailtemplate` VALUES ('3', '333','content3','remark', 1);
-INSERT INTO `emailtemplate` VALUES ('4', '444','content4','remark', 1);
 -- ----------------------------
 -- Records of catalogcontent
 -- ----------------------------
@@ -300,7 +289,6 @@ CREATE TABLE `reptiletool2` (
 -- ----------------------------
 -- Records of reptiletool2
 -- ----------------------------
-INSERT INTO `reptiletool2` VALUES ('2', 'gbk', 'ebay', 'https://www.ebay.co.uk/', 'utf-8', 'https://www.ebay.co.uk/sch/i.html?_from=R40&rt=nc&_nkw=${name}', '.srp-results.srp-list.clearfix', '1', '0', 'td>a、html', 'td>a、attrhref', 'td:nth-child(3)、html', 'td:nth-child(6)、html', 'td:nth-child(5)、html', '#info>h1、html', '#info>p:nth-child(2)、html、split、：、1', '#info>p:nth-child(4)、html、split、：、1', '.con_top、html、split、>、9、split、<、0', '', '', '', '', '1', 'pc', '.srp-river-results .s-item__link', '#list>dl>dt:eq(1)、index-2', '', '#fmimg>img、attrsrc', '#intro>p、html', '.ux-seller-section__item--seller、text', '1', '.srp-river-results .s-item__link、attrhref', '.s-item__title、text', '、attrhref', '');
 
 -- ----------------------------
 -- Table structure for role
