@@ -46,19 +46,19 @@ async function startReptile(startPage, endPage, callback) {
             return
           }
           if (isTrue) {
-            // wss.broadcast(
-            //   `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
-            // )
+            console.log(
+              `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
+            )
             list.push(data)
           } else {
             try {
-              // wss.broadcast(
-              //   `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
-              // )
+              console.log(
+                `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
+              )
             } catch (err2) {
-              // wss.broadcast(
-              //   `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
-              // )
+              console.log(
+                `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
+              )
             }
           }
           finish()
@@ -83,11 +83,11 @@ async function startReptile(startPage, endPage, callback) {
   }
 
   async function end() {
-    wss.broadcast(
+    console.log(
       `共检查了${length}条数据，其中有${list.length}条IP是有用的，开始保存`
     )
     await tool.redisData.ipList.setIpList(list)
-    wss.broadcast(`保存${list.length}条IP完毕`)
+    console.log(`保存${list.length}条IP完毕`)
     callback && callback()
   }
 }

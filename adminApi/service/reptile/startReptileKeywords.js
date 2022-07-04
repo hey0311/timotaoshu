@@ -1,5 +1,5 @@
-const getBooksFromJson = require("../../reptileTool/getBooksFromJson.js");
-const reptileAllKeywords = require("../../reptileTools/reptileAllKeywords.js");
+const getBooksFromJson = require('../../reptileTool/getBooksFromJson.js')
+const reptileAllKeywords = require('../../reptileTools/reptileAllKeywords.js')
 
 const startReptile = async () => {
   return new Promise(async (resolve, reject) => {
@@ -22,9 +22,9 @@ const startReptile = async () => {
     //   });
     //   resolve("开始爬取");
     // }
-    await reptileAllKeywords();
-    resolve("开始爬取");
-  });
-};
+    reptileAllKeywords()
+    resolve('开始爬取')
+  })
+}
 
-module.exports = startReptile;
+module.exports = startReptile

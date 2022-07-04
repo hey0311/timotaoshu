@@ -220,7 +220,6 @@ function getRule(ruleConfig, keywords) {
         const shopUrl = domCommon(null, shopUrlList[i], $)
         if (shopUrl) {
           return shopUrl
-          break
         }
       }
       return ''

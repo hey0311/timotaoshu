@@ -62,7 +62,7 @@ async function batchAddShopToQueue(paramsList, pro) {
           // end();
           // resolve();
           resultCount++
-          paramsList[i].result && paramsList[i].result()
+          paramsList[i].result && paramsList[i].result(data)
           if (resultCount === paramsList.length) {
             resolve()
           }
@@ -72,7 +72,7 @@ async function batchAddShopToQueue(paramsList, pro) {
           // end();
           // reject();
           resultCount++
-          paramsList[i].error && paramsList[i].error()
+          paramsList[i].error && paramsList[i].error(data)
           if (resultCount === paramsList.length) {
             resolve()
           }

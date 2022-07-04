@@ -50,9 +50,6 @@ async function reptileAllKeywords() {
           if (keywordsProgressList[0]) {
             reptilePage = keywordsProgressList[0].finishPage + 1
           }
-          // wss.broadcast(
-          //   `开始爬取关键词${keywords.name},${ruleConfig.site},${ruleConfig.country}`
-          // )
           const rule = getRule(ruleConfig, keywords)
           await reptileKeywordsByRule(keywords, rule, reptilePage)
         }

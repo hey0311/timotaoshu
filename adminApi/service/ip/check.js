@@ -35,19 +35,19 @@ async function check() {
             if (overLength > needCount) return
             if (isTrue) {
               successArr.push(data.i)
-              //   wss.broadcast(
-              //     `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
-              //   )
+                console.log(
+                  `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
+                )
             } else {
               indexArr.push(data.i)
               try {
-                // wss.broadcast(
-                //   `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
-                // )
+                console.log(
+                  `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
+                )
               } catch (err2) {
-                // wss.broadcast(
-                //   `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
-                // )
+                console.log(
+                  `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
+                )
               }
             }
             if (overLength == needCount) {
@@ -90,7 +90,7 @@ async function check() {
           global.delIp = false
           global.checkIp = false
           if (result) {
-            wss.broadcast(
+            console.log(
               `检查了${length}条代理IP,删除了${
                 indexArr.length + leakIndexArr.length
               }条代理IP`
@@ -101,11 +101,11 @@ async function check() {
               }条代理IP`,
             })
           } else {
-            wss.broadcast(`删除失败`)
+            console.log(`删除失败`)
             reject(`删除失败`)
           }
         } catch (err) {
-          wss.broadcast(`删除失败，失败原因：${err}`)
+          console.log(`删除失败，失败原因：${err}`)
           global.delIp = false
           global.checkIp = false
           reject(`删除失败，失败原因：${err}`)

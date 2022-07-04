@@ -36,7 +36,7 @@ async function reptileErrorTasks() {
     const errorTaskRecords = await db.query(
       `select * from errortask limit 0,100`
     )
-    wss.broadcast(
+    console.log(
       `开始爬取错误记录,共${count}条,现在取${errorTaskRecords.length}条爬取`
     )
     const ruleMap = getRuleConfigMap()
@@ -62,15 +62,18 @@ async function reptileErrorTasks() {
             page,
             order: i + 1,
             reptileStatus: REPTILE_STATUS.ERROR_TASKS,
-            result: async () => {
-              await deleteErrorTask(errorTask.id)
+            errorTaskId: errorTask.id,
+            result: (result) => {
+              console.log(
+                `爬取errorTask完成,地址:${errorTask.uri},结果:${result}`
+              )
               wss.broadcast({
                 type: REPTILE_STATUS.ERROR_TASKS,
                 page,
                 keywordsName: keywords.name,
                 ruleName: rule.name,
                 index: i + 1,
-                result: '已去除',
+                result,
               })
             },
             error() {},
@@ -84,15 +87,18 @@ async function reptileErrorTasks() {
             page,
             order: i + 1,
             reptileStatus: REPTILE_STATUS.ERROR_TASKS,
-            result: async () => {
-              await deleteErrorTask(errorTask.id)
+            errorTaskId: errorTask.id,
+            result: (result) => {
+              console.log(
+                `爬取errorTask完成,地址:${errorTask.uri},结果:${result}`
+              )
               wss.broadcast({
                 type: REPTILE_STATUS.ERROR_TASKS,
                 page,
                 keywordsName: keywords.name,
                 ruleName: rule.name,
                 index: i + 1,
-                result: '已去除',
+                result,
               })
             },
             error() {},
@@ -102,7 +108,7 @@ async function reptileErrorTasks() {
     }
     await batchAddSearchItemToQueue(searchItemParamsList, reptileSearchItem)
     await batchAddShopToQueue(shopParamsList, reptileShop)
-    wss.broadcast(`错误记录爬取完成`)
+    console.log(`错误记录爬取完成`)
   } catch (err) {
     console.log(
       '🚀 ~ file: reptileAllKeywords.js ~ line 24 ~ reptileAllKeywords ~ err',

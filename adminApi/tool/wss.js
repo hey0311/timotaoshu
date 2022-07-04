@@ -28,7 +28,6 @@ console.log('websocket服务器开启了,端口8000')
 
 wss.on('connection', function (ws) {
   count++
-  console.log('in to connect')
   wss.broadcastCount()
   // ws.on('message', function (message) {
   //     console.log('received: %s', message);
@@ -72,7 +71,6 @@ let infoList = []
 
 //广播
 wss.broadcast = function (data) {
-  console.log(data)
   infoList.push({ progress: data })
 
   setInterval(function () {

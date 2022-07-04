@@ -435,7 +435,6 @@ let redisData = {
       let update = new Promise((resolve, reject) => {
         let value2 = typeof value == 'object' ? JSON.stringify(value) : value
         client3.lset('ipList', index, value2, function (err, reply) {
-          console.log('index:' + index)
           if (err) reject(err)
           if (reply) resolve(reply)
         })

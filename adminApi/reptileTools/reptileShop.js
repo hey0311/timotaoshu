@@ -1,4 +1,7 @@
-const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
+const {
+  ERROR_TASK_PAGE_TYPE,
+  REPTILE_STATUS,
+} = require('../../common/tool/constant')
 const {
   fs,
   rp,
@@ -23,6 +26,7 @@ async function reptileShop({
   page,
   order,
   reptileStatus,
+  errorTaskId,
 }) {
   return new Promise(async (resolve, reject) => {
     let $ = null
@@ -38,7 +42,7 @@ async function reptileShop({
         order,
         reptileStatus,
       })
-      resolve()
+      resolve('店铺网址请求失败')
       return
     }
     const email = rule.getEmail($)
@@ -46,15 +50,12 @@ async function reptileShop({
     const firstName = rule.getFirstName($)
     const lastName = rule.getLastName($)
     const phone = rule.getPhone($)
-    wss.broadcast({
-      type: reptileStatus,
-      page,
-      keywordsName: keywords.name,
-      ruleName: rule.name,
-      index: order,
-      email: email || '空',
-      result: email ? undefined : '忽略',
-    })
+    // 这里应该就可以删除错误记录了
+    let deleteErrorTaskResult = ''
+    if (reptileStatus === REPTILE_STATUS.ERROR_TASKS && errorTaskId) {
+      deleteErrorTaskResult = await deleteErrorTask(errorTaskId)
+      deleteErrorTaskResult = ',' + deleteErrorTaskResult
+    }
     if (email) {
       const insertResult = await insertEmail({
         keywords,
@@ -69,12 +70,11 @@ async function reptileShop({
         page,
         reptileStatus,
       })
-      if (insertResult) {
-        resolve()
-      } else {
-        resolve('错误,存取失败')
-      }
+      console.log(`店铺地址${uri},${insertResult}`)
+      resolve(insertResult + deleteErrorTaskResult)
+    } else {
+      console.log(`店铺地址${uri},无邮箱`)
+      resolve('无邮箱' + deleteErrorTaskResult)
     }
-    resolve()
   })
 }

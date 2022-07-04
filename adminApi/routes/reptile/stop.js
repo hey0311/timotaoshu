@@ -8,7 +8,7 @@ const { REPTILE_STATUS } = require('../../../common/tool/constant')
 // global.isReptile
 router.use('', oauth(4003), async function (req, res, next) {
   global.reptileStatus = REPTILE_STATUS.STOP
-  res.send(tool.toJson('success', msg, 1000))
+  res.send(tool.toJson('success', '', 1000))
   // reptileService
   //   .stop()
   //   .then((msg) => {

@@ -1,3 +1,4 @@
+const reptileRequest = require('../../reptileTools/reptileRequest')
 const {
   oauth,
   tool,
@@ -8,7 +9,7 @@ const {
   iconv,
   request,
   timoRp,
-} = require("../../tool/require");
+} = require('../../tool/require')
 
 // let started = Date.now();
 // const printTime = label => () => console.log("%d ms\t%s", Date.now() - started, label);
@@ -81,18 +82,18 @@ const {
 
 async function checkIp(ipObj, target) {
   return new Promise((resolve, reject) => {
-    timoRp({
-      uri: target || "https://www.ebay.co.uk/" || "https://www.baidu.com/",
+    reptileRequest({
+      uri: 'https://www.ebay.com/',
       timeout: 10000, //10s没有返回则视为代理不行
       proxy: `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`,
     })
       .then(function (data) {
-        resolve([ipObj, true]);
+        resolve([ipObj, true])
       })
       .catch(function (err) {
-        resolve([ipObj, false, err]);
-      });
-  });
+        resolve([ipObj, false, err])
+      })
+  })
 }
 
-module.exports = checkIp;
+module.exports = checkIp

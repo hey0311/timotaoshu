@@ -1,4 +1,5 @@
 const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
+const userAgents = require('../../common/tool/user-agent')
 const {
   fs,
   rp,
@@ -25,11 +26,18 @@ async function reptileSearchItem({
   page,
   order,
   reptileStatus,
+  errorTaskId,
 }) {
   return new Promise(async (resolve, reject) => {
     let $ = null
+    // let agentIndex = Math.floor(Math.random() * userAgents.pc.length)
+    // const agentIndex = 7
+    // const agent = userAgents.pc[agentIndex]
     try {
-      $ = await reptileRequest({ uri })
+      $ = await reptileRequest({
+        uri,
+        // agent,
+      })
     } catch (err) {
       // 插入错误记录
       await insertErrorTask({
@@ -41,28 +49,23 @@ async function reptileSearchItem({
         order,
         reptileStatus,
       })
-      resolve()
+      resolve('商品网址请求失败')
       return
     }
     const shopUrl = rule.getShopUrl($)
-    wss.broadcast({
-      type: reptileStatus,
-      page,
-      keywordsName: keywords.name,
-      ruleName: rule.name,
-      index: order,
-      shopUrl,
-    })
     if (shopUrl) {
       // emmm..这里不能用queue
-      await reptileShop({
+      const shopResult = await reptileShop({
         keywords,
         rule,
         uri: shopUrl,
         page,
         order,
         reptileStatus,
+        errorTaskId,
       })
+      // console.log(`有店铺网址,商品网址是:${uri}`)
+      resolve(shopResult)
     } else {
       // 不可能没shopUrl的,先存入错误记录
       await insertErrorTask({
@@ -74,7 +77,8 @@ async function reptileSearchItem({
         order,
         reptileStatus,
       })
+      console.log(`无店铺网址,商品地址是${rui}`)
+      resolve('无店铺网址')
     }
-    resolve()
   })
 }

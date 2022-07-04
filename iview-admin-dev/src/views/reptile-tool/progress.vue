@@ -107,33 +107,38 @@ export default {
           width: 70,
           align: 'center'
         },
-        {
-          title: '商品网址',
-          key: 'itemUrl',
-          align: 'center',
-          width: 90,
-          render: (h, params) => {
-            return h('span', {}, params.row.itemUrl ? '成功' : '')
-          }
-        },
-        {
-          title: '店铺网址',
-          key: 'shopUrl',
-          align: 'center',
-          width: 90,
-          render: (h, params) => {
-            return h('span', {}, params.row.shopUrl ? '成功' : '')
-          }
-        },
-        {
-          title: '邮箱',
-          key: 'email',
-          align: 'center',
-        },
+        // {
+        //   title: '商品网址',
+        //   key: 'itemUrl',
+        //   align: 'center',
+        //   width: 90,
+        //   render: (h, params) => {
+        //     return h('span', {}, params.row.itemUrl ? '成功' : '')
+        //   }
+        // },
+        // {
+        //   title: '店铺网址',
+        //   key: 'shopUrl',
+        //   align: 'center',
+        //   width: 90,
+        //   render: (h, params) => {
+        //     return h('span', {}, params.row.shopUrl ? '成功' : '')
+        //   }
+        // },
+        // {
+        //   title: '邮箱',
+        //   key: 'email',
+        //   align: 'center',
+        // },
         {
           title: '处理结果',
           key: 'result',
           align: 'center',
+          render: (h, params) => {
+            return h('span', {
+              color: params.row.result && params.row.result.indexOf('@') !== -1 ? 'green' : 'black'
+            }, params.row.result)
+          }
         },
       ],
       list: [
@@ -159,7 +164,9 @@ export default {
       // this.list.splice(0,this.list.length);
       this.$refs.body.innerHTML = ''
     },
-    startReptileErrorTasks() { },
+    startReptileErrorTasks() {
+
+    },
     stopReptile() {
       this.loading = true
       let obj = {
@@ -233,7 +240,7 @@ export default {
               this.tableList2 = []
               tableList1 = []
               tableList2 = []
-            }, 3000)
+            }, 10000)
           } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
             this.curReptileStatus = '爬取关键词'
             this.curKeywordsName = progress.keywordsName
