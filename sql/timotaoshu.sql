@@ -151,7 +151,7 @@ DROP TABLE IF EXISTS `emailblack`;
 CREATE TABLE `emailblack` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `able` int(11) DEFAULT '2' COMMENT '是否启用',
+  `active` int(11) DEFAULT '0' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -162,7 +162,7 @@ DROP TABLE IF EXISTS `emailwhite`;
 CREATE TABLE `emailwhite` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `able` int(11) DEFAULT '2' COMMENT '是否启用',
+  `active` int(11) DEFAULT '0' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

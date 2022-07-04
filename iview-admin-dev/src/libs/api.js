@@ -63,6 +63,14 @@ export default {
     test: '/template/test',
     delete: '/template/delete',
   },
+  emailExtra: {
+    saveBlackEmail: '/emailExtra/saveBlackEmail',
+    saveWhiteEmail: '/emailExtra/saveWhiteEmail',
+    listBlackEmail: '/emailExtra/listBlackEmail',
+    listWhiteEmail: '/emailExtra/listWhiteEmail',
+    deleteWhiteEmail: '/emailExtra/deleteWhiteEmail',
+    deleteBlackEmail: '/emailExtra/deleteBlackEmail',
+  },
   reptile: {
     startReptileKeywords: '/reptile/startReptileKeywords',
     stop: '/reptile/stop',
