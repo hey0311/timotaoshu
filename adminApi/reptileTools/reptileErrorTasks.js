@@ -12,7 +12,10 @@ const {
 
 const { getRuleConfigList, getRuleConfigMap } = require('./ruleConfig')
 const reptileKeywordsByRule = require('./reptileKeywordsByRule')
-const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
+const {
+  ERROR_TASK_PAGE_TYPE,
+  REPTILE_STATUS,
+} = require('../../common/tool/constant')
 const reptileSearchItem = require('./reptileSearchItem')
 const {
   addSearchItemToQueue,
@@ -49,19 +52,21 @@ async function reptileErrorTasks() {
       keywords = keywordsRecords && keywordsRecords[0]
       // 获取爬取规则
       const rule = getRule(ruleMap[errorTask.ruleId], keywords)
+      const page = errorTask.page
       switch (errorTask.pageType) {
         case ERROR_TASK_PAGE_TYPE.ITEM_PAGE: // 搜索项
           searchItemParamsList.push({
             keywords,
             rule,
             uri: errorTask.uri,
-            page: 10000,
+            page,
             order: i + 1,
+            reptileStatus: REPTILE_STATUS.ERROR_TASKS,
             result: async () => {
               await deleteErrorTask(errorTask.id)
               wss.broadcast({
-                type: 'table',
-                page: 10000,
+                type: REPTILE_STATUS.ERROR_TASKS,
+                page,
                 keywordsName: keywords.name,
                 ruleName: rule.name,
                 index: i + 1,
@@ -76,13 +81,14 @@ async function reptileErrorTasks() {
             keywords,
             rule,
             uri: errorTask.uri,
-            page: 10000,
+            page,
             order: i + 1,
+            reptileStatus: REPTILE_STATUS.ERROR_TASKS,
             result: async () => {
               await deleteErrorTask(errorTask.id)
               wss.broadcast({
-                type: 'table',
-                page: 10000,
+                type: REPTILE_STATUS.ERROR_TASKS,
+                page,
                 keywordsName: keywords.name,
                 ruleName: rule.name,
                 index: i + 1,

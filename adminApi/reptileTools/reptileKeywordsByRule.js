@@ -19,6 +19,7 @@ const getRule = require('./rule')
 const { batchAddSearchItemToQueue } = require('./searchItemQueue')
 const reptileErrorTasks = require('./reptileErrorTasks')
 const checkstop = require('./tools')
+const { REPTILE_STATUS } = require('../../common/tool/constant')
 
 module.exports = reptileKeywordsByRule
 
@@ -26,7 +27,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
   return new Promise(async (resolve, reject) => {
     // 先找到对应的rule
     let page = reptilePage || 1
-    wss.broadcast(`开始爬取第${page}页`)
+    // wss.broadcast(`开始爬取第${page}页`)
     let $ = null
     // 这里更新一下ip
     await reptileIp()
@@ -37,7 +38,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
       })
     } catch (err) {
       // 爬第一页出错
-      wss.broadcast(`爬取第${page}页出错,${err}`)
+      // wss.broadcast(`爬取第${page}页出错,${err}`)
       resolve()
       return
     }
@@ -60,9 +61,10 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
           uri: searchItemUrl,
           page,
           order: i + 1,
+          reptileStatus: REPTILE_STATUS.ALL_KEY_WORDS,
         })
         wss.broadcast({
-          type: 'table',
+          type: REPTILE_STATUS.ALL_KEY_WORDS,
           page,
           keywordsName: keywords.name,
           ruleName: rule.name,
@@ -71,6 +73,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
         })
       }
       await batchAddSearchItemToQueue(paramsList, reptileSearchItem)
+      await reptileIp()
       // 爬完一页开始爬错误页面
       await reptileErrorTasks()
       if (rule.isLastPage($)) {
@@ -82,7 +85,6 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
         })
         break
       }
-      await reptileIp()
       try {
         console.log(
           '🚀 ~ file: reptileKeywordsByRule.js ~ line 62 ~ returnnewPromise ~ rule.getNextPage($)',
@@ -92,7 +94,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
           uri: rule.getNextPage($),
         })
         // 第page页爬完
-        wss.broadcast(`第${page}页爬完,开始下一页`)
+        // wss.broadcast(`第${page}页爬完,开始下一页`)
         await updateKeywordsProgress({
           keywords,
           rule,
@@ -101,7 +103,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
         })
       } catch (err) {
         // 下一页出错,停止这个关键词
-        wss.broadcast(`第${page}页爬取出错,${err}`)
+        // wss.broadcast(`第${page}页爬取出错,${err}`)
         $ = null
         // 记录已爬完的页面
         await updateKeywordsProgress({

@@ -12,6 +12,7 @@ async function insertEmail({
   phone,
   order,
   page,
+  reptileStatus,
 }) {
   try {
     // 先判断是否和表中的重复
@@ -20,7 +21,7 @@ async function insertEmail({
     if (result) {
       //如果数据库里有这本书
       wss.broadcast({
-        type: 'table',
+        type: reptileStatus,
         keywordsName: keywords.name,
         ruleName: rule.name,
         index: order,
@@ -38,7 +39,7 @@ async function insertEmail({
     }","${firstName}","${lastName}","${phone}")`
     await db.query(insertSql)
     wss.broadcast({
-      type: 'table',
+      type: reptileStatus,
       page,
       keywordsName: keywords.name,
       ruleName: rule.name,
@@ -75,7 +76,7 @@ async function updateKeywordsProgress({ keywords, rule, page, finished }) {
         } where keywordsId=${keywords.id} and ruleId=${rule.id}`
       )
     }
-    wss.broadcast(`更新进度成功`)
+    // wss.broadcast(`更新进度成功`)
     return true
   } catch (err) {
     log.error(err)
@@ -97,6 +98,7 @@ async function insertErrorTask({
   pageType,
   page = 0,
   order = 0,
+  reptileStatus,
 }) {
   try {
     const records = await db.query(`select * from errortask where uri="${uri}"`)
@@ -121,7 +123,7 @@ async function insertErrorTask({
       )
     }
     wss.broadcast({
-      type: 'table',
+      type: reptileStatus,
       keywordsName: keywords.name,
       ruleName: rule.name,
       page,

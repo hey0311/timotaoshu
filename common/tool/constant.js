@@ -14,6 +14,7 @@ const REPTILE_STATUS = {
   ALL_KEY_WORDS: 0,
   ERROR_TASKS: 1,
   STOP: 2,
+  CHECK_IP: 3,
 }
 
 module.exports = {

@@ -27,13 +27,14 @@
       </Row>
     </Card>
     <Card shadow style="margin: 10px 0">
-      <Row>
-        <Col span="8">当前关键词:{{ curKeywordsName }}</Col>
-        <Col span="8">当前网站:{{ curRuleName }}</Col>
-        <Col span="8">当前页数:{{ curReptilePage }}</Col>
-      </Row>
-      <Row>
-        <Col span="8">
+      <div>当前步骤:{{ curReptileStatus }}</div>
+      <div>当前关键词:{{ curKeywordsName }}</div>
+      <div>当前网站:{{ curRuleName }}</div>
+      <div>当前页数:{{ curReptilePage }}</div>
+    </Card>
+    <Card shadow style="margin: 10px 0">
+      <div class="table-container">
+        <div>
           <Table
             border
             highlight-row
@@ -43,8 +44,8 @@
             size="small"
             :row-class-name="rowClass"
           ></Table>
-        </Col>
-        <Col span="8">
+        </div>
+        <div style="margin-left: 20px">
           <Table
             border
             highlight-row
@@ -54,19 +55,22 @@
             size="small"
             :row-class-name="rowClass"
           ></Table>
-        </Col>
-        <Col span="8">
+        </div>
+        <!-- <Col span="8">
           <div
             ref="body"
             class="progress_log"
             :style="{ height: tableHeight, overflowY: 'auto' }"
           ></div>
-        </Col>
-      </Row>
+        </Col> -->
+      </div>
     </Card>
   </div>
 </template>
 <style>
+.table-container {
+  display: flex;
+}
 .table-row {
   height: 18px !important;
 }
@@ -142,7 +146,8 @@ export default {
       tableList2: [],
       curReptilePage: 0,
       curKeywordsName: '',
-      curRuleName: ''
+      curRuleName: '',
+      curReptileStatus: ''
     }
   },
   computed: {},
@@ -200,8 +205,11 @@ export default {
   },
   components: {},
   created() {
+
     this.ws = new WebSocket(config.wssServer + '?token=token')
+    console.log("🚀 ~ file: progress.vue ~ line 211 ~ created ~ config.wssServer", config.wssServer)
     this.ws.onopen = () => {
+      console.log('opend')
       this.ws.send('我是从客户端发送的消息')
     }
     this.ws.onmessage = (response) => {
@@ -209,27 +217,41 @@ export default {
       console.log("🚀 ~ file: progress.vue ~ line 143 ~ created ~ data", data)
       for (let i = 0; i < data.length; i++) {
         const progress = data[i].progress;
-        if (typeof progress === 'object' && progress.type === 'table') {
-          if (progress.page === 10000) {
-            this.curKeywordsName = '爬取错误记录中'
+        if (typeof progress === 'object') {
+          if (progress.type === 1) {// 错误记录
+            this.curReptileStatus = '爬取错误记录'
+            this.curKeywordsName = ''
+            this.curRuleName = ''
+            this.curReptilePage = ''
+          } else if (progress.type === 3) {
+            this.curReptileStatus = '检查IP'
+            this.curKeywordsName = ''
+            this.curRuleName = ''
+            this.curReptilePage = ''
+            setTimeout(() => {
+              this.tableList1 = []
+              this.tableList2 = []
+              tableList1 = []
+              tableList2 = []
+            }, 3000)
           } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
+            this.curReptileStatus = '爬取关键词'
             this.curKeywordsName = progress.keywordsName
             this.curRuleName = progress.ruleName
             this.curReptilePage = progress.page
-            this.tableList1 = []
-            this.tableList2 = []
-            tableList1 = []
-            tableList2 = []
           }
           // 插入表格
+          if (progress.index === undefined) {
+            continue
+          }
           let curIndex = -1;
-          if (progress.index < 31) {
+          if (progress.index % 2 === 1) {
             curIndex = tableList1.findIndex(item => item.index === progress.index)
           } else {
             curIndex = tableList2.findIndex(item => item.index === progress.index)
           }
           if (curIndex !== -1) {
-            if (progress.index < 31) {
+            if (progress.index % 2 === 1) {
               // Vue.set(tableList1, curIndex, Object.assign({}, tableList1[i], progress))
               tableList1[curIndex] = Object.assign({}, tableList1[curIndex], progress)
             } else {
@@ -237,43 +259,45 @@ export default {
               tableList2[curIndex] = Object.assign({}, tableList2[curIndex], progress)
             }
           } else {
-            if (progress.index < 31) {
+            if (progress.index % 2 === 1) {
               tableList1.push(progress)
             } else {
               tableList2.push(progress)
             }
           }
-          this.tableList1 = [...tableList1]
-          this.tableList2 = [...tableList2]
+          this.tableList1 = [...tableList1.sort((a, b) => a.index - b.index)]
+          this.tableList2 = [...tableList2.sort((a, b) => a.index - b.index)]
         }
       }
-      let firstData = data[0]
-      if (firstData.count >= 0) {
-        this.count = firstData.count
-      } else {
-        // this.list = this.list.concat(data);
-        // data.forEach((value, index) => {
-        //     this.list.push(value);
-        // })
-        var html = ``
-        data.forEach((value, index) => {
-          this.index += index
-          if (typeof value.progress === 'string') {
-            html += `<div>${value.progress}</div>`
-          }
-        })
-        this.scrollTop += 80
-        this.$refs.body.innerHTML += html
-        this.$refs.body.scrollTop = this.scrollTop
-      }
+      // let firstData = data[0]
+      // if (firstData.count >= 0) {
+      //   this.count = firstData.count
+      // } else {
+      //   // this.list = this.list.concat(data);
+      //   // data.forEach((value, index) => {
+      //   //     this.list.push(value);
+      //   // })
+      //   var html = ``
+      //   data.forEach((value, index) => {
+      //     this.index += index
+      //     if (typeof value.progress === 'string') {
+      //       html += `<div>${value.progress}</div>`
+      //     }
+      //   })
+      //   this.scrollTop += 80
+      //   this.$refs.body.innerHTML += html
+      //   this.$refs.body.scrollTop = this.scrollTop
+      // }
 
       this.state = this.readyState[this.ws.readyState]
     }
     this.ws.onclose = () => {
       this.state = this.readyState[this.ws.readyState]
+      console.log("🚀 ~ file: progress.vue ~ line 294 ~ created ~ this.ws.readyState", this.ws.readyState)
     }
     this.ws.onerror = () => {
       this.state = this.readyState[this.ws.readyState]
+      console.log("🚀 ~ file: progress.vue ~ line 298 ~ created ~ this", this)
     }
 
     // 页面被破坏时触发下
@@ -283,7 +307,7 @@ export default {
   },
   mounted() {
     // this.tableHeight = (window.innerHeight - this.$refs.table.$el.offsetTop - 173 ) + 'px';
-    this.tableHeight = (window.innerHeight - this.$refs.body.offsetTop - 173) + 'px'
+    // this.tableHeight = (window.innerHeight - this.$refs.body.offsetTop - 173) + 'px'
     // for (let i = 0; i < 63; i++) {
     //   this.tableList.push({
     //     index: i,

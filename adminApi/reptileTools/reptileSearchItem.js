@@ -18,7 +18,14 @@ const { addShopToQueue } = require('./shopQueue')
 
 module.exports = reptileSearchItem
 
-async function reptileSearchItem({ keywords, rule, uri, page, order }) {
+async function reptileSearchItem({
+  keywords,
+  rule,
+  uri,
+  page,
+  order,
+  reptileStatus,
+}) {
   return new Promise(async (resolve, reject) => {
     let $ = null
     try {
@@ -32,13 +39,14 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
         order,
+        reptileStatus,
       })
       resolve()
       return
     }
     const shopUrl = rule.getShopUrl($)
     wss.broadcast({
-      type: 'table',
+      type: reptileStatus,
       page,
       keywordsName: keywords.name,
       ruleName: rule.name,
@@ -53,6 +61,7 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         uri: shopUrl,
         page,
         order,
+        reptileStatus,
       })
     } else {
       // 不可能没shopUrl的,先存入错误记录
@@ -63,6 +72,7 @@ async function reptileSearchItem({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
         order,
+        reptileStatus,
       })
     }
     resolve()

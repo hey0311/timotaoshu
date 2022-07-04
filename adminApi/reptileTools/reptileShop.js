@@ -16,7 +16,14 @@ const reptileRequest = require('./reptileRequest')
 
 module.exports = reptileShop
 
-async function reptileShop({ keywords, rule, uri, page, order }) {
+async function reptileShop({
+  keywords,
+  rule,
+  uri,
+  page,
+  order,
+  reptileStatus,
+}) {
   return new Promise(async (resolve, reject) => {
     let $ = null
     try {
@@ -29,6 +36,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
         pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
         page,
         order,
+        reptileStatus,
       })
       resolve()
       return
@@ -39,7 +47,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
     const lastName = rule.getLastName($)
     const phone = rule.getPhone($)
     wss.broadcast({
-      type: 'table',
+      type: reptileStatus,
       page,
       keywordsName: keywords.name,
       ruleName: rule.name,
@@ -59,6 +67,7 @@ async function reptileShop({ keywords, rule, uri, page, order }) {
         phone,
         order,
         page,
+        reptileStatus,
       })
       if (insertResult) {
         resolve()
