@@ -67,6 +67,6 @@ module.exports = app
 //捕获node异常  不允许退出
 process.on('uncaughtException', function (err) {
   console.log('api异常退出被捕获了')
-  console.error(err.stack)
+  console.log(err.stack)
   console.log('Node NOT Exiting...')
 })

@@ -415,7 +415,7 @@ async function getIpList6(page) {
 async function getIpList7(page) {
   return new Promise(async (resolve, reject) => {
     const url =
-      'http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=20'
+      'http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=30'
     axios
       .get(url)
       .then((res) => {

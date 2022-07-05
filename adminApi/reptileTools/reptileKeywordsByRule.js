@@ -31,12 +31,13 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
     let $ = null
     // 这里更新一下ip
     await reptileIp()
-    console.log(`开始爬取关键词${keywords.name},网站${rule.name},第${page}页`)
+    const uri = rule.getSearchUrl(page)
+    console.log(
+      `开始爬取关键词${keywords.name},网站${rule.name},第${page}页,地址:${uri}`
+    )
     try {
       // 这个是当前的搜索页
-      $ = await reptileRequest({
-        uri: rule.getSearchUrl(page),
-      })
+      $ = await reptileRequest({ uri })
     } catch (err) {
       // 爬第一页出错
       console.log(`爬取搜索页出错,${err}`)

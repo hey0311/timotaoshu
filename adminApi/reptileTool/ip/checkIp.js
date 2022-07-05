@@ -83,7 +83,7 @@ const {
 async function checkIp(ipObj, target) {
   return new Promise((resolve, reject) => {
     reptileRequest({
-      uri: 'https://www.ebay.com/',
+      uri: 'https://www.ebay.com',
       timeout: 10000, //10s没有返回则视为代理不行
       proxy: `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`,
     })

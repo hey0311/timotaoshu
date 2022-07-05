@@ -117,7 +117,6 @@ const reptileRequest = function (options) {
         let setTime = setTimeout(() => {
           if (chaoshi) {
             reject(`访问超时${timeout}ms`)
-            console.log(`访问超时${timeout}ms,地址:${options.uri}`)
             req.abort(`访问超时${timeout}ms`)
           }
           clearTimeout(setTime)
