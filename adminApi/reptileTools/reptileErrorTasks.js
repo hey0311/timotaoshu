@@ -29,7 +29,7 @@ const { deleteErrorTask, batchInsertEmail } = require('./dbTool')
 module.exports = reptileErrorTasks
 
 async function reptileErrorTasks() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       // 取出错误记录
       const startTime = Date.now()
