@@ -78,7 +78,7 @@ const reptileRequest = function (options) {
     delete reqOptions.userAgent // 请求之前，删除多余的东西
     delete reqOptions.transform // 请求之前，删除多余的东西
     // reqOptions.proxy = "http://23.105.136.76:8118";
-    if (options.noIp) {
+    if (true || options.noIp) {
       delete reqOptions.proxy
     }
     // reqOptions.proxy = 'http://127.0.0.1:8888'
