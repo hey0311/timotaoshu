@@ -60,9 +60,6 @@ async function batchAddSearchItemToQueue(paramsList, pro) {
         params: paramsList[i],
         pro,
         result: async (data) => {
-          console.log(
-            `第${i}条searchItem返回:${data},resultCount=${resultCount}`
-          )
           // sucCount++;
           // end();
           // resolve();
@@ -71,8 +68,12 @@ async function batchAddSearchItemToQueue(paramsList, pro) {
             emailList.push(data)
           }
           resultCount++
+          console.log(
+            `第${i}条searchItem返回:${data},resultCount=${resultCount},paramsLen:${paramsList.length}`
+          )
           paramsList[i].result && paramsList[i].result(data)
           if (resultCount === paramsList.length) {
+            console.log(`${resultCount}错误记录全部完成`)
             resolve(emailList)
           }
         },
