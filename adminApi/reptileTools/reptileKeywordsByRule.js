@@ -30,7 +30,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
     // wss.broadcast(`开始爬取第${page}页`)
     let $ = null
     // 这里更新一下ip
-    await reptileIp()
+    // await reptileIp()
     const uri = rule.getSearchUrl(page)
     console.log(
       `开始爬取关键词${keywords.name},网站${rule.name},第${page}页,地址:${uri}`
@@ -88,7 +88,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
       console.log(
         `第${page}页爬取完成,耗时${(Date.now() - startTime) / 1000}秒`
       )
-      await reptileIp()
+      // await reptileIp()
       // 爬完一页开始爬错误页面
       await reptileErrorTasks()
       if (rule.isLastPage($)) {
