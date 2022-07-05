@@ -42,7 +42,8 @@ async function reptileShop({
         order,
         reptileStatus,
       })
-      resolve('店铺网址请求失败')
+      console.log(`店铺网址请求失败,url:${uri}`)
+      resolve(`店铺网址请求失败,err:${err}`)
       return
     }
     const email = rule.getEmail($)
@@ -57,7 +58,24 @@ async function reptileShop({
       deleteErrorTaskResult = ',' + deleteErrorTaskResult
     }
     if (email) {
-      const insertResult = await insertEmail({
+      // const insertResult = await insertEmail({
+      //   keywords,
+      //   rule,
+      //   shopUrl: uri,
+      //   email,
+      //   bizName,
+      //   firstName,
+      //   lastName,
+      //   phone,
+      //   order,
+      //   page,
+      //   reptileStatus,
+      // })
+      // console.log(`店铺地址${uri},${insertResult}`)
+      // resolve(insertResult + deleteErrorTaskResult)
+      console.log(`有邮箱:${email}`)
+      resolve({
+        type: 'email',
         keywords,
         rule,
         shopUrl: uri,
@@ -70,8 +88,6 @@ async function reptileShop({
         page,
         reptileStatus,
       })
-      console.log(`店铺地址${uri},${insertResult}`)
-      resolve(insertResult + deleteErrorTaskResult)
     } else {
       console.log(`店铺地址${uri},无邮箱`)
       resolve('无邮箱' + deleteErrorTaskResult)

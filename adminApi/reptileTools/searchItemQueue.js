@@ -53,19 +53,27 @@ async function addSearchItemToQueue(params, pro) {
 }
 async function batchAddSearchItemToQueue(paramsList, pro) {
   return new Promise((resolve, reject) => {
+    let emailList = []
     let resultCount = 0
     for (let i = 0; i < paramsList.length; i++) {
       searchItemQueue.push({
         params: paramsList[i],
         pro,
         result: async (data) => {
+          console.log(
+            `第${i}条searchItem返回:${data},resultCount=${resultCount}`
+          )
           // sucCount++;
           // end();
           // resolve();
+          // 把邮箱保存起来,最后插入
+          if (data && typeof data === 'object' && data.type === 'email') {
+            emailList.push(data)
+          }
           resultCount++
           paramsList[i].result && paramsList[i].result(data)
           if (resultCount === paramsList.length) {
-            resolve()
+            resolve(emailList)
           }
         },
         error: async (data) => {

@@ -11,7 +11,7 @@ const {
   log,
   timoRp,
 } = require('../tool/require')
-const { updateKeywordsProgress } = require('./dbTool')
+const { updateKeywordsProgress, batchInsertEmail } = require('./dbTool')
 const reptileRequest = require('./reptileRequest')
 const reptileSearchItem = require('./reptileSearchItem')
 
@@ -37,7 +37,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
     )
     try {
       // 这个是当前的搜索页
-      $ = await reptileRequest({ uri })
+      $ = await reptileRequest({ uri, noIp: true })
     } catch (err) {
       // 爬第一页出错
       console.log(`爬取搜索页出错,${err}`)
@@ -45,6 +45,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
       return
     }
     while ($) {
+      const startTime = Date.now()
       if (checkstop()) {
         resolve()
       }
@@ -72,12 +73,21 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
               ruleName: rule.name,
               index: i + 1,
               itemUrl: searchItemUrl,
-              result,
+              result: typeof result === 'object' ? result.email : result,
             })
           },
         })
       }
-      await batchAddSearchItemToQueue(paramsList, reptileSearchItem)
+      const emailList = await batchAddSearchItemToQueue(
+        paramsList,
+        reptileSearchItem
+      )
+      if (emailList.length !== 0) {
+        await batchInsertEmail(emailList)
+      }
+      console.log(
+        `第${page}页爬取完成,耗时${(Date.now() - startTime) / 1000}秒`
+      )
       await reptileIp()
       // 爬完一页开始爬错误页面
       await reptileErrorTasks()
@@ -95,6 +105,7 @@ async function reptileKeywordsByRule(keywords, rule, reptilePage) {
         console.log(`获取下一页,地址:${rule.getNextPage($)}`)
         $ = await reptileRequest({
           uri: rule.getNextPage($),
+          noIp: true,
         })
         // 第page页爬完
         // wss.broadcast(`第${page}页爬完,开始下一页`)

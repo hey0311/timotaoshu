@@ -1,6 +1,27 @@
 const { fs, rp, timoRp, path, tool, log, db, wss } = require('../tool/require')
 const { ERROR_TASK_PAGE_TYPE } = require('../../common/tool/constant')
 
+async function batchInsertEmail(emailList) {
+  return new Promise(async (resolve, reject) => {
+    console.log(
+      '去重前邮箱:',
+      emailList.map((item) => item.email)
+    )
+    // 去重
+    const uniqueEmailList = emailList.filter((item, index) => {
+      return emailList.findIndex((i) => i.email === item.email) === index
+    })
+    console.log(
+      '去重后邮箱:',
+      uniqueEmailList.map((item) => item.email)
+    )
+    for (let i = 0; i < uniqueEmailList.length; i++) {
+      const result = await insertEmail(uniqueEmailList[i])
+      console.log('邮箱保存结果:', result)
+    }
+    resolve(true)
+  })
+}
 async function insertEmail({
   keywords,
   bizName,
@@ -157,4 +178,5 @@ module.exports = {
   insertErrorTask,
   deleteErrorTask,
   updateKeywordsProgress,
+  batchInsertEmail,
 }

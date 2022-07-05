@@ -49,7 +49,8 @@ async function reptileSearchItem({
         order,
         reptileStatus,
       })
-      resolve('商品网址请求失败')
+      resolve(`商品网址请求失败,err:${err}`)
+      console.log(`商品网址请求失败`)
       return
     }
     const shopUrl = rule.getShopUrl($)
@@ -77,7 +78,7 @@ async function reptileSearchItem({
         order,
         reptileStatus,
       })
-      console.log(`无店铺网址,商品地址是${rui}`)
+      console.log(`无店铺网址,商品地址是${uri}`)
       resolve('无店铺网址')
     }
   })

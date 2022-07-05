@@ -51,6 +51,7 @@ async function addShopToQueue(params, pro) {
   })
 }
 async function batchAddShopToQueue(paramsList, pro) {
+  let emailList = []
   return new Promise((resolve, reject) => {
     let resultCount = 0
     for (let i = 0; i < paramsList.length; i++) {
@@ -62,9 +63,12 @@ async function batchAddShopToQueue(paramsList, pro) {
           // end();
           // resolve();
           resultCount++
+          if (data && typeof data === 'object' && data.type === 'email') {
+            emailList.push(data)
+          }
           paramsList[i].result && paramsList[i].result(data)
           if (resultCount === paramsList.length) {
-            resolve()
+            resolve(emailList)
           }
         },
         error: async (data) => {
