@@ -116,16 +116,23 @@ async function reptileErrorTasks() {
             break
         }
       }
-      const emailList1 = await batchAddSearchItemToQueue(
-        searchItemParamsList,
-        reptileSearchItem
-      )
-      if (emailList1.length !== 0) {
-        await batchInsertEmail(emailList1)
+      if (searchItemParamsList.length > 0) {
+        const emailList1 = await batchAddSearchItemToQueue(
+          searchItemParamsList,
+          reptileSearchItem
+        )
+        if (emailList1.length !== 0) {
+          await batchInsertEmail(emailList1)
+        }
       }
-      const emailList2 = await batchAddShopToQueue(shopParamsList, reptileShop)
-      if (emailList2.length !== 0) {
-        await batchInsertEmail(emailList2)
+      if (shopParamsList.length > 0) {
+        const emailList2 = await batchAddShopToQueue(
+          shopParamsList,
+          reptileShop
+        )
+        if (emailList2.length !== 0) {
+          await batchInsertEmail(emailList2)
+        }
       }
       console.log(`错误记录爬取完成,用时${(Date.now() - startTime) / 1000}秒`)
       resolve()

@@ -33,15 +33,22 @@ async function reptileShop({
     try {
       $ = await reptileRequest({ uri })
     } catch (err) {
-      await insertErrorTask({
-        keywords,
-        rule,
-        uri,
-        pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
-        page,
-        order,
-        reptileStatus,
-      })
+      try {
+        await insertErrorTask({
+          keywords,
+          rule,
+          uri,
+          pageType: ERROR_TASK_PAGE_TYPE.SHOP_PAGE,
+          page,
+          order,
+          reptileStatus,
+        })
+      } catch (err) {
+        console.log(
+          '🚀 ~ file: reptileShop.js ~ line 47 ~ returnnewPromise ~ err',
+          err
+        )
+      }
       console.log(`店铺网址请求失败,url:${uri}`)
       resolve(`店铺网址请求失败,err:${err}`)
       return
@@ -54,8 +61,15 @@ async function reptileShop({
     // 这里应该就可以删除错误记录了
     let deleteErrorTaskResult = ''
     if (reptileStatus === REPTILE_STATUS.ERROR_TASKS && errorTaskId) {
-      deleteErrorTaskResult = await deleteErrorTask(errorTaskId)
-      deleteErrorTaskResult = ',' + deleteErrorTaskResult
+      try {
+        deleteErrorTaskResult = await deleteErrorTask(errorTaskId)
+        deleteErrorTaskResult = ',' + deleteErrorTaskResult
+      } catch (err) {
+        console.log(
+          '🚀 ~ file: reptileShop.js ~ line 65 ~ returnnewPromise ~ err',
+          err
+        )
+      }
     }
     if (email) {
       // const insertResult = await insertEmail({

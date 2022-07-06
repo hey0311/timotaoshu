@@ -51,7 +51,8 @@ async function insertEmail({
         //   result: '重复',
         // })
         // return true
-        resolve(email)
+        resolve('重复')
+        return
       }
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
       // insertSql += `("${tool.toSql(bizName)}", ${
@@ -71,7 +72,7 @@ async function insertEmail({
       // })
       // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
       // return true
-      resolve('重复')
+      resolve(email)
     } catch (err) {
       log.error(err)
       // return false
@@ -126,41 +127,48 @@ async function insertErrorTask({
   order = 0,
   reptileStatus,
 }) {
-  try {
-    const records = await db.query(`select * from errortask where uri="${uri}"`)
-    if (records.length !== 0) {
-      // 如果重试次数超过5次,删掉
-      if (records[0].retryCount >= 5) {
-        await deleteErrorTask(records[0].id)
-        return
+  return new Promise(async (resolve, reject) => {
+    try {
+      const records = await db.query(
+        `select * from errortask where uri="${uri}"`
+      )
+      if (records.length !== 0) {
+        // 如果重试次数超过5次,删掉
+        if (records[0].retryCount >= 5) {
+          await deleteErrorTask(records[0].id)
+          resolve()
+          return
+        }
+        //更新记录,retryCount
+        await db.query(
+          `update errortask set retryCount=${
+            records[0].retryCount + 1
+          } where keywordsId=${keywords.id} and ruleId=${
+            rule.id
+          } and pageType=${pageType}`
+        )
+      } else {
+        // 新记录
+        await db.query(
+          `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${rule.id}, "${uri}", 0, ${pageType},${page},${order})`
+        )
       }
-      //更新记录,retryCount
-      await db.query(
-        `update errortask set retryCount=${
-          records[0].retryCount + 1
-        } where keywordsId=${keywords.id} and ruleId=${
-          rule.id
-        } and pageType=${pageType}`
-      )
-    } else {
-      // 新记录
-      await db.query(
-        `INSERT INTO errortask (keywordsId,ruleId,uri,retryCount,pageType,page,sequence) VALUES (${keywords.id}, ${rule.id}, "${uri}", 0, ${pageType},${page},${order})`
-      )
+      // wss.broadcast({
+      //   type: reptileStatus,
+      //   keywordsName: keywords.name,
+      //   ruleName: rule.name,
+      //   page,
+      //   index: order,
+      //   result: '存入错误记录',
+      // })
+      resolve(true)
+      return true
+    } catch (err) {
+      log.error(err)
+      resolve(true)
+      return false
     }
-    // wss.broadcast({
-    //   type: reptileStatus,
-    //   keywordsName: keywords.name,
-    //   ruleName: rule.name,
-    //   page,
-    //   index: order,
-    //   result: '存入错误记录',
-    // })
-    return true
-  } catch (err) {
-    log.error(err)
-    return false
-  }
+  })
 }
 async function deleteErrorTask(id) {
   return new Promise(async (resolve, reject) => {
