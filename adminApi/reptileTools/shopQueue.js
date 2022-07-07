@@ -22,6 +22,7 @@ let shopQueue = async.queue((obj, cb) => {
 
 shopQueue.empty = function () {
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");
+  console.log('shopQWueue已空')
   // console.log("开始执行到最后一个");
 }
 shopQueue.saturated = function () {

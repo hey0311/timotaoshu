@@ -49,6 +49,7 @@ export default {
   },
   email: {
     list: '/email/list',
+    count:'/email/count'
   },
   keywords: {
     list: '/keywords/list',

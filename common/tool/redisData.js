@@ -490,6 +490,12 @@ let redisData = {
             let random = Math.floor(Math.random() * length)
             let ipList = await redisData.ipList.getIpList(random, random + 1)
             let ipObj = JSON.parse(ipList[0])
+            if (new Date(ipObj.endtime) < Date.now()) {
+              // 如果过期了,再随机取一个
+              random = Math.floor(Math.random() * length)
+              ipList = await redisData.ipList.getIpList(random, random + 1)
+              ipObj = JSON.parse(ipList[0])
+            }
             resolve(`${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`)
           } else {
             // console.error("代理IP池里没有代理IP了，需要填充了");

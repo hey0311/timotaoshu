@@ -54,7 +54,7 @@ function getRuleConfigList() {
       id: 9,
       site: 'ebay',
       country: 'England',
-      baseUrl: 'https://www.ebay.uk',
+      baseUrl: 'https://www.ebay.co.uk',
     },
     {
       id: 10,

@@ -38,9 +38,10 @@ async function reptileErrorTasks() {
       const errorTaskRecords = await db.query(
         `select * from errortask limit 0,100`
       )
-      if (errorTaskRecords.length === 0) {
-        console.log(`无错误记录,跳过`)
+      if (errorTaskRecords.length < 60) {
+        console.log(`错误记录小于60条,跳过`)
         resolve()
+        return
       }
       console.log(
         `开始爬取错误记录,共${count}条,现在取${errorTaskRecords.length}条爬取`

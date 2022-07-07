@@ -27,10 +27,18 @@
       </Row>
     </Card>
     <Card shadow style="margin: 10px 0">
-      <div>当前步骤:{{ curReptileStatus }}</div>
-      <div>当前关键词:{{ curKeywordsName }}</div>
-      <div>当前网站:{{ curRuleName }}</div>
-      <div>当前页数:{{ curReptilePage }}</div>
+      <Row>
+        <Col span="12">
+          <div>当前步骤:{{ curReptileStatus }}</div>
+          <div>当前关键词:{{ curKeywordsName }}</div>
+          <div>当前网站:{{ curRuleName }}</div>
+          <div>当前页数:{{ curReptilePage }}</div>
+        </Col>
+        <Col span="12">
+          <div>邮箱数量:{{ emailCount }}</div>
+          <div>错误记录数量:{{ errorTaskCount }}</div>
+        </Col>
+      </Row>
     </Card>
     <Card shadow style="margin: 10px 0">
       <div class="table-container">
@@ -152,11 +160,33 @@ export default {
       curReptilePage: 0,
       curKeywordsName: '',
       curRuleName: '',
-      curReptileStatus: ''
+      curReptileStatus: '',
+      emailCount: 0,
+      errorTaskCount: 0
     }
   },
   computed: {},
   methods: {
+    getErrorTaskCount() {
+      let obj = {
+        params: {
+        }
+      }
+      util.post.errorTask.list(obj).then((data) => {
+        this.errorTaskCount = data.count
+      }).catch((err) => {
+      })
+    },
+    getEmailCount() {
+      let obj = {
+        params: {
+        }
+      }
+      util.post.email.count(obj).then((data) => {
+        this.emailCount = data.count
+      }).catch((err) => {
+      })
+    },
     rowClass() {
       return 'table-row'
     },
@@ -230,11 +260,15 @@ export default {
             this.curKeywordsName = ''
             this.curRuleName = ''
             this.curReptilePage = ''
+            this.getEmailCount()
+            this.getErrorTaskCount()
           } else if (progress.type === 3) {
             this.curReptileStatus = '检查IP'
             this.curKeywordsName = ''
             this.curRuleName = ''
             this.curReptilePage = ''
+            this.getEmailCount()
+            this.getErrorTaskCount()
             setTimeout(() => {
               this.tableList1 = []
               this.tableList2 = []
@@ -246,6 +280,8 @@ export default {
             this.curKeywordsName = progress.keywordsName
             this.curRuleName = progress.ruleName
             this.curReptilePage = progress.page
+            this.getEmailCount()
+            this.getErrorTaskCount()
           }
           // 插入表格
           if (progress.index === undefined) {
@@ -313,6 +349,8 @@ export default {
     }
   },
   mounted() {
+    this.getEmailCount()
+    this.getErrorTaskCount()
     // this.tableHeight = (window.innerHeight - this.$refs.table.$el.offsetTop - 173 ) + 'px';
     // this.tableHeight = (window.innerHeight - this.$refs.body.offsetTop - 173) + 'px'
     // for (let i = 0; i < 63; i++) {

@@ -224,8 +224,32 @@ function getRule(ruleConfig, keywords) {
       }
       return ''
     },
-    getEmail: ($) => {
-      return domCommon(null, '#email~span、text', $) || ''
+    getEmail: ($, uri) => {
+      let email = ''
+      email = domCommon(null, '#email~span、text', $) || ''
+      if (!email) {
+        email =
+          domCommon(
+            null,
+            ".str-business-details__seller-info span:contains('Email') ~ span、text",
+            $
+          ) || ''
+        if (!email) {
+          email =
+            domCommon(
+              null,
+              ".str-business-details__seller-info span:contains('E-Mail') ~ span、text",
+              $
+            ) || ''
+          if (!email) {
+            const likeEmail = domCommon(null, "span:contains('@')、text", $)
+            if (likeEmail) {
+              log.info(`疑似有email,地址${uri},email:${likeEmail}`)
+            }
+          }
+        }
+      }
+      return email
     },
     getBizName: ($) => {
       const bizName = domCommon(null, '#business_name~span、text', $) || ''

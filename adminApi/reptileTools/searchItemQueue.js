@@ -5,7 +5,8 @@ let searchItemQueue = async.queue((obj, cb) => {
     .apply(this, [obj.params])
     .then(async (data) => {
       if (typeof data == 'string' && data.indexOf('错误：') == 0) {
-        obj.error && (await obj.error(data))
+        // obj.error && (await obj.error(data))
+        obj.result && (await obj.result(data)) //data是字符串或者null
         await cb()
       } else {
         obj.result && (await obj.result(data)) //data是字符串或者null
@@ -15,12 +16,14 @@ let searchItemQueue = async.queue((obj, cb) => {
     .catch(async (err) => {
       console.log('searchItemQueue报错')
       console.log(err)
-      obj.error && (await obj.error('错误：' + err))
+      obj.result && (await obj.result(data)) //data是字符串或者null
+      // obj.error && (await obj.error('错误：' + err))
       await cb(err)
     })
 }, 100)
 
 searchItemQueue.empty = function () {
+  console.log('searchItemQueue已空')
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");
   // console.log("开始执行到最后一个");
 }
@@ -68,9 +71,6 @@ async function batchAddSearchItemToQueue(paramsList, pro) {
             emailList.push(data)
           }
           resultCount++
-          console.log(
-            `第${i}条searchItem返回:${data},resultCount=${resultCount},paramsLen:${paramsList.length}`
-          )
           paramsList[i].result && paramsList[i].result(data)
           if (resultCount === paramsList.length) {
             console.log(`${resultCount}错误记录全部完成`)
