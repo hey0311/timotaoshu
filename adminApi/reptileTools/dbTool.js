@@ -54,6 +54,7 @@ async function insertEmail({
         resolve('重复')
         return
       }
+      console.log('开始插入邮箱')
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
       // insertSql += `("${tool.toSql(bizName)}", ${
       //   keyword.id
@@ -86,29 +87,33 @@ async function insertEmail({
  * @returns
  */
 async function updateKeywordsProgress({ keywords, rule, page, finished }) {
-  try {
-    const records = await db.query(
-      `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${rule.id}`
-    )
-    if (records.length === 0) {
-      await db.query(
-        `insert into keywordsprogress (keywordsId,ruleId,finishPage,finished) values (${
-          keywords.id
-        },${rule.id},${page},${finished ? 1 : 0})`
+  return new Promise(async (resolve, reject) => {
+    try {
+      const records = await db.query(
+        `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${rule.id}`
       )
-    } else {
-      await db.query(
-        `update keywordsprogress set finishPage=${page},finished=${
-          finished ? 1 : 0
-        } where keywordsId=${keywords.id} and ruleId=${rule.id}`
-      )
+      if (records.length === 0) {
+        await db.query(
+          `insert into keywordsprogress (keywordsId,ruleId,finishPage,finished) values (${
+            keywords.id
+          },${rule.id},${page},${finished ? 1 : 0})`
+        )
+      } else {
+        await db.query(
+          `update keywordsprogress set finishPage=${page},finished=${
+            finished ? 1 : 0
+          } where keywordsId=${keywords.id} and ruleId=${rule.id}`
+        )
+      }
+      // wss.broadcast(`更新进度成功`)
+      resolve(true)
+      return true
+    } catch (err) {
+      log.error(err)
+      resolve(true)
+      return false
     }
-    // wss.broadcast(`更新进度成功`)
-    return true
-  } catch (err) {
-    log.error(err)
-    return false
-  }
+  })
 }
 /**
  * 插入错误记录

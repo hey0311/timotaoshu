@@ -14,6 +14,3 @@ urlLog.log
 /adminApi/upload
 /adminApi/public/img
 /mock
-config/redis.js
-config/sql.js
-iview-admin-dev/src/config.js
