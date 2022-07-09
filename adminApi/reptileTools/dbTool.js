@@ -54,7 +54,6 @@ async function insertEmail({
       //   resolve('重复')
       //   return
       // }
-      console.log('开始插入邮箱')
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
       insertSql += `("${email}",${keywords.id},${rule.id},"${shopUrl}",now(),"${
         bizName || 'null'

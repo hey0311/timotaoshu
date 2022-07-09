@@ -1,8 +1,9 @@
 const { fs, rp, timoRp, path, tool, log, db, wss } = require('../tool/require')
 const axios = require('axios')
 const checkIp = require('../reptileTool/ip/checkIp')
-const MIN_IP_COUNT = 10
+const MIN_IP_COUNT = 5
 let IP_LIST = []
+let isFetchingIp = false
 /**
  * 检查ip是否过期
  * @param {*} ipObj
@@ -13,6 +14,9 @@ function isIpTimeout(ipObj) {
 }
 function setIpFail(ipObj) {
   console.log('set ip error', ipObj)
+  if (!ipObj) {
+    return
+  }
   let curIpObj = IP_LIST.find((item) => item.ip === ipObj.ip)
   if (curIpObj) {
     if (!curIpObj.errorCount) {
@@ -28,14 +32,16 @@ function getRandomIp() {
     return !isIpTimeout(item) && (!item.errorCount || item.errorCount <= 2)
   })
   // 如果ip数量过少,重新获取,异步的
-  if (IP_LIST.length < MIN_IP_COUNT) {
+  // 可能重复获取,设置一个标记
+  if (IP_LIST.length < MIN_IP_COUNT && !isFetchingIp) {
+    isFetchingIp = true
     console.log(
       `当前可用ip数量${IP_LIST.length}条,少于${MIN_IP_COUNT}条,开始补充`
     )
     fetchIpList()
-    if (IP_LIST.length === 0) {
-      return null
-    }
+  }
+  if (IP_LIST.length === 0) {
+    return null
   }
   // 随机返回一个ip
   let random = Math.floor(Math.random() * IP_LIST.length)
@@ -45,8 +51,14 @@ function getRandomIp() {
 }
 async function checkIpList(ipList) {
   return new Promise(async (resolve, reject) => {
-    let yu = length > 10 ? Math.ceil(length / 20) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
-    let needCount = length - yu
+    console.log('开始检查ip')
+    let yu =
+      ipList.length > 10
+        ? Math.ceil(ipList.length / 20)
+        : ipList.length > 1
+        ? 1
+        : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
+    let needCount = ipList.length - yu
     let overLength = 0
     let list = []
     for (i; i < ipList.length; i++) {
@@ -110,9 +122,10 @@ async function checkIpList(ipList) {
  * 远程获取ip
  */
 async function fetchIpList() {
+  console.log('开始获取ip')
   return new Promise(async (resolve, reject) => {
     const url =
-      'http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=20'
+      'http://http2.9vps.com/getip.asp?username=13641294686&pwd=f5f5cac7bae0538879961dbb8321ed47&geshi=2&fenge=1&fengefu=&Contenttype=1&getnum=10'
     axios
       .get(url)
       .then(async (res) => {
@@ -129,12 +142,15 @@ async function fetchIpList() {
           await checkIpList(ipArr)
           // IP_LIST = IP_LIST.concat(ipArr)
           // console.log(`补充了${ipArr.length}条ip`)
+          isFetchingIp = false
           resolve(true)
         } else {
+          isFetchingIp = false
           resolve(false)
         }
       })
       .catch((err) => {
+        isFetchingIp = false
         log.error(err)
         resolve(false)
       })
