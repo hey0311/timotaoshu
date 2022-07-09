@@ -498,7 +498,7 @@ let redisData = {
             }
             resolve(`${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`)
           } else {
-            // console.error("代理IP池里没有代理IP了，需要填充了");
+            console.error('代理IP池小于10，需要填充了')
             resolve()
           }
         } catch (err) {

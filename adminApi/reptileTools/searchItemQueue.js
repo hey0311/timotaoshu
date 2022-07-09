@@ -57,33 +57,33 @@ async function addSearchItemToQueue(params, pro) {
 async function batchAddSearchItemToQueue(paramsList, pro) {
   return new Promise((resolve, reject) => {
     let emailList = []
-    let resultCount = 0
+    let length = paramsList.length
+    let overLength = 0
+    let yu = length > 10 ? Math.ceil(length / 60) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
+    let needCount = length - yu
     for (let i = 0; i < paramsList.length; i++) {
       searchItemQueue.push({
         params: paramsList[i],
         pro,
         result: async (data) => {
-          // sucCount++;
-          // end();
-          // resolve();
+          if (overLength > needCount) {
+            return
+          }
           // 把邮箱保存起来,最后插入
           if (data && typeof data === 'object' && data.type === 'email') {
             emailList.push(data)
           }
-          resultCount++
+          overLength++
           paramsList[i].result && paramsList[i].result(data)
-          if (resultCount === paramsList.length) {
-            console.log(`${resultCount}错误记录全部完成`)
+          if (overLength === needCount) {
+            console.log(`${overLength}错误记录全部完成`)
             resolve(emailList)
           }
         },
         error: async (data) => {
-          // errCount++;
-          // end();
-          // reject();
-          resultCount++
+          overLength++
           paramsList[i].error && paramsList[i].error(data)
-          if (resultCount === paramsList.length) {
+          if (overLength === needCount) {
             resolve()
           }
         },

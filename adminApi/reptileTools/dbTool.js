@@ -38,22 +38,12 @@ async function insertEmail({
   return new Promise(async (resolve, reject) => {
     try {
       // 先判断是否和表中的重复
-      // let sql = `select COUNT(*) from email where email="${email}"`
-      // let result = tool.getData(await db.query(sql))
-      // if (result) {
-      //   //如果数据库里有这本书
-      //   // wss.broadcast({
-      //   //   type: reptileStatus,
-      //   //   keywordsName: keywords.name,
-      //   //   ruleName: rule.name,
-      //   //   index: order,
-      //   //   page,
-      //   //   result: '重复',
-      //   // })
-      //   // return true
-      //   resolve('重复')
-      //   return
-      // }
+      let sql = `select COUNT(*) from email where email="${email}"`
+      let result = tool.getData(await db.query(sql))
+      if (result) {
+        resolve('重复')
+        return
+      }
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
       insertSql += `("${email}",${keywords.id},${rule.id},"${shopUrl}",now(),"${
         bizName || 'null'
@@ -62,7 +52,6 @@ async function insertEmail({
       resolve(email)
     } catch (err) {
       log.error(err)
-      // return false
       resolve('保存异常')
     }
   })

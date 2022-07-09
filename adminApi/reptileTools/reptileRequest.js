@@ -21,13 +21,13 @@ const agent = new Agent({
 })
 const TIMEOUT = 10000
 const redisData = require('../../common/tool/redisData')
-const { getRandomIp, setIpFail } = require('./ipTool')
+// const { getRandomIp, setIpFail } = require('./ipTool')
 let timer = null
 const reptileRequest = function (options) {
-  let ipObj = null
-  if (!options.proxy) {
-    ipObj = getRandomIp()
-  }
+  // let ipObj = null
+  // if (!options.proxy) {
+  //   ipObj = getRandomIp()
+  // }
   const timeout = options.timeout || TIMEOUT
   return Promise.race([
     new Promise(async (resolve, reject) => {
@@ -54,13 +54,13 @@ const reptileRequest = function (options) {
           if (global.server) {
             initOptions.proxy = global.serverProxy
           } else {
-            // let ip = await redisData.ipList.getRandomIpList()
-            // if (ip) {
-            //   initOptions.proxy = ip
-            // }
-            if (ipObj) {
-              initOptions.proxy = `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`
+            let ip = await redisData.ipList.getRandomIpList()
+            if (ip) {
+              initOptions.proxy = ip
             }
+            // if (ipObj) {
+            //   initOptions.proxy = `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`
+            // }
           }
         }
         options.proxy = initOptions.proxy // 借用js的对象特性，把proxy传递出去
@@ -118,7 +118,7 @@ const reptileRequest = function (options) {
                   '🚀 ~ file: reptileRequest.js ~ line 102 ~ returnnewPromise ~ err',
                   err
                 )
-                setIpFail(ipObj)
+                // setIpFail(ipObj)
                 clearTimeout(timer)
                 reject('error')
               }
@@ -127,7 +127,7 @@ const reptileRequest = function (options) {
               // }
             } else {
               // 失败了,告诉这个ip不行
-              setIpFail(ipObj)
+              // setIpFail(ipObj)
               clearTimeout(timer)
               if (!error) {
                 reject('状态:' + response.statusCode)

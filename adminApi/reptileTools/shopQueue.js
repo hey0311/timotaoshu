@@ -53,32 +53,32 @@ async function addShopToQueue(params, pro) {
 }
 async function batchAddShopToQueue(paramsList, pro) {
   let emailList = []
+  let length = paramsList.length
+  let overLength = 0
+  let yu = length > 10 ? Math.ceil(length / 60) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
+  let needCount = length - yu
   return new Promise((resolve, reject) => {
-    let resultCount = 0
     for (let i = 0; i < paramsList.length; i++) {
       shopQueue.push({
         params: paramsList[i],
         pro,
         result: async (data) => {
-          // sucCount++;
-          // end();
-          // resolve();
-          resultCount++
+          if (overLength > needCount) {
+            return
+          }
+          overLength++
           if (data && typeof data === 'object' && data.type === 'email') {
             emailList.push(data)
           }
           paramsList[i].result && paramsList[i].result(data)
-          if (resultCount === paramsList.length) {
+          if (overLength === needCount) {
             resolve(emailList)
           }
         },
         error: async (data) => {
-          // errCount++;
-          // end();
-          // reject();
-          resultCount++
+          overLength++
           paramsList[i].error && paramsList[i].error(data)
-          if (resultCount === paramsList.length) {
+          if (overLength === needCount) {
             resolve()
           }
         },

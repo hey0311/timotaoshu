@@ -231,14 +231,14 @@ function getRule(ruleConfig, keywords) {
         email =
           domCommon(
             null,
-            ".str-business-details__seller-info span:contains('Email') ~ span:contains('@')、text",
+            ".str-business-details__seller-info span:contains('Email') ~ span:contains('@').BOLD、text",
             $
           ) || ''
         if (!email) {
           email =
             domCommon(
               null,
-              ".str-business-details__seller-info span:contains('E-Mail') ~ span:contains('@')、text",
+              ".str-business-details__seller-info span:contains('E-Mail') ~ span:contains('@').BOLD、text",
               $
             ) || ''
           if (!email) {
