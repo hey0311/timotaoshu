@@ -86,7 +86,6 @@ async function checkIp(ipObj, target) {
     // 如果当前时间超过enttime,直接放弃
     if (ipObj.endtime) {
       if (new Date(ipObj.endtime) < Date.now()) {
-        console.log(`已过期:${ipObj.endtime},${new Date()}`)
         resolve([ipObj, false, '已过期'])
         return
       }

@@ -1,6 +1,9 @@
 const schedule = require('node-schedule')
 const { oauth, tool, log, wss } = require('../tool/require')
 const { reptileService, ipReptileService, logService } = require('../service/')
+const { redisData } = require('../../common/tool/tool')
+const { REPTILE_STATUS } = require('../../common/tool/constant')
+const reptileIp = require('../reptileTools/reptileIp')
 
 /*
  * 规则1  每晚零点定时任务
@@ -21,6 +24,16 @@ let i3 = 0,
   length3 = 30
 for (i3; i3 < length3; i3++) {
   rule3.minute.push(i3 * 2)
+}
+/*
+ * 规则3.5  每1分钟一次定时任务
+ * */
+let rule35 = new schedule.RecurrenceRule()
+rule35.minute = []
+let i35 = 1,
+  length35 = 60
+for (i35; i35 < length35; i35++) {
+  rule35.minute.push(i35)
 }
 /*
  * 规则4  每天凌晨1点和中午13点定时任务
@@ -47,6 +60,25 @@ rule6.minute = 0 //必填
 //     rule6.hour.push(i6*2);
 // }
 
+/*
+ * 规则4  每天凌晨1点和中午13点定时任务
+ * 爬取代理ip，然后去重，然后再检查
+ * */
+let j35 = schedule.scheduleJob(rule35, function () {
+  log.debug('定时任务3.5：检查ip.' + new Date().Format())
+  // wss.broadcast("定时任务4：" + new Date().Format());
+  // ipReptileService.startReptile().then(() => {
+  //   ipReptileService.removeRepeat().then(() => {
+  //     ipReptileService.check().then(() => {
+  //       log.debug("ip更新成功，ip更新时间为：" + new Date().Format());
+  //     });
+  //   });
+  // });
+  // 取出所有ip,判断有效数量
+  reptileIp().then((res) => {
+    log.debug(`定时任务3.5完成`)
+  })
+})
 /*
  * 规则4  每天凌晨1点和中午13点定时任务
  * 爬取代理ip，然后去重，然后再检查

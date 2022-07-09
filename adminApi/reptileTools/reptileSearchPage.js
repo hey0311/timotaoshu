@@ -30,7 +30,7 @@ async function reptileSearchPage(keywords, rule, reptilePage) {
     // wss.broadcast(`开始爬取第${page}页`)
     let $ = null
     // 这里更新一下ip
-    await reptileIp()
+    // await reptileIp()
     const uri = rule.getSearchUrl(page)
     console.log(
       `开始爬取关键词${keywords.name},网站${rule.name},第${page}页,地址:${uri}`

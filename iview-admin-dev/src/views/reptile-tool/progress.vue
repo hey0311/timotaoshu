@@ -282,15 +282,9 @@ export default {
             this.pageTableList1 = []
             this.pageTableList2 = []
             this.pageTableList3 = []
-            this.errorTableList1 = []
-            this.errorTableList2 = []
-            this.errorTableList3 = []
             pageTableList1 = []
             pageTableList2 = []
             pageTableList3 = []
-            errorTableList1 = []
-            errorTableList2 = []
-            errorTableList3 = []
           } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
             this.curReptileStatus = '爬取关键词'
             this.curKeywordsName = progress.keywordsName
@@ -298,6 +292,12 @@ export default {
             this.curReptilePage = progress.page
             this.getEmailCount()
             this.getErrorTaskCount()
+            this.errorTableList1 = []
+            this.errorTableList2 = []
+            this.errorTableList3 = []
+            errorTableList1 = []
+            errorTableList2 = []
+            errorTableList3 = []
           }
           // 插入表格
           if (progress.index === undefined) {

@@ -16,6 +16,7 @@ const getRule = require('./rule')
 const { REPTILE_STATUS } = require('../../common/tool/constant')
 const checkstop = require('./tools')
 const reptileErrorTasks = require('./reptileErrorTasks')
+const reptileIp = require('./reptileIp')
 // const { fetchIpList } = require('./ipTool')
 
 module.exports = reptileAllKeywords
@@ -31,6 +32,7 @@ async function reptileAllKeywords() {
   // wss.broadcast(`开始爬取所有关键词`)
   global.reptileStatus = REPTILE_STATUS.ALL_KEY_WORDS
   console.log(`开始爬取所有关键词`)
+  await reptileIp()
   // await fetchIpList()
   try {
     let keywordsList = await db.query(`select * from keywords`)

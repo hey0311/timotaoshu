@@ -59,7 +59,7 @@ async function batchAddSearchItemToQueue(paramsList, pro) {
     let emailList = []
     let length = paramsList.length
     let overLength = 0
-    let yu = length > 10 ? Math.ceil(length / 60) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
+    let yu = length > 10 ? Math.ceil(length / 30) : length > 1 ? 1 : 0 //允许有几个个缺失  默认丢弃最后几个未返回的
     let needCount = length - yu
     for (let i = 0; i < paramsList.length; i++) {
       searchItemQueue.push({

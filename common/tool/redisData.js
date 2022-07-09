@@ -485,20 +485,28 @@ let redisData = {
     getRandomIpList: async () => {
       return new Promise(async (resolve, reject) => {
         try {
-          let length = await redisData.ipList.getIpCount()
-          if (length > 0) {
-            let random = Math.floor(Math.random() * length)
-            let ipList = await redisData.ipList.getIpList(random, random + 1)
-            let ipObj = JSON.parse(ipList[0])
-            if (new Date(ipObj.endtime) < Date.now()) {
-              // 如果过期了,再随机取一个
-              random = Math.floor(Math.random() * length)
-              ipList = await redisData.ipList.getIpList(random, random + 1)
-              ipObj = JSON.parse(ipList[0])
+          //   let length = await redisData.ipList.getIpCount()
+          let allIpList = await redisData.ipList.getAllIpList()
+          let validIpList = allIpList.filter((itemStr) => {
+            const item = JSON.parse(itemStr)
+            return new Date(item.endtime) > Date.now()
+          })
+          if (validIpList.length > 0) {
+            let random = Math.floor(Math.random() * validIpList.length)
+            let ipObj = JSON.parse(validIpList[random])
+            if (!ipObj) {
+              resolve()
             }
+            // ipObj = JSON.parse(ipList[0])
+            // if (new Date(ipObj.endtime) < Date.now()) {
+            //   // 如果过期了,再随机取一个
+            //   random = Math.floor(Math.random() * length)
+            //   ipList = await redisData.ipList.getIpList(random, random + 1)
+            //   ipObj = JSON.parse(ipList[0])
+            // }
             resolve(`${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`)
           } else {
-            console.error('代理IP池小于10，需要填充了')
+            console.error('代理IP池为空，需要填充了')
             resolve()
           }
         } catch (err) {
