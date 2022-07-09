@@ -5,9 +5,6 @@ const { REPTILE_STATUS } = require('../../common/tool/constant')
 async function reptileIp() {
   return new Promise(async (resolve, reject) => {
     console.log('开始检查IP')
-    wss.broadcast({
-      type: REPTILE_STATUS.CHECK_IP,
-    })
     await check()
     let ipList = await redisData.ipList.getAllIpList()
     while (ipList.length < 10) {
@@ -16,6 +13,9 @@ async function reptileIp() {
       ipList = await redisData.ipList.getAllIpList()
       console.log(`当前ip数量:${ipList.length}`)
     }
+    wss.broadcast({
+      type: REPTILE_STATUS.CHECK_IP,
+    })
     resolve()
   })
 }

@@ -51,7 +51,7 @@ async function reptileShop({
           )
         }
         console.log(`店铺网址请求失败,url:${uri}`)
-        resolve(`店铺网址请求失败,err:${err}`)
+        resolve(`店铺网址请求失败`)
         return
       }
       const email = rule.getEmail($, uri)

@@ -47,7 +47,7 @@
             border
             highlight-row
             :columns="columns"
-            :data="tableList1"
+            :data="pageTableList1"
             ref="table"
             size="small"
             :row-class-name="rowClass"
@@ -58,19 +58,60 @@
             border
             highlight-row
             :columns="columns"
-            :data="tableList2"
+            :data="pageTableList2"
             ref="table"
             size="small"
             :row-class-name="rowClass"
           ></Table>
         </div>
-        <!-- <Col span="8">
-          <div
-            ref="body"
-            class="progress_log"
-            :style="{ height: tableHeight, overflowY: 'auto' }"
-          ></div>
-        </Col> -->
+        <div style="margin-left: 20px">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="pageTableList3"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+      </div>
+    </Card>
+    <Card shadow style="margin: 10px 0">
+      <div class="table-container">
+        <div>
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList1"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div style="margin-left: 20px">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList2"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div style="margin-left: 20px">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList3"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
       </div>
     </Card>
   </div>
@@ -96,8 +137,12 @@
 import util from 'util'
 import config from '../../config'
 import Vue from 'vue'
-let tableList1 = []
-let tableList2 = []
+let pageTableList1 = []
+let pageTableList2 = []
+let pageTableList3 = []
+let errorTableList1 = []
+let errorTableList2 = []
+let errorTableList3 = []
 export default {
   name: 'progress__',
   data() {
@@ -115,36 +160,15 @@ export default {
           width: 70,
           align: 'center'
         },
-        // {
-        //   title: '商品网址',
-        //   key: 'itemUrl',
-        //   align: 'center',
-        //   width: 90,
-        //   render: (h, params) => {
-        //     return h('span', {}, params.row.itemUrl ? '成功' : '')
-        //   }
-        // },
-        // {
-        //   title: '店铺网址',
-        //   key: 'shopUrl',
-        //   align: 'center',
-        //   width: 90,
-        //   render: (h, params) => {
-        //     return h('span', {}, params.row.shopUrl ? '成功' : '')
-        //   }
-        // },
-        // {
-        //   title: '邮箱',
-        //   key: 'email',
-        //   align: 'center',
-        // },
         {
           title: '处理结果',
           key: 'result',
           align: 'center',
           render: (h, params) => {
             return h('span', {
-              color: params.row.result && params.row.result.indexOf('@') !== -1 ? 'green' : 'black'
+              style: {
+                color: (params.row.result && params.row.result.indexOf('@') !== -1) ? 'blue' : (params.row.result && params.row.result.indexOf('失败') !== -1) ? 'red' : 'black'
+              }
             }, params.row.result)
           }
         },
@@ -155,8 +179,12 @@ export default {
       btnTitle: '开始爬取全部关键词',
       index: 1,
       scrollTop: 0,
-      tableList1: [],
-      tableList2: [],
+      pageTableList1: [],
+      pageTableList2: [],
+      pageTableList3: [],
+      errorTableList1: [],
+      errorTableList2: [],
+      errorTableList3: [],
       curReptilePage: 0,
       curKeywordsName: '',
       curRuleName: '',
@@ -210,23 +238,6 @@ export default {
       })
     },
     startReptile() {
-      // if(this.loading || this.btnTitle =='正在爬取') {
-      //     return;
-      // }
-      // let obj = {
-      //   params: {
-      //   }
-      // }
-      // this.loading = true
-      // util.post.reptile.startReptile(obj).then((data) => {
-      //   this.loading = false
-      //   this.$Message.info('开始爬取')
-      //   this.btnTitle = '正在爬取'
-      // }).catch((err) => {
-      //   this.loading = false
-      //   this.btnTitle = '正在爬取'
-      //   throw err
-      // })
       if (this.loading) return
       this.loading = true
       let obj = {
@@ -251,7 +262,6 @@ export default {
     }
     this.ws.onmessage = (response) => {
       let data = JSON.parse(response.data)
-      console.log("🚀 ~ file: progress.vue ~ line 143 ~ created ~ data", data)
       for (let i = 0; i < data.length; i++) {
         const progress = data[i].progress;
         if (typeof progress === 'object') {
@@ -269,12 +279,18 @@ export default {
             this.curReptilePage = ''
             this.getEmailCount()
             this.getErrorTaskCount()
-            setTimeout(() => {
-              this.tableList1 = []
-              this.tableList2 = []
-              tableList1 = []
-              tableList2 = []
-            }, 10000)
+            this.pageTableList1 = []
+            this.pageTableList2 = []
+            this.pageTableList3 = []
+            this.errorTableList1 = []
+            this.errorTableList2 = []
+            this.errorTableList3 = []
+            pageTableList1 = []
+            pageTableList2 = []
+            pageTableList3 = []
+            errorTableList1 = []
+            errorTableList2 = []
+            errorTableList3 = []
           } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
             this.curReptileStatus = '爬取关键词'
             this.curKeywordsName = progress.keywordsName
@@ -287,29 +303,67 @@ export default {
           if (progress.index === undefined) {
             continue
           }
-          let curIndex = -1;
-          if (progress.index % 2 === 1) {
-            curIndex = tableList1.findIndex(item => item.index === progress.index)
-          } else {
-            curIndex = tableList2.findIndex(item => item.index === progress.index)
-          }
-          if (curIndex !== -1) {
-            if (progress.index % 2 === 1) {
-              // Vue.set(tableList1, curIndex, Object.assign({}, tableList1[i], progress))
-              tableList1[curIndex] = Object.assign({}, tableList1[curIndex], progress)
+          if (progress.type === 1) {
+            let curIndex = -1;
+            if (progress.index % 3 === 1) {
+              curIndex = errorTableList1.findIndex(item => item.index === progress.index)
+            } else if (progress.index % 3 === 2) {
+              curIndex = errorTableList2.findIndex(item => item.index === progress.index)
             } else {
-              // Vue.set(tableList2, curIndex, Object.assign({}, tableList2[i], progress))
-              tableList2[curIndex] = Object.assign({}, tableList2[curIndex], progress)
+              curIndex = errorTableList3.findIndex(item => item.index === progress.index)
             }
-          } else {
-            if (progress.index % 2 === 1) {
-              tableList1.push(progress)
+            if (curIndex !== -1) {
+              if (progress.index % 3 === 1) {
+                errorTableList1[curIndex] = Object.assign({}, errorTableList1[curIndex], progress)
+              } else if (progress.index % 3 === 2) {
+                errorTableList2[curIndex] = Object.assign({}, errorTableList2[curIndex], progress)
+              } else {
+                errorTableList3[curIndex] = Object.assign({}, errorTableList3[curIndex], progress)
+              }
             } else {
-              tableList2.push(progress)
+              if (progress.index % 3 === 1) {
+                errorTableList1.push(progress)
+              } else if (progress.index % 3 === 2) {
+                errorTableList2.push(progress)
+              } else {
+                errorTableList3.push(progress)
+              }
             }
+            this.errorTableList1 = [...errorTableList1.sort((a, b) => a.index - b.index)]
+            this.errorTableList2 = [...errorTableList2.sort((a, b) => a.index - b.index)]
+            this.errorTableList3 = [...errorTableList3.sort((a, b) => a.index - b.index)]
+          } else if (progress.type === 0) { // page
+            let curIndex = -1;
+            if (progress.index % 3 === 1) {
+              curIndex = pageTableList1.findIndex(item => item.index === progress.index)
+            } else if (progress.index % 3 === 2) {
+              curIndex = pageTableList2.findIndex(item => item.index === progress.index)
+            } else {
+              curIndex = pageTableList3.findIndex(item => item.index === progress.index)
+            }
+            if (curIndex !== -1) {
+              if (progress.index % 3 === 1) {
+                pageTableList1[curIndex] = Object.assign({}, pageTableList1[curIndex], progress)
+              } else if (progress.index % 3 === 2) {
+                // Vue.set(pageTableList2, curIndex, Object.assign({}, pageTableList2[i], progress))
+                pageTableList2[curIndex] = Object.assign({}, pageTableList2[curIndex], progress)
+              } else {
+                pageTableList3[curIndex] = Object.assign({}, pageTableList3[curIndex], progress)
+
+              }
+            } else {
+              if (progress.index % 3 === 1) {
+                pageTableList1.push(progress)
+              } else if (progress.index % 3 === 2) {
+                pageTableList2.push(progress)
+              } else {
+                pageTableList3.push(progress)
+              }
+            }
+            this.pageTableList1 = [...pageTableList1.sort((a, b) => a.index - b.index)]
+            this.pageTableList2 = [...pageTableList2.sort((a, b) => a.index - b.index)]
+            this.pageTableList3 = [...pageTableList3.sort((a, b) => a.index - b.index)]
           }
-          this.tableList1 = [...tableList1.sort((a, b) => a.index - b.index)]
-          this.tableList2 = [...tableList2.sort((a, b) => a.index - b.index)]
         }
       }
       // let firstData = data[0]

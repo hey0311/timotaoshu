@@ -21,6 +21,13 @@ router.use('', oauth(4004), async function (req, res, next) {
         if (!nameList[i]) {
           continue
         }
+        // 检测重复
+        let sql = `select COUNT(*) from keywords where name="${nameList[i]}"`
+        let count = tool.getData(await db.query(sql))
+        if (count) {
+          console.log(`${nameList[i]}重复,跳过`)
+          continue
+        }
         await db.query(
           `insert into keywords (name,active) values ("${nameList[i]}",1)`
         )

@@ -36,10 +36,10 @@ async function reptileErrorTasks() {
       const allErrorRecords = await db.query(`select count(*) from errortask`)
       const count = allErrorRecords[0]['count(*)']
       const errorTaskRecords = await db.query(
-        `select * from errortask limit 0,100`
+        `select * from errortask limit 0,240`
       )
-      if (errorTaskRecords.length < 60) {
-        console.log(`错误记录小于60条,跳过`)
+      if (errorTaskRecords.length < 240) {
+        console.log(`错误记录小于240条,跳过`)
         resolve()
         return
       }

@@ -19,9 +19,12 @@ const agent = new Agent({
   maxSockets: 5,
   maxFreeSockets: 5,
 })
+const TIMEOUT = 15000
 const redisData = require('../../common/tool/redisData')
+// const { getRandomIp, setIpFail } = require('./ipTool')
 let timer = null
 const reptileRequest = function (options) {
+  // let ipObj = getRandomIp()
   return Promise.race([
     new Promise(async (resolve, reject) => {
       try {
@@ -36,7 +39,7 @@ const reptileRequest = function (options) {
             //     "User-Agent": 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.170 Safari/537.36', // 谷歌浏览器
           },
           // agent,   // 不支持https
-          timeout: 10000, // 默认20秒超时
+          timeout: TIMEOUT, // 默认20秒超时
         }
         let reqOptions = Object.assign(initOptions, options)
 
@@ -48,7 +51,13 @@ const reptileRequest = function (options) {
             initOptions.proxy = global.serverProxy
           } else {
             let ip = await redisData.ipList.getRandomIpList()
-            if (ip) initOptions.proxy = ip
+            if (ip) {
+              initOptions.proxy = ip
+            }
+            // let ip = getRandomIp()
+            // if (ipObj) {
+            //   initOptions.proxy = `${ipObj.protocol}://${ipObj.ip}:${ipObj.port}`
+            // }
           }
         }
         options.proxy = initOptions.proxy // 借用js的对象特性，把proxy传递出去
@@ -113,6 +122,8 @@ const reptileRequest = function (options) {
               // resolve(body);
               // }
             } else {
+              // 失败了,告诉这个ip不行
+              // setIpFail(ipObj)
               clearTimeout(timer)
               if (!error) {
                 reject('状态:' + response.statusCode)
@@ -127,11 +138,14 @@ const reptileRequest = function (options) {
          * 设置超时
          * */
         function time(timeout, nochaoshi) {
+          // timeout = TIMEOUT
+          // nochaoshi = false
           if (nochaoshi) return // 设置了这个，则timeout无效
           if (parseInt(timeout) > 0) {
             let setTime = setTimeout(() => {
               if (chaoshi) {
                 clearTimeout(timer)
+                // setIpFail(ipObj)
                 reject(`访问超时${timeout}ms`)
                 req.abort(`访问超时${timeout}ms`)
               }
@@ -151,7 +165,7 @@ const reptileRequest = function (options) {
     new Promise((resolve, reject) => {
       timer = setTimeout(() => {
         reject('timeout')
-      }, 10000)
+      }, TIMEOUT)
     }),
   ])
 }

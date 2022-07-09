@@ -189,7 +189,7 @@ function getRule(ruleConfig, keywords) {
       //   .replace('${page}', page)
       let url = ruleConfig.baseUrl
       const formatKeywords = keywords.name.split(' ').join('+')
-      url += `/sch/i.html?_from=R40&rt=nc&_nkw=${formatKeywords}&_pgn=${page}`
+      url += `/sch/i.html?_from=R40&rt=nc&_nkw=${formatKeywords}&_pgn=${page}&_ipg=240`
       return url
     },
     getSearchItemUrl: ($, searchItem, index) => {
@@ -231,14 +231,14 @@ function getRule(ruleConfig, keywords) {
         email =
           domCommon(
             null,
-            ".str-business-details__seller-info span:contains('Email') ~ span、text",
+            ".str-business-details__seller-info span:contains('Email') ~ span:contains('@')、text",
             $
           ) || ''
         if (!email) {
           email =
             domCommon(
               null,
-              ".str-business-details__seller-info span:contains('E-Mail') ~ span、text",
+              ".str-business-details__seller-info span:contains('E-Mail') ~ span:contains('@')、text",
               $
             ) || ''
           if (!email) {

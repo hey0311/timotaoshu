@@ -50,7 +50,7 @@ async function reptileSearchItem({
           order,
           reptileStatus,
         })
-        resolve(`商品网址请求失败,err:${err}`)
+        resolve(`商品网址请求失败`)
         console.log(`商品网址请求失败`)
         return
       }
