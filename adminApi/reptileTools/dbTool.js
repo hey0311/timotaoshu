@@ -38,41 +38,28 @@ async function insertEmail({
   return new Promise(async (resolve, reject) => {
     try {
       // 先判断是否和表中的重复
-      let sql = `select COUNT(*) from email where email="${email}"`
-      let result = tool.getData(await db.query(sql))
-      if (result) {
-        //如果数据库里有这本书
-        // wss.broadcast({
-        //   type: reptileStatus,
-        //   keywordsName: keywords.name,
-        //   ruleName: rule.name,
-        //   index: order,
-        //   page,
-        //   result: '重复',
-        // })
-        // return true
-        resolve('重复')
-        return
-      }
+      // let sql = `select COUNT(*) from email where email="${email}"`
+      // let result = tool.getData(await db.query(sql))
+      // if (result) {
+      //   //如果数据库里有这本书
+      //   // wss.broadcast({
+      //   //   type: reptileStatus,
+      //   //   keywordsName: keywords.name,
+      //   //   ruleName: rule.name,
+      //   //   index: order,
+      //   //   page,
+      //   //   result: '重复',
+      //   // })
+      //   // return true
+      //   resolve('重复')
+      //   return
+      // }
       console.log('开始插入邮箱')
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
-      // insertSql += `("${tool.toSql(bizName)}", ${
-      //   keyword.id
-      // },1,"${shopUrl}","${email}")`;
       insertSql += `("${email}",${keywords.id},${rule.id},"${shopUrl}",now(),"${
         bizName || 'null'
       }","${firstName}","${lastName}","${phone}")`
       await db.query(insertSql)
-      // wss.broadcast({
-      //   type: reptileStatus,
-      //   page,
-      //   keywordsName: keywords.name,
-      //   ruleName: rule.name,
-      //   index: order,
-      //   result: '已保存',
-      // })
-      // wss.broadcast(bookName + "---" + catalog.name + "存取成功");
-      // return true
       resolve(email)
     } catch (err) {
       log.error(err)
@@ -106,7 +93,9 @@ async function updateKeywordsProgress({ keywords, rule, page, finished }) {
         )
       }
       // wss.broadcast(`更新进度成功`)
-      console.log(`已更新进度,keywords:${keywords.name},rule:${rule.name},page:${page}`)
+      console.log(
+        `已更新进度,keywords:${keywords.name},rule:${rule.name},page:${page}`
+      )
       resolve(true)
       return true
     } catch (err) {

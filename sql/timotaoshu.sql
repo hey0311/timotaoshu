@@ -111,7 +111,7 @@ CREATE TABLE `email` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `keywordsId` int(11) DEFAULT NULL COMMENT '小说id',
   `ruleId` int(11) DEFAULT NULL COMMENT '小说id',
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(50) UNIQUE COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bizName` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `firstName` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lastName` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
