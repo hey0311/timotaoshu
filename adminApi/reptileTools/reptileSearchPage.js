@@ -37,7 +37,7 @@ async function reptileSearchPage(keywords, rule, reptilePage) {
     )
     try {
       // 这个是当前的搜索页
-      $ = await reptileRequest({ uri, noIp: true })
+      $ = await reptileRequest({ uri, timeout: 30000 })
     } catch (err) {
       // 爬第一页出错
       console.log(`爬取搜索页出错,${err}`)

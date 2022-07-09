@@ -19,12 +19,12 @@ const agent = new Agent({
   maxSockets: 5,
   maxFreeSockets: 5,
 })
-const TIMEOUT = 15000
+const TIMEOUT = 10000
 const redisData = require('../../common/tool/redisData')
 // const { getRandomIp, setIpFail } = require('./ipTool')
 let timer = null
 const reptileRequest = function (options) {
-  // let ipObj = getRandomIp()
+  const timeout = options.timeout || TIMEOUT
   return Promise.race([
     new Promise(async (resolve, reject) => {
       try {
@@ -39,7 +39,7 @@ const reptileRequest = function (options) {
             //     "User-Agent": 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.170 Safari/537.36', // 谷歌浏览器
           },
           // agent,   // 不支持https
-          timeout: TIMEOUT, // 默认20秒超时
+          timeout, // 默认20秒超时
         }
         let reqOptions = Object.assign(initOptions, options)
 
@@ -138,8 +138,7 @@ const reptileRequest = function (options) {
          * 设置超时
          * */
         function time(timeout, nochaoshi) {
-          // timeout = TIMEOUT
-          // nochaoshi = false
+          nochaoshi = false
           if (nochaoshi) return // 设置了这个，则timeout无效
           if (parseInt(timeout) > 0) {
             let setTime = setTimeout(() => {
@@ -165,7 +164,7 @@ const reptileRequest = function (options) {
     new Promise((resolve, reject) => {
       timer = setTimeout(() => {
         reject('timeout')
-      }, TIMEOUT)
+      }, timeout)
     }),
   ])
 }

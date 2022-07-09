@@ -14,7 +14,7 @@ router.use('', oauth(4004), async function (req, res, next) {
   let subject = tool.getParams(req, 'subject')
   let remark = tool.getParams(req, 'remark')
   let data = null
-  content = content.replace(/"/g, '')
+  content = content.replace(/"/g, "'")
   try {
     let allData = {}
     if (id) {
