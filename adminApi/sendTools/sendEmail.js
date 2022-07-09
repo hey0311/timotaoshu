@@ -13,6 +13,8 @@ async function sendEmail({ from, to, subject, content }) {
         pass: 'Fangcuizhu123', // generated ethereal password
       },
     })
+    // 更改签名邮箱
+    content = content.replace('info@buyshiphere.com', from)
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
