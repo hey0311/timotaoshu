@@ -3,12 +3,7 @@
     <Card shadow>
       <div class="header">
         <h3>黑名单</h3>
-        <Button
-          type="primary"
-          :disabled="loading"
-          @click="onClickShowModal('addBlackEmail')"
-          >添加</Button
-        >
+        <Button type="primary" :disabled="loading" @click="onClickShowModal('addBlackEmail')">添加</Button>
       </div>
       <Table
         border
@@ -32,12 +27,7 @@
     <Card shadow style="margin-top: 30px">
       <div class="header">
         <h3>白名单</h3>
-        <Button
-          type="primary"
-          :disabled="loading"
-          @click="onClickShowModal('addWhiteEmail')"
-          >添加</Button
-        >
+        <Button type="primary" :disabled="loading" @click="onClickShowModal('addWhiteEmail')">添加</Button>
       </div>
       <Table
         border
@@ -59,16 +49,8 @@
       ></Page>
     </Card>
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <add-black-email
-      :modal="modal"
-      ref="addBlackEmail"
-      @save="saveBlackEmail"
-    ></add-black-email>
-    <add-black-email
-      :modal="whiteModal"
-      ref="addWhiteEmail"
-      @save="saveWhiteEmail"
-    ></add-black-email>
+    <add-black-email :modal="modal" ref="addBlackEmail" @save="saveBlackEmail"></add-black-email>
+    <add-black-email :modal="whiteModal" ref="addWhiteEmail" @save="saveWhiteEmail"></add-black-email>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -223,7 +205,6 @@ export default {
       });
     },
     saveBlackEmail(email) {
-      console.log('aaaaaaaaa')
       this.loading = true;
       util.post.emailExtra.saveBlackEmail({
         params: {

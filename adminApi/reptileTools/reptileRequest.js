@@ -63,7 +63,9 @@ const reptileRequest = function (options) {
             // }
           }
         }
-        options.proxy = initOptions.proxy // 借用js的对象特性，把proxy传递出去
+        // initOptions.proxy = 'http://127.0.0.1:21882'
+        options.proxy = initOptions.proxy
+        // 借用js的对象特性，把proxy传递出去
         /*
          * 代理ip end
          * */

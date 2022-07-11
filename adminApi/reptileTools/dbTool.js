@@ -81,7 +81,7 @@ async function updateKeywordsProgress({ keywords, rule, page, finished }) {
         )
       }
       // wss.broadcast(`更新进度成功`)
-      console.log(
+      log.info(
         `已更新进度,keywords:${keywords.name},rule:${rule.name},page:${page}`
       )
       resolve(true)

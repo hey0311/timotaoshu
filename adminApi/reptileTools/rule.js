@@ -215,6 +215,7 @@ function getRule(ruleConfig, keywords) {
       const shopUrlList = [
         '.ux-seller-section__item--seller a、attrhref',
         '.si-inner .mbg a、attrhref',
+        '.si-content .mbg a、attrhref',
       ]
       for (let i = 0; i < shopUrlList.length; i++) {
         const shopUrl = domCommon(null, shopUrlList[i], $)

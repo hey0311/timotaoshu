@@ -4,6 +4,7 @@ const { reptileService, ipReptileService, logService } = require('../service/')
 const { redisData } = require('../../common/tool/tool')
 const { REPTILE_STATUS } = require('../../common/tool/constant')
 const reptileIp = require('../reptileTools/reptileIp')
+const reptileAllKeywords = require('../reptileTools/reptileAllKeywords')
 
 /*
  * 规则1  每晚零点定时任务
@@ -60,20 +61,32 @@ rule6.minute = 0 //必填
 //     rule6.hour.push(i6*2);
 // }
 
+// /*
+//  * 规则3  每两分钟一次定时任务
+//  * */
+// let rule7 = new schedule.RecurrenceRule()
+// rule7.minute = []
+// let i7 = 1,
+//   length7 = 30
+// for (i3; i3 < length3; i3++) {
+//   rule3.minute.push(i3 * 2)
+// }
+// let j7 = schedule.scheduleJob(rule7, function () {
+//   log.debug('定时任务7：爬取搜索页.' + new Date().Format())
+//   // 取出所有ip,判断有效数量
+//   // reptileIp().then((res) => {
+//   //   log.debug(`定时任务3.5完成`)
+//   // })
+//   reptileAllKeywords().then(res=>{
+//     log.debug(`定时任务7完成`)
+//   })
+// })
 /*
  * 规则4  每天凌晨1点和中午13点定时任务
  * 爬取代理ip，然后去重，然后再检查
  * */
 let j35 = schedule.scheduleJob(rule35, function () {
   log.debug('定时任务3.5：检查ip.' + new Date().Format())
-  // wss.broadcast("定时任务4：" + new Date().Format());
-  // ipReptileService.startReptile().then(() => {
-  //   ipReptileService.removeRepeat().then(() => {
-  //     ipReptileService.check().then(() => {
-  //       log.debug("ip更新成功，ip更新时间为：" + new Date().Format());
-  //     });
-  //   });
-  // });
   // 取出所有ip,判断有效数量
   reptileIp().then((res) => {
     log.debug(`定时任务3.5完成`)

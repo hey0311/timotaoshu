@@ -17,6 +17,7 @@ const { REPTILE_STATUS } = require('../../common/tool/constant')
 const checkstop = require('./tools')
 const reptileErrorTasks = require('./reptileErrorTasks')
 const reptileIp = require('./reptileIp')
+const { sleep } = require('../../common/tool/tool')
 // const { fetchIpList } = require('./ipTool')
 
 module.exports = reptileAllKeywords
@@ -34,12 +35,19 @@ async function reptileAllKeywords() {
   console.log(`开始爬取所有关键词`)
   await reptileIp()
   // await fetchIpList()
+  reptileErrorTasks()
   try {
     let keywordsList = await db.query(`select * from keywords`)
     // keywordsList.sort(randomsort)
     // 随机选一个关键词
     const ruleConfigList = getRuleConfigList()
     while (true) {
+      // 等等errorTask
+      const allErrorRecords = await db.query(`select count(*) from errortask`)
+      const count = allErrorRecords[0]['count(*)']
+      if (count > 1000) {
+        await sleep(30000)
+      }
       const keywords = randomSelect(keywordsList)
       const ruleConfig = randomSelect(ruleConfigList)
       if (checkstop()) {
@@ -60,7 +68,7 @@ async function reptileAllKeywords() {
         const rule = getRule(ruleConfig, keywords)
         // await reptileKeywordsByRule(keywords, rule, reptilePage)
         await reptileSearchPage(keywords, rule, reptilePage)
-        await reptileErrorTasks()
+        // await reptileErrorTasks()
       }
     }
   } catch (err) {

@@ -40,16 +40,18 @@ async function reptileSearchItem({
           // agent,
         })
       } catch (err) {
-        // 插入错误记录
-        await insertErrorTask({
-          keywords,
-          rule,
-          uri,
-          pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
-          page,
-          order,
-          reptileStatus,
-        })
+        if (!errorTaskId) {
+          // 插入错误记录
+          await insertErrorTask({
+            keywords,
+            rule,
+            uri,
+            pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+            page,
+            order,
+            reptileStatus,
+          })
+        }
         resolve(`商品网址请求失败`)
         console.log(`商品网址请求失败`)
         return
@@ -70,15 +72,17 @@ async function reptileSearchItem({
         resolve(shopResult)
       } else {
         // 不可能没shopUrl的,先存入错误记录
-        await insertErrorTask({
-          keywords,
-          rule,
-          uri,
-          pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
-          page,
-          order,
-          reptileStatus,
-        })
+        // if (!errorTaskId) {
+          await insertErrorTask({
+            keywords,
+            rule,
+            uri,
+            pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
+            page,
+            order,
+            reptileStatus,
+          })
+        // }
         console.log(`无店铺网址,商品地址是${uri}`)
         resolve('无店铺网址')
       }

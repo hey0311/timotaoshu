@@ -10,9 +10,10 @@
       @on-cancel="onClickCancel"
     >
       <h3 slot="header" class="modal-header-color">添加邮箱</h3>
+      <div style="margin-right:10px">邮箱:</div>
       <div class="email-row">
-        <span style="margin-right:10px">邮箱:</span>
-        <Input v-model="email" placeholder="输入邮箱" style="width:400px" />
+        <!-- <Input v-model="email" placeholder="输入邮箱" style="width:400px" /> -->
+        <Input v-model="email" placeholder="输入邮箱" type="textarea" :rows="10" />
       </div>
       <div slot="footer">
         <Button type="text" @click="onClickCancel">取消</Button>

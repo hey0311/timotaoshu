@@ -20,7 +20,7 @@ let searchItemQueue = async.queue((obj, cb) => {
       // obj.error && (await obj.error('错误：' + err))
       await cb(err)
     })
-}, 100)
+}, 50)
 
 searchItemQueue.empty = function () {
   console.log('searchItemQueue已空')

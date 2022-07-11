@@ -25,23 +25,26 @@ const getRule = require('./rule')
 const reptileShop = require('./reptileShop')
 const { addShopToQueue, batchAddShopToQueue } = require('./shopQueue')
 const { deleteErrorTask, batchInsertEmail } = require('./dbTool')
+const { sleep } = require('../../common/tool/tool')
 
 module.exports = reptileErrorTasks
-
+const MAX_TASK_LEN = 300
 async function reptileErrorTasks() {
-  return new Promise(async (resolve, reject) => {
+  while (true) {
     try {
       // 取出错误记录
       const startTime = Date.now()
       const allErrorRecords = await db.query(`select count(*) from errortask`)
       const count = allErrorRecords[0]['count(*)']
       const errorTaskRecords = await db.query(
-        `select * from errortask limit 0,240`
+        `select * from errortask limit 0,${MAX_TASK_LEN}`
       )
-      if (errorTaskRecords.length < 240) {
-        console.log(`错误记录小于240条,跳过`)
-        resolve()
-        return
+      if (errorTaskRecords.length < MAX_TASK_LEN) {
+        console.log(`错误记录小于${MAX_TASK_LEN}条,跳过`)
+        await sleep(30000)
+        continue
+        // resolve()
+        // return
       }
       console.log(
         `开始爬取错误记录,共${count}条,现在取${errorTaskRecords.length}条爬取`
@@ -61,6 +64,7 @@ async function reptileErrorTasks() {
         const rule = getRule(ruleMap[errorTask.ruleId], keywords)
         const page = errorTask.page
         switch (errorTask.pageType) {
+          case ERROR_TASK_PAGE_TYPE.SEARCH_PAGE:
           case ERROR_TASK_PAGE_TYPE.ITEM_PAGE: // 搜索项
             searchItemParamsList.push({
               keywords,
@@ -136,13 +140,13 @@ async function reptileErrorTasks() {
         }
       }
       console.log(`错误记录爬取完成,用时${(Date.now() - startTime) / 1000}秒`)
-      resolve()
+      // resolve()
     } catch (err) {
       console.log(
         '🚀 ~ file: reptileAllKeywords.js ~ line 24 ~ reptileAllKeywords ~ err',
         err
       )
-      resolve()
+      // resolve()
     }
-  })
+  }
 }

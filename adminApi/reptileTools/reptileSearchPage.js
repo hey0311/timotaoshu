@@ -11,7 +11,11 @@ const {
   log,
   timoRp,
 } = require('../tool/require')
-const { updateKeywordsProgress, batchInsertEmail } = require('./dbTool')
+const {
+  updateKeywordsProgress,
+  batchInsertEmail,
+  insertErrorTask,
+} = require('./dbTool')
 const reptileRequest = require('./reptileRequest')
 const reptileSearchItem = require('./reptileSearchItem')
 
@@ -19,7 +23,10 @@ const getRule = require('./rule')
 const { batchAddSearchItemToQueue } = require('./searchItemQueue')
 const reptileErrorTasks = require('./reptileErrorTasks')
 const checkstop = require('./tools')
-const { REPTILE_STATUS } = require('../../common/tool/constant')
+const {
+  REPTILE_STATUS,
+  ERROR_TASK_PAGE_TYPE,
+} = require('../../common/tool/constant')
 
 module.exports = reptileSearchPage
 
@@ -49,73 +56,71 @@ async function reptileSearchPage(keywords, rule, reptilePage) {
       resolve()
     }
     let searchItemList = rule.getSearchItemList($).toArray()
-    let paramsList = []
+    // 这里存入数据库就行了,没必要等爬完
+
+    // let paramsList = []
     for (let i = 0; i < searchItemList.length; i++) {
-      // for (let i = 0; i < 3; i++) {
       const searchItem = searchItemList[i]
       const searchItemUrl = rule.getSearchItemUrl($, searchItem, i)
-      paramsList.push({
+      await insertErrorTask({
         keywords,
         rule,
         uri: searchItemUrl,
+        pageType: ERROR_TASK_PAGE_TYPE.ITEM_PAGE,
         page,
         order: i + 1,
-        reptileStatus: REPTILE_STATUS.ALL_KEY_WORDS,
-        result: (result) => {
-          wss.broadcast({
-            type: REPTILE_STATUS.ALL_KEY_WORDS,
-            page,
-            keywordsName: keywords.name,
-            ruleName: rule.name,
-            index: i + 1,
-            itemUrl: searchItemUrl,
-            result: typeof result === 'object' ? result.email : result,
-          })
-        },
+        reptileStatus: REPTILE_STATUS.ERROR_TASKS,
       })
-    }
-    if (paramsList.length > 0) {
-      const emailList = await batchAddSearchItemToQueue(
-        paramsList,
-        reptileSearchItem
-      )
-      if (emailList.length !== 0) {
-        await batchInsertEmail(emailList)
-      }
-    }
-    console.log(`第${page}页爬取完成,耗时${(Date.now() - startTime) / 1000}秒`)
-    // await reptileIp()
-    // 爬完一页开始爬错误页面
-    // await reptileErrorTasks()
-    if (rule.isLastPage($)) {
-      console.log(`最后一页,开始保存进度`)
-      await updateKeywordsProgress({
-        keywords,
-        rule,
-        page,
-        finished: true,
-      })
-      resolve()
-      return
-    }
-    try {
-      // console.log(`获取下一页,地址:${rule.getNextPage($)}`)
-      // $ = await reptileRequest({
-      //   uri: rule.getNextPage($),
-      //   noIp: true,
+      // paramsList.push({
+      //   keywords,
+      //   rule,
+      //   uri: searchItemUrl,
+      //   page,
+      //   order: i + 1,
+      //   reptileStatus: REPTILE_STATUS.ALL_KEY_WORDS,
+      //   result: (result) => {
+      //     wss.broadcast({
+      //       type: REPTILE_STATUS.ALL_KEY_WORDS,
+      //       page,
+      //       keywordsName: keywords.name,
+      //       ruleName: rule.name,
+      //       index: i + 1,
+      //       itemUrl: searchItemUrl,
+      //       result: typeof result === 'object' ? result.email : result,
+      //     })
+      //   },
       // })
-      // 第page页爬完
-      // wss.broadcast(`第${page}页爬完,开始下一页`)
-      await updateKeywordsProgress({
-        keywords,
-        rule,
-        page,
-        finished: false,
-      })
+    }
+    // if (paramsList.length > 0) {
+    //   const emailList = await batchAddSearchItemToQueue(
+    //     paramsList,
+    //     reptileSearchItem
+    //   )
+    //   if (emailList.length !== 0) {
+    //     await batchInsertEmail(emailList)
+    //   }
+    // }
+    // console.log(`第${page}页爬取完成,耗时${(Date.now() - startTime) / 1000}秒`)
+    try {
+      if (rule.isLastPage($)) {
+        log.info(`最后一页,开始保存进度`)
+        await updateKeywordsProgress({
+          keywords,
+          rule,
+          page,
+          finished: true,
+        })
+      } else {
+        log.info(`插入${searchItemList.length}条errortask成功,开始保存进度`)
+        await updateKeywordsProgress({
+          keywords,
+          rule,
+          page,
+          finished: false,
+        })
+      }
     } catch (err) {
-      // 下一页出错,停止这个关键词
-      console.log(`保存进度出错,地址:${rule.getNextPage($)},${err}`)
-      // wss.broadcast(`第${page}页爬取出错,${err}`)
+      console.log(`保存进度出错`)
     }
     resolve()
   })
