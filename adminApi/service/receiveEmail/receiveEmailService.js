@@ -45,6 +45,7 @@ async function receiveEmailService() {
         await db.query(
           `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",1,0)`
         )
+        console.log(`邮件${data[i].email}插入成功`)
       }
     }
     resolve(data)

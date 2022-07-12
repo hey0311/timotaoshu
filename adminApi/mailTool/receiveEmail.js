@@ -43,11 +43,6 @@ async function receiveEmail(mailbox) {
                   // console.log('邮件主题: ' + headers.get('subject'))
                   // console.log('发件人: ' + headers.get('from').text)
                   // console.log('收件人: ' + headers.get('to').text)
-                  console.log(
-                    'moment',
-                    moment(headers.get('date')).format('YYYY-MM-DD HH:mm:ss')
-                  )
-                  console.log('time', headers.get('date').getTime())
                   if (!mails[seqno]) {
                     mails[seqno] = {}
                   }
@@ -71,10 +66,6 @@ async function receiveEmail(mailbox) {
                 //邮件内容
 
                 mailparser.on('data', function (data) {
-                  console.log(
-                    '🚀 ~ file: receiveEmail.js ~ line 99 ~ data',
-                    data
-                  )
                   if (data.type === 'text') {
                     if (!mails[seqno]) {
                       mails[seqno] = {}
