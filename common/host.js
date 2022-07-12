@@ -1,12 +1,15 @@
-
-
 /*
-* 允许访问的域名host
-* */
+ * 允许访问的域名host
+ * */
 module.exports = [
-    'localhost:1111',
-    'localhost:3000',
-    'localhost:9092',
-    'localhost:8000',
-    'localhost:8080',
+  'localhost:1111',
+  'localhost:3000',
+  'localhost:9092',
+  'localhost:8000',
+  'localhost:8080',
+  '43.134.102.124:1111',
+  '43.134.102.124:3000',
+  '43.134.102.124:9092',
+  '43.134.102.124:8000',
+  '43.134.102.124:8080',
 ]
