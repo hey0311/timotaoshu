@@ -2,7 +2,7 @@ doctype html
 html
     head
         meta(charset="utf-8")
-        title= `${site?(site.title?site.title +'？提莫淘书,猜你喜欢':'提莫淘书'):'提莫淘书'}`
+        title= `邮件详情`
         meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
         meta(name="viewport" content="initial-scale=1, width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1, user-scalable=no" media="(device-height: 568px)" )
         meta(name="renderer" content="webkit")
@@ -48,7 +48,7 @@ html
         script(type="text/javascript" src="/js/common.js?v=23ea901a6c")
 
         block links
-    body(style=`${(bookConfig && bookConfig.huyan)?'color:#333;background-color:rgb(220, 236, 210);':''}${(bookConfig && bookConfig.light)?  'color:rgb(153, 153, 153);background-color:rgb(50, 55, 59);':''}`)
+    body(style=`padding:20px;`)
         block header
         block content
 
