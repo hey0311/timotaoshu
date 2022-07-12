@@ -22,10 +22,6 @@ async function receiveEmailService() {
         }
       }
     }
-    console.log(
-      '🚀 ~ file: receiveEmailService.js ~ line 27 ~ returnnewPromise ~ data',
-      data
-    )
     // 存到数据库里
 
     for (let i = 0; i < data.length; i++) {
@@ -42,10 +38,14 @@ async function receiveEmailService() {
         continue
       }
       const html = data[i].html ? data[i].html.replace(/"/g, "'") : ''
-      await db.query(
-        `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",0,0)`
-      )
-      // await sendMessage(data[i])
+      // 判断有没有发送消息
+      // 新的肯定没发??
+      const messageResult = await sendMessage(data[i])
+      if (messageResult) {
+        await db.query(
+          `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",1,0)`
+        )
+      }
     }
     resolve(data)
   })

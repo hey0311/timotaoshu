@@ -19,7 +19,6 @@ async function sendMessage(mail) {
   //       resolve('发送成功')
   //     })
   // })
-  return
   return new Promise(async (resolve, reject) => {
     axios
       .post(url, {
@@ -98,7 +97,10 @@ async function sendMessage(mail) {
       })
       .then((res) => {
         console.log('🚀 ~ file: testRobot.js ~ line 6 ~ .then ~ res', res)
-        resolve('发送成功')
+        resolve(true)
+      })
+      .catch((err) => {
+        resolve(false)
       })
   })
 }

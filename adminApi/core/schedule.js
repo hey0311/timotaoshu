@@ -6,6 +6,7 @@ const { REPTILE_STATUS } = require('../../common/tool/constant')
 const reptileIp = require('../reptileTools/reptileIp')
 const reptileAllKeywords = require('../reptileTools/reptileAllKeywords')
 const batchSendEmail = require('../service/sendEmail/batchSendEmail')
+const receiveEmailService = require('../service/receiveEmail/receiveEmailService')
 
 /*
  * 规则1  每晚零点定时任务
@@ -46,6 +47,14 @@ let i9 = 1,
 for (i9; i9 < length9; i9++) {
   rule9.minute.push(i9)
 }
+// 发送微信消息
+let rule4Message = new schedule.RecurrenceRule()
+rule4Message.minute = [1, 11, 21, 31, 41, 51]
+// let iMessage = 1,
+//   lengthMessage = 60
+// for (iMessage; iMessage <lengthMessage; iMessage++) {
+//   rule4Message.minute.push(iMessage)
+// }
 /*
  * 规则4  每天凌晨1点和中午13点定时任务
  * */
@@ -96,7 +105,7 @@ rule6.minute = 0 //必填
  * 爬取代理ip，然后去重，然后再检查
  * */
 let j35 = schedule.scheduleJob(rule35, function () {
-  log.debug('定时任务3.5：检查ip.' + new Date().Format())
+  log.debug('定时任务1：检查ip.' + new Date().Format())
   // 取出所有ip,判断有效数量
   reptileIp().then((res) => {
     log.debug(`定时任务3.5完成`)
@@ -104,10 +113,15 @@ let j35 = schedule.scheduleJob(rule35, function () {
 })
 
 let j9 = schedule.scheduleJob(rule9, function () {
-  log.debug('定时任务9：发送邮件.' + new Date().Format())
-  // 取出所有ip,判断有效数量
+  log.debug('定时任务2：发送邮件.' + new Date().Format())
   batchSendEmail().then((res) => {
     log.debug(`定时任务9完成`)
+  })
+})
+let jMessage = schedule.scheduleJob(rule4Message, function () {
+  log.debug('定时任务3：收取邮件.' + new Date().Format())
+  receiveEmailService().then((res) => {
+    log.debug(`定时任务3完成`)
   })
 })
 /*
