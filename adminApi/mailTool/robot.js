@@ -77,7 +77,7 @@ async function sendMessage(mail) {
           jump_list: [
             {
               type: 1,
-              url: 'https://work.weixin.qq.com/?from=openApi',
+              url: `http://43.134.102.124:1111/home?id=${mail.id}`,
               title: '查看详细信息',
             },
             // {
@@ -89,7 +89,7 @@ async function sendMessage(mail) {
           ],
           card_action: {
             type: 1,
-            url: 'https://work.weixin.qq.com/?from=openApi',
+            url: `http://43.134.102.124:1111/home?id=${mail.id}`,
             appid: 'APPID',
             pagepath: 'PAGEPATH',
           },
@@ -100,6 +100,10 @@ async function sendMessage(mail) {
         resolve(true)
       })
       .catch((err) => {
+        console.log(
+          '🚀 ~ file: robot.js ~ line 103 ~ returnnewPromise ~ err',
+          err
+        )
         resolve(false)
       })
   })
