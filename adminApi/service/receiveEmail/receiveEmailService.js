@@ -38,15 +38,10 @@ async function receiveEmailService() {
         continue
       }
       const html = data[i].html ? data[i].html.replace(/"/g, "'") : ''
-      // 判断有没有发送消息
-      // 新的肯定没发??
-      const messageResult = await sendMessage(data[i])
-      if (messageResult) {
-        await db.query(
-          `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",1,0)`
-        )
-        console.log(`邮件${data[i].email}插入成功`)
-      }
+      await db.query(
+        `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",0,0)`
+      )
+      console.log(`邮件${data[i].email}插入成功`)
     }
     resolve(data)
   })

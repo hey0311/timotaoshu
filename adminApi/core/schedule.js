@@ -7,6 +7,7 @@ const reptileIp = require('../reptileTools/reptileIp')
 const reptileAllKeywords = require('../reptileTools/reptileAllKeywords')
 const batchSendEmail = require('../service/sendEmail/batchSendEmail')
 const receiveEmailService = require('../service/receiveEmail/receiveEmailService')
+const sendToRobot = require('../service/receiveEmail/sendToRobot')
 
 /*
  * 规则1  每晚零点定时任务
@@ -47,9 +48,6 @@ let i9 = 1,
 for (i9; i9 < length9; i9++) {
   rule9.minute.push(i9)
 }
-// 发送微信消息
-let rule4Message = new schedule.RecurrenceRule()
-rule4Message.minute = [1, 11, 21, 31, 41, 51]
 // let iMessage = 1,
 //   lengthMessage = 60
 // for (iMessage; iMessage <lengthMessage; iMessage++) {
@@ -118,10 +116,21 @@ let j9 = schedule.scheduleJob(rule9, function () {
     log.debug(`定时任务9完成`)
   })
 })
-let jMessage = schedule.scheduleJob(rule4Message, function () {
+let ruleReceive = new schedule.RecurrenceRule()
+ruleReceive.minute = [1, 11, 21, 31, 41, 51]
+let jReceive = schedule.scheduleJob(ruleReceive, function () {
   log.debug('定时任务3：收取邮件.' + new Date().Format())
   receiveEmailService().then((res) => {
     log.debug(`定时任务3完成`)
+  })
+})
+// 发送微信消息
+let ruleMessage = new schedule.RecurrenceRule()
+ruleMessage.minute = [3, 13, 23, 33, 43, 53]
+let jMessage = schedule.scheduleJob(ruleMessage, function () {
+  log.debug('定时任务4：发送消息.' + new Date().Format())
+  sendToRobot().then((res) => {
+    log.debug(`定时任务4完成`)
   })
 })
 /*
