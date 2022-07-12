@@ -92,7 +92,12 @@ export default {
         },
         {
           title: '爬取时间',
-          key: 'reptileTime'
+          key: 'reptileTime',
+          render: (h, params) => {
+            return h('span', {
+
+            }, new Date(params.row.reptileTime).toLocaleString())
+          }
         },
         {
           title: '发送状态',
@@ -101,7 +106,34 @@ export default {
         },
         {
           title: '发送时间',
-          key: 'sendTime'
+          key: 'sendTime',
+          render: (h, params) => {
+            return h('span', {
+
+            }, new Date(params.row.sendTime).toLocaleString())
+          }
+        },
+        {
+          title: '邮件模板',
+          key: 'template',
+          render: (h, params) => {
+            return h('span', {
+
+            }, params.row.template.subject)
+          }
+        },
+        {
+          title: '发件箱',
+          key: 'sendbox',
+          render: (h, params) => {
+            return h('span', {
+
+            }, params.row.sendbox.email)
+          }
+        },
+        {
+          title: '发送结果',
+          key: 'send_result',
         },
       ],
       loading: false,

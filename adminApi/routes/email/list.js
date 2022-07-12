@@ -15,9 +15,24 @@ router.use('', oauth(4004), async function (req, res, next) {
   let data = null
   try {
     const list = await db.query(
-      `select * from email limit ${(page - 1) * limit},${limit}`
+      `select * from email where sendStatus=1 limit ${
+        (page - 1) * limit
+      },${limit}`
     )
-    const countObj = await db.query(`select count(*) from email`)
+    for (let i = 0; i < list.length; i++) {
+      const email = list[i]
+      const template = await db.query(
+        `select * from emailtemplate where id=${email.template_id}`
+      )
+      email.template = template[0]
+      const sendbox = await db.query(
+        `select * from emailbox where id=${email.sendbox_id}`
+      )
+      email.sendbox = sendbox[0]
+    }
+    const countObj = await db.query(
+      `select count(*) from email where sendStatus=1`
+    )
     const count = countObj[0]['count(*)'],
       data = {
         list,

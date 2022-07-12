@@ -28,7 +28,7 @@ async function sendEmail({ from, to, subject, content }) {
 
     console.log('Message sent: %s', info)
     if (info.messageId) {
-      resolve('success')
+      resolve(info)
     } else {
       resolve('error')
     }

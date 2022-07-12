@@ -3,12 +3,7 @@
     <Card shadow>
       <div class="header">
         <h3>邮件模板</h3>
-        <Button
-          type="primary"
-          :disabled="loading"
-          @click="onClickShowModal('add')"
-          >添加</Button
-        >
+        <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
       </div>
       <Table
         border
@@ -28,18 +23,10 @@
         show-elevator
         @on-change="getList"
       ></Page>
-    </Card> -->
+    </Card>-->
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <edit-template
-      :modal="modal"
-      ref="editTemplate"
-      @save="saveTemplate"
-    ></edit-template>
-    <set-test-email
-      :modal="setEmailModal"
-      ref="setEmailModal"
-      @save="testTemplate"
-    ></set-test-email>
+    <edit-template :modal="modal" ref="editTemplate" @save="saveTemplate"></edit-template>
+    <set-test-email :modal="setEmailModal" ref="setEmailModal" @save="testTemplate"></set-test-email>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -88,6 +75,11 @@ export default {
         {
           title: '备注',
           key: 'remark'
+        },
+        {
+          title: '已发送邮件数',
+          key: 'sendCount',
+          width: 120
         },
         {
           title: '状态',

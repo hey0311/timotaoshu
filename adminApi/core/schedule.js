@@ -5,6 +5,7 @@ const { redisData } = require('../../common/tool/tool')
 const { REPTILE_STATUS } = require('../../common/tool/constant')
 const reptileIp = require('../reptileTools/reptileIp')
 const reptileAllKeywords = require('../reptileTools/reptileAllKeywords')
+const batchSendEmail = require('../service/sendEmail/batchSendEmail')
 
 /*
  * 规则1  每晚零点定时任务
@@ -35,6 +36,15 @@ let i35 = 1,
   length35 = 60
 for (i35; i35 < length35; i35++) {
   rule35.minute.push(i35)
+}
+// 发送邮件
+let rule9 = new schedule.RecurrenceRule()
+rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22]
+rule9.minute = []
+let i9 = 1,
+  length9 = 60
+for (i9; i9 < length9; i9++) {
+  rule9.minute.push(i9)
 }
 /*
  * 规则4  每天凌晨1点和中午13点定时任务
@@ -90,6 +100,14 @@ let j35 = schedule.scheduleJob(rule35, function () {
   // 取出所有ip,判断有效数量
   reptileIp().then((res) => {
     log.debug(`定时任务3.5完成`)
+  })
+})
+
+let j9 = schedule.scheduleJob(rule9, function () {
+  log.debug('定时任务9：发送邮件.' + new Date().Format())
+  // 取出所有ip,判断有效数量
+  batchSendEmail().then((res) => {
+    log.debug(`定时任务9完成`)
   })
 })
 /*

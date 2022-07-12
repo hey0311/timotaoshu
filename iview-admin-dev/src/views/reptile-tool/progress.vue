@@ -4,25 +4,23 @@
       <Row>
         <Col span="12" class="lh32">
           与服务器的连接状态：
-          <span :style="{ color: state === '已经连接' ? 'green' : 'red' }">{{
+          <span :style="{ color: state === '已经连接' ? 'green' : 'red' }">
+            {{
             state
-          }}</span>
+            }}
+          </span>
         </Col>
         <!-- <Col span="4" class="lh32">停留人数：{{ count }}</Col> -->
         <Col span="12" class="tr">
           <Button type="primary" @click="clear">清除log</Button>
-          <Button type="primary" @click="startReptile" :disabled="loading">{{
+          <Button type="primary" @click="startReptile" :disabled="loading">
+            {{
             btnTitle
-          }}</Button>
-          <Button type="primary" @click="stopReptile" :disabled="loading"
-            >停止</Button
-          >
-          <Button
-            type="primary"
-            @click="startReptileErrorTasks"
-            :disabled="loading"
-            >开始爬取错误记录</Button
-          >
+            }}
+          </Button>
+          <Button type="primary" @click="stopReptile" :disabled="loading">停止</Button>
+          <Button type="primary" @click="startReptileErrorTasks" :disabled="loading">开始爬取错误记录</Button>
+          <Button type="primary" @click="batchSendEmail" :disabled="loading">批量发送邮件</Button>
         </Col>
       </Row>
     </Card>
@@ -195,6 +193,15 @@ export default {
   },
   computed: {},
   methods: {
+    batchSendEmail() {
+      let obj = {
+        params: {
+        }
+      }
+      util.post.sendEmail.batch(obj).then((data) => {
+      }).catch((err) => {
+      })
+    },
     getErrorTaskCount() {
       let obj = {
         params: {

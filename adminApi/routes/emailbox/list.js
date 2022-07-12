@@ -9,25 +9,24 @@ const { oauth, tool, db, log, reptileConfig } = require('../../tool/require')
  *
  * */
 router.use('', oauth(4004), async function (req, res, next) {
-  // let page = tool.getParams(req, "page") || 1;
-  // let limit = tool.getParams(req, "limit") || 10;
+  let page = tool.getParams(req, 'page') || 1
+  let limit = tool.getParams(req, 'limit') || 10
 
   let data = null
   try {
-    let list = await db.query(`select * from emailtemplate`)
-
+    let list = await db.query(`select * from emailbox`)
     for (let i = 0; i < list.length; i++) {
       const box = list[i]
       const sendCountObj = await db.query(
-        `select count(*) from email where template_id=${box.id}`
+        `select count(*) from email where sendbox_id=${box.id}`
       )
       const sendCount = sendCountObj[0]['count(*)']
       box.sendCount = sendCount
     }
+
     data = {
       list,
       count: list.length,
-      msg: '',
     }
     res.send(tool.toJson(data, '', 1000))
   } catch (err) {

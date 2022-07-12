@@ -5,13 +5,13 @@ block links
     link(rel='stylesheet', href='/css/pages/home/index.css')
 
 block header
-    div(class="book-search") 搜索书名：
+    div(class="book-search") 搜索书名1：
         input(class="book-search-input")
         a(class="book-searct-a") 点击搜索
 
 block content
 
-    a( href="/home" style="display:block;line-height:2rem;font-size:1rem;text-align:center;") 随机十本推荐--点击刷新
+    a( href="/home" style="display:block;line-height:2rem;font-size:1rem;text-align:center;") 随机十本推荐1--点击刷新
     - let i = 0;
     - let length = bookList ? bookList.length : 0;
     if(length > 0)

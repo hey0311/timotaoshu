@@ -38,6 +38,12 @@ export default {
     delCatalog: '/writer/delCatalog',
     editBook: '/writer/editBook',
   },
+  receive: {
+    list: 'receive/list',
+  },
+  emailbox: {
+    list: 'emailbox/list',
+  },
   sendEmail: {
     batch: 'sendEmail/batch',
   },
