@@ -47,7 +47,7 @@ async function sendMessage(mail) {
           //   title: '邮件内容',
           //   quote_text: mail.content.slice(0, 100),
           // },
-          sub_title_text: mail.from,
+          sub_title_text: mail.from_box,
           horizontal_content_list: [
             {
               keyname: '主题',
@@ -55,11 +55,11 @@ async function sendMessage(mail) {
             },
             {
               keyname: '收件箱',
-              value: mail.to,
+              value: mail.to_box,
             },
             {
               keyname: '时间',
-              value: mail.date,
+              value: mail.receive_time,
             },
             // {
             //   keyname: '企微官网',
