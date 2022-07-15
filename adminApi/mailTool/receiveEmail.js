@@ -29,6 +29,10 @@ async function receiveEmail(mailbox) {
 
             if (err) throw err
 
+            if (results.length === 0) {
+              resolve(mails)
+              return
+            }
             var f = imap.fetch(results, { bodies: '' }) //抓取邮件（默认情况下邮件服务器的邮件是未读状态）
 
             f.on('message', function (msg, seqno) {
