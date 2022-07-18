@@ -104,8 +104,8 @@ let j35 = schedule.scheduleJob(rule35, function () {
 
 // 发送微信消息
 let ruleFreeEmailBox = new schedule.RecurrenceRule()
-ruleFreeEmailBox.hour = [58, 53, 54, 55, 56, 57, 1, 2, 3, 4, 5, 6, 7]
-ruleFreeEmailBox.minute = [14, 21, 22]
+ruleFreeEmailBox.minute = [58, 53, 54, 55, 56, 57, 1, 2, 3, 4, 5, 6, 7]
+ruleFreeEmailBox.hour = [14, 21, 22]
 let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
   log.debug('定时任务6：解封发件箱.' + new Date().Format())
   // sendToRobot().then((res) => {
