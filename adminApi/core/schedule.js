@@ -8,6 +8,7 @@ const reptileAllKeywords = require('../reptileTools/reptileAllKeywords')
 const batchSendEmail = require('../service/sendEmail/batchSendEmail')
 const receiveEmailService = require('../service/receiveEmail/receiveEmailService')
 const sendToRobot = require('../service/receiveEmail/sendToRobot')
+const freeEmailBox = require('../service/receiveEmail/freeEmailBox')
 
 /*
  * 规则1  每晚零点定时任务
@@ -107,8 +108,11 @@ ruleFreeEmailBox.hour = [58, 53, 54, 55, 56, 57]
 ruleFreeEmailBox.minute = [14, 21]
 let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
   log.debug('定时任务6：解封发件箱.' + new Date().Format())
-  sendToRobot().then((res) => {
-    log.debug(`定时任务4完成`)
+  // sendToRobot().then((res) => {
+  //   log.debug(`定时任务4完成`)
+  // })
+  freeEmailBox.then((res) => {
+    log.debug(`定时任务6完成`)
   })
 })
 // 发送邮件
