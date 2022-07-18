@@ -113,7 +113,7 @@ let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
   // sendToRobot().then((res) => {
   //   log.debug(`定时任务4完成`)
   // })
-  freeEmailBox.then((res) => {
+  freeEmailBox().then((res) => {
     log.debug(`定时任务6完成`)
   })
 })
