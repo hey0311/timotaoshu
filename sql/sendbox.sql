@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `receivemail`;
 CREATE TABLE `receivemail` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键，自增长，唯一',
-  `from_box` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'subject',
+  `from_box` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'subject',
   `to_box` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'subject',
   `receive_time` datetime DEFAULT NULL COMMENT 'receive time',
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'subject',

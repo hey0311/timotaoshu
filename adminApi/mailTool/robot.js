@@ -96,7 +96,6 @@ async function sendMessage(mail) {
         },
       })
       .then((res) => {
-        console.log('🚀 ~ file: testRobot.js ~ line 6 ~ .then ~ res', res)
         resolve(true)
       })
       .catch((err) => {

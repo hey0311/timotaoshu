@@ -97,7 +97,7 @@ async function receiveEmail(mailbox) {
                 })
               })
               msg.once('end', function () {
-                console.log(seqno + '完成')
+                // console.log(seqno + '完成')
                 // resolve(result)
               })
             })
@@ -105,7 +105,7 @@ async function receiveEmail(mailbox) {
               console.log('抓取出现错误: ' + err)
             })
             f.once('end', function () {
-              console.log('所有邮件抓取完成!')
+              // console.log('所有邮件抓取完成!')
               // resolve(mailList)
               // resolve(result)
               resolve(mails)
@@ -121,7 +121,7 @@ async function receiveEmail(mailbox) {
     })
 
     imap.once('end', function () {
-      console.log('关闭邮箱')
+      // console.log('关闭邮箱')
     })
 
     imap.connect()

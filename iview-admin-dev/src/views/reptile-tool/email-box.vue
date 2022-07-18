@@ -66,6 +66,36 @@ export default {
           title: '已发邮件数',
           key: 'sendCount'
         },
+        {
+          title: '状态',
+          key: 'active',
+          render: (h, params) => {
+            return h('div', {}, params.row.active === 1 ? '启用' : '禁用')
+          }
+        },
+        {
+          title: '操作',
+          key: 'handle',
+          render: (h, params) => {
+            return h('div', [
+              h('a', {
+                attrs: {
+                  href: 'javascript:void(0);',
+                  target: '_blank',
+                  style: `margin-left:10px;${params.row.isSearch === 2 ? '' : 'color:red;'}`
+                },
+                on: {
+                  click: (e) => {
+                    // this.$router.push("/catalog?bookId=" + params.row.id);
+                    this.onClickToggleUse(params.row.id, params.row.active)
+                    e.stopPropagation()
+                    e.preventDefault()
+                  }
+                }
+              }, `${params.row.active === 0 ? '启用' : '禁用'}`),
+            ])
+          }
+        }
       ],
       columnsReceive: [
         {
@@ -186,59 +216,14 @@ export default {
       }
       this.modal.showModal = true;
     },
-    onClickToggleUse(reptileTypeId, isSearch, reason) {
-
-      // console.log(isSearch);//1、启用 2、禁用
-
-      let isSearchTitle = `${isSearch == 1 ? "启用" : "禁用"}`;
-      this.$Modal.confirm({
-        title: `你确定要${isSearchTitle}吗？`,
-        closable: true,
-        loading: true,      //onOk异步关闭
-        onOk: () => {
-          let reason = document.getElementById("reasonTextarea").value;
-          this.onClickConfirmToggleUse(reptileTypeId, isSearch, reason, () => {
-            this.$Modal.remove();
-          });
-
-        },
-        onCancel: () => {
-          this.$Message.info(`取消${isSearchTitle}`);
-        },
-        render: (h) => {
-          return h('div', {
-            attrs: {
-              style: `padding-top:20px;`,
-            },
-            on: {
-              input: (val) => {
-                this.value = val;
-              }
-            }
-          }, [
-            h('span', {
-              attrs: {
-                style: `line-height:20px;margin-bottom:5px;display:block;`
-              },
-              on: {
-                click: (e) => {
-
-                  e.stopPropagation();
-                  e.preventDefault();
-                }
-              }
-            }, `禁用原因：`),
-            h('textarea', {
-              attrs: {
-                style: 'line-height:20px;min-height:100px;',
-                placeholder: '请填写禁用原因',
-                class: 'ivu-input',
-                id: 'reasonTextarea'
-              }
-            }, `${reason}`),
-          ])
-        }
-      });
+    onClickToggleUse(id, curAble) {
+      this.loading = true;
+      util.post.emailbox.active({ params: { id, active: curAble === 1 ? 0 : 1 } }).then((data) => {
+        this.loading = false
+        this.getList()
+      }).catch((err) => {
+        this.loading = false
+      })
     },
     onClickConfirmToggleUse(reptileTypeId, isSearch, reason, callback) {
       if (this.loading) return;
@@ -294,7 +279,7 @@ export default {
   },
   mounted() {
     this.getList();
-    this.receiveEmail()
+    // this.receiveEmail()
     this.$on('reset', () => {
       this.onClickUpdate();
     });

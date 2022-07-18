@@ -43,6 +43,7 @@ export default {
   },
   emailbox: {
     list: 'emailbox/list',
+    active: 'emailbox/active',
   },
   sendEmail: {
     batch: 'sendEmail/batch',
@@ -55,7 +56,7 @@ export default {
   },
   email: {
     list: '/email/list',
-    count:'/email/count'
+    count: '/email/count',
   },
   keywords: {
     list: '/keywords/list',

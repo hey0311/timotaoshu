@@ -39,15 +39,6 @@ let i35 = 1,
 for (i35; i35 < length35; i35++) {
   rule35.minute.push(i35)
 }
-// 发送邮件
-let rule9 = new schedule.RecurrenceRule()
-rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22]
-rule9.minute = []
-let i9 = 1,
-  length9 = 60
-for (i9; i9 < length9; i9++) {
-  rule9.minute.push(i9)
-}
 // let iMessage = 1,
 //   lengthMessage = 60
 // for (iMessage; iMessage <lengthMessage; iMessage++) {
@@ -110,6 +101,25 @@ let j35 = schedule.scheduleJob(rule35, function () {
   })
 })
 
+// 发送微信消息
+let ruleFreeEmailBox = new schedule.RecurrenceRule()
+ruleFreeEmailBox.hour = [58, 53, 54, 55, 56, 57]
+ruleFreeEmailBox.minute = [14, 21]
+let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
+  log.debug('定时任务6：解封发件箱.' + new Date().Format())
+  sendToRobot().then((res) => {
+    log.debug(`定时任务4完成`)
+  })
+})
+// 发送邮件
+let rule9 = new schedule.RecurrenceRule()
+rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22]
+rule9.minute = []
+let i9 = 1,
+  length9 = 60
+for (i9; i9 < length9; i9++) {
+  rule9.minute.push(i9)
+}
 let j9 = schedule.scheduleJob(rule9, function () {
   log.debug('定时任务2：发送邮件.' + new Date().Format())
   batchSendEmail().then((res) => {
