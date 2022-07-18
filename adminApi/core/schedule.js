@@ -98,13 +98,15 @@ let j35 = schedule.scheduleJob(rule35, function () {
   log.debug('定时任务1：检查ip.' + new Date().Format())
   // 取出所有ip,判断有效数量
   reptileIp().then((res) => {
-    log.debug(`定时任务3.5完成`)
+    log.debug(`定时任务1完成`)
   })
 })
 
 // 发送微信消息
 let ruleFreeEmailBox = new schedule.RecurrenceRule()
-ruleFreeEmailBox.minute = [58, 53, 54, 55, 56, 57, 1, 2, 3, 4, 5, 6, 7]
+ruleFreeEmailBox.minute = [
+  58, 53, 54, 55, 56, 57, 1, 2, 3, 4, 5, 6, 7, 15, 16, 17, 18, 19,
+]
 ruleFreeEmailBox.hour = [14, 21, 22]
 let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
   log.debug('定时任务6：解封发件箱.' + new Date().Format())
@@ -127,7 +129,7 @@ for (i9; i9 < length9; i9++) {
 let j9 = schedule.scheduleJob(rule9, function () {
   log.debug('定时任务2：发送邮件.' + new Date().Format())
   batchSendEmail().then((res) => {
-    log.debug(`定时任务9完成`)
+    log.debug(`定时任务2完成`)
   })
 })
 let ruleReceive = new schedule.RecurrenceRule()

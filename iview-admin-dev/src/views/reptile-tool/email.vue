@@ -1,10 +1,23 @@
 <template>
   <Layout>
-    <Card shadow>
-      <div class="header">
-        <h3>已爬邮箱</h3>
-        <Button type="primary" @click="getList">刷新</Button>
-      </div>
+    <Card>
+      <Row>
+        <Col span="18">
+          <span class="span-title">搜索邮箱：</span>
+          <Input
+            @keyup.native.13="getList"
+            v-model="searchEmail"
+            placeholder="请输入邮箱"
+            clearable
+            class="w300"
+          ></Input>
+        </Col>
+        <Col span="6" class="tr">
+          <Button type="primary" @click="getList">查询</Button>
+        </Col>
+      </Row>
+    </Card>
+    <Card style="margin-top:20px" shadow>
       <Table
         border
         highlight-row
@@ -150,7 +163,8 @@ export default {
       token: Cookies.get('token'),
       uploadParams: {
         token: Cookies.get('token')
-      }
+      },
+      searchEmail: ''
     }
   },
   computed: {},
@@ -164,7 +178,8 @@ export default {
       let obj = {
         params: {
           page: page || this.params.page,
-          limit: this.params.limit
+          limit: this.params.limit,
+          email: this.searchEmail
         }
       }
       this.loading = true
