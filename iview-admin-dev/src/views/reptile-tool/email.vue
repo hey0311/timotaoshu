@@ -2,7 +2,7 @@
   <Layout>
     <Card>
       <Row>
-        <Col span="18">
+        <Col span="6">
           <span class="span-title">搜索邮箱：</span>
           <Input
             @keyup.native.13="getList"
@@ -12,7 +12,10 @@
             class="w300"
           ></Input>
         </Col>
-        <Col span="6" class="tr">
+        <Col span="4">
+          <Checkbox v-model="onlyShowSend">只显示已发送</Checkbox>
+        </Col>
+        <Col span="14" class="tr">
           <Button type="primary" @click="getList">查询</Button>
         </Col>
       </Row>
@@ -164,7 +167,8 @@ export default {
       uploadParams: {
         token: Cookies.get('token')
       },
-      searchEmail: ''
+      searchEmail: '',
+      onlyShowSend: false
     }
   },
   computed: {},
@@ -179,7 +183,8 @@ export default {
         params: {
           page: page || this.params.page,
           limit: this.params.limit,
-          email: this.searchEmail
+          email: this.searchEmail,
+          onlyShowSend: this.onlyShowSend
         }
       }
       this.loading = true

@@ -12,19 +12,27 @@ router.use('', oauth(4004), async function (req, res, next) {
   let page = tool.getParams(req, 'page') || 1
   let limit = tool.getParams(req, 'limit') || 10
   let email = tool.getParams(req, 'email') || ''
+  let onlyShowSend = tool.getParams(req, 'onlyShowSend') || false
 
   let data = null
   try {
-    let list = []
+    let whereArr = []
+    let sql = `select * from email`
+    let countSql = `select count(*) from email`
     if (email) {
-      list = await db.query(`select * from email where email="${email}"`)
-    } else {
-      list = await db.query(
-        `select * from email where sendStatus=1 limit ${
-          (page - 1) * limit
-        },${limit}`
-      )
+      whereArr.push(`email="${email}"`)
     }
+    if (onlyShowSend === 'true') {
+      whereArr.push(`sendStatus=1`)
+    }
+    let limitSql = ` limit ${(page - 1) * limit},${limit}`
+    if (whereArr.length > 0) {
+      sql = sql + ' where ' + whereArr.join(' and ')
+      countSql = countSql + ' where ' + whereArr.join(' and ')
+    }
+    sql += limitSql
+    countSql += limitSql
+    let list = await db.query(sql)
     for (let i = 0; i < list.length; i++) {
       const email = list[i]
       const template = await db.query(
@@ -36,9 +44,7 @@ router.use('', oauth(4004), async function (req, res, next) {
       )
       email.sendbox = sendbox[0]
     }
-    const countObj = await db.query(
-      `select count(*) from email where sendStatus=1`
-    )
+    const countObj = await db.query(countSql)
     const count = countObj[0]['count(*)']
     data = {
       list,
