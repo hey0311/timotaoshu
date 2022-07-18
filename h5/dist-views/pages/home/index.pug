@@ -1,39 +1,16 @@
 extends ../../common/layout
 
 block links
-    //link(rel='stylesheet', href='/lib/swiper/dist/css/swiper.min.css?v=9aade19d0a')
     link(rel='stylesheet', href='/css/pages/home/index.css?v=25f8fc1c22')
-
-//- block header
-//-     div(class="book-search") 搜索书名1：
-//-         input(class="book-search-input")
-//-         a(class="book-searct-a") 点击搜索
 
 block content
 
-    //- a( href="/home" style="display:block;line-height:2rem;font-size:1rem;text-align:center;") 随机十本推荐--点击刷新
-    //- - let i = 0;
-    //- - let length = bookList ? bookList.length : 0;
-    //- if(length > 0)
-    //-     - for (i; i < length; i++)
-    //-         a(class="search-list clearfix" href=`/book/info?bookId=${bookList[i].id}&toBack=1`)
-    //-             div(class="search-img-box")
-    //-                 img(src=`${imgUrlConfig + bookList[i].id}`)
-    //-             div(class="search-info-box")
-    //-                 span= `书名：${bookList[i].name}`
-    //-                 span= `作者：${bookList[i].author}`
-    //-                 span(class="fl") 描述：
-    //-                 div(class="description")!=`${bookList[i].description}`
-    //- div= `${bookList[0].html}`
     div= `主题:${bookList[0].subject}`
     div= `发件人:${bookList[0].from_box}`
     div= `收件箱:${bookList[0].to_box}`
-    div= `时间:${bookList[0].receive_time}`
-    #{bookList[0].html}
-//- block footer
-//-     include ../../common/footer
-//-     +footer(myUrl)
+    div= `时间:${new Date(bookList[0].receive_time).Format('yyyy/MM/dd hh:mm:ss')}`
+    hr
+    html !{bookList[0].html}
 
 block scripts
-    //script(type="text/javascript" src="/lib/swiper/dist/js/swiper.min.js?v=b1f64dfa2d")
     script(type="text/javascript" src="/js/pages/home/index.js?v=83695827f2")
