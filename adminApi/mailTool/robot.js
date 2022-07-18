@@ -1,6 +1,7 @@
 const axios = require('axios')
 const url =
   'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9ac2c43d-1299-4785-9100-8f516cd0373e'
+const moment = require('moment')
 async function sendMessage(mail) {
   // return new Promise(async (resolve, reject) => {
   //   axios
@@ -59,7 +60,7 @@ async function sendMessage(mail) {
             },
             {
               keyname: '时间',
-              value: mail.receive_time,
+              value: moment(mail.receive_time).format('YYYY-MM-DD HH:MM:SS'),
             },
             // {
             //   keyname: '企微官网',
