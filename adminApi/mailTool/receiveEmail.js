@@ -14,9 +14,13 @@ async function receiveEmail(mailbox) {
   )
   return new Promise(async (resolve, reject) => {
     let mails = {}
+    let password = 'Fangcuizhu123'
+    if (mailbox.indexOf('apriltec') !== -1) {
+      password = 'Fangcuizhu791411'
+    }
     var imap = new Imap({
       user: mailbox, //你的邮箱账号
-      password: 'Fangcuizhu123', //你的邮箱密码
+      password, //你的邮箱密码
       host: 'imap.exmail.qq.com', //邮箱服务器的主机地址
       port: 993, //邮箱服务器的端口地址
       tls: true, //使用安全传输协议
