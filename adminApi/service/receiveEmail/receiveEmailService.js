@@ -38,14 +38,14 @@ async function receiveEmailService() {
       )
       if (mails.length > 0) {
         // 判断有没有发送消息
-        console.log(`${data[i]}重复,跳过`)
+        console.log(`${data[i].from}重复,跳过`)
         continue
       }
       const html = data[i].html ? data[i].html.replace(/"/g, "'") : ''
       await db.query(
         `insert into receivemail (from_box,to_box,receive_time,subject,html,message_status,handle_status) values ("${data[i].from}","${data[i].to}","${data[i].date}","${data[i].subject}","${html}",0,0)`
       )
-      console.log(`邮件${data[i].email}插入成功`)
+      console.log(`邮件${data[i].from}插入成功`)
     }
     resolve(data)
   })
