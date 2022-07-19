@@ -20,7 +20,7 @@ router.use('', oauth(4004), async function (req, res, next) {
     let sql = `select * from email`
     let countSql = `select count(*) from email`
     if (email) {
-      whereArr.push(`email="${email}"`)
+      whereArr.push(`email like "%${email}%"`)
     }
     if (onlyShowSend === 'true') {
       whereArr.push(`sendStatus=1`)
