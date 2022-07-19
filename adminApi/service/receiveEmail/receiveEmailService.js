@@ -9,6 +9,10 @@ async function receiveEmailService() {
     let data = []
     // 获取发件箱列表
     let mailBoxList = await db.query(`select * from emailbox`)
+    // 加上一个邮箱
+    mailBoxList.push({
+      email: 'monica@apriltec.com',
+    })
     for (let i = 0; i < mailBoxList.length; i++) {
       const result = await receiveEmail(mailBoxList[i].email)
       const keys = Object.keys(result)

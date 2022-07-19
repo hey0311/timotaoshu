@@ -3,6 +3,15 @@ var MailParser = require('mailparser').MailParser
 const moment = require('moment')
 
 async function receiveEmail(mailbox) {
+  // 取前三天的邮件
+
+  const today = moment()
+  const threeDaysAgo = today.add(-3, 'days')
+  const threeDaysAgoStr = threeDaysAgo.format('MMM DD,yyyy')
+  console.log(
+    '🚀 ~ file: receiveEmail.js ~ line 11 ~ receiveEmail ~ threeDaysAgoStr',
+    threeDaysAgoStr
+  )
   return new Promise(async (resolve, reject) => {
     let mails = {}
     var imap = new Imap({
@@ -23,7 +32,7 @@ async function receiveEmail(mailbox) {
         if (err) throw err
 
         imap.search(
-          ['UNSEEN', ['SINCE', 'May 10,2022']],
+          ['ALL', ['SINCE', threeDaysAgoStr]],
           function (err, results) {
             //搜寻2017-05-20以后未读的邮件
 
