@@ -119,11 +119,12 @@ let jFreeEmailBox = schedule.scheduleJob(ruleFreeEmailBox, function () {
 let rule9 = new schedule.RecurrenceRule()
 rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22]
 rule9.minute = []
-let i9 = 1,
+let i9 = 0,
   length9 = 60
 for (i9; i9 < length9; i9++) {
   rule9.minute.push(i9)
 }
+rule9.second = [0, 30]
 let j9 = schedule.scheduleJob(rule9, function () {
   log.debug('定时任务2：发送邮件.' + new Date().Format())
   batchSendEmail().then((res) => {
@@ -131,6 +132,9 @@ let j9 = schedule.scheduleJob(rule9, function () {
   })
 })
 let ruleReceive = new schedule.RecurrenceRule()
+ruleReceive.hour = [
+  0, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+]
 ruleReceive.minute = [1, 11, 21, 31, 41, 51]
 let jReceive = schedule.scheduleJob(ruleReceive, function () {
   log.debug('定时任务3：收取邮件.' + new Date().Format())
@@ -140,6 +144,9 @@ let jReceive = schedule.scheduleJob(ruleReceive, function () {
 })
 // 发送微信消息
 let ruleMessage = new schedule.RecurrenceRule()
+ruleMessage.hour = [
+  0, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+]
 ruleMessage.minute = [3, 13, 23, 33, 43, 53]
 let jMessage = schedule.scheduleJob(ruleMessage, function () {
   log.debug('定时任务4：发送消息.' + new Date().Format())

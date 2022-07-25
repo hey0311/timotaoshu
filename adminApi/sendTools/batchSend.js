@@ -2,7 +2,7 @@ const { fs, rp, timoRp, path, tool, log, db } = require('../tool/require')
 const nodemailer = require('nodemailer')
 const { sendEmail } = require('./sendEmail')
 
-const MAX_SEND_COUNT = 500
+const MAX_SEND_COUNT = 750
 async function batchSend() {
   // check,今天是否达到发送上限
   const date = new Date()
