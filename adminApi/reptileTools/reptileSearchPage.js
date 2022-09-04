@@ -30,7 +30,7 @@ const {
 
 module.exports = reptileSearchPage
 
-async function reptileSearchPage(keywords, rule, reptilePage) {
+async function reptileSearchPage({keywords, rule, reptilePage}) {
   return new Promise(async (resolve, reject) => {
     // 先找到对应的rule
     let page = reptilePage || 1

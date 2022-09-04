@@ -3,13 +3,26 @@
     <Card shadow>
       <div class="header">
         <h3>关键词</h3>
-        <Button
-          type="primary"
-          :disabled="loading"
-          @click="onClickShowModal('add')"
-          >添加</Button
-        >
+        <Button type="primary" :disabled="loading" @click="onClickShowModal('add')">添加</Button>
       </div>
+      <Row style="margin-bottom:20px">
+        <Col span="6">
+          <span class="span-title">搜索关键词：</span>
+          <Input
+            @keyup.native.13="getList"
+            v-model="searchKeywords"
+            placeholder="请输入关键词"
+            clearable
+            class="w300"
+          ></Input>
+        </Col>
+        <Col span="4">
+          <Checkbox v-model="onlyShowSend">只显示已发送</Checkbox>
+        </Col>
+        <Col span="14" class="tr">
+          <Button type="primary" @click="getList">查询</Button>
+        </Col>
+      </Row>
       <Table
         border
         highlight-row
@@ -30,11 +43,7 @@
       ></Page>
     </Card>
     <!-- <edit-channel :modal="modal" ref="editCannel"></edit-channel> -->
-    <add-keywords
-      :modal="modal"
-      ref="addKeywords"
-      @save="saveKeywords"
-    ></add-keywords>
+    <add-keywords :modal="modal" ref="addKeywords" @save="saveKeywords"></add-keywords>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -143,7 +152,8 @@ export default {
       token: Cookies.get('token'),
       uploadParams: {
         token: Cookies.get('token')
-      }
+      },
+      searchKeywords: ''
     }
   },
   computed: {},
@@ -166,7 +176,8 @@ export default {
       let obj = {
         params: {
           page: page || this.params.page,
-          limit: this.params.limit
+          limit: this.params.limit,
+          keywords: this.searchKeywords
         }
       }
       this.loading = true

@@ -21,24 +21,21 @@
           <Button type="primary" @click="stopReptile" :disabled="loading">停止</Button>
           <Button type="primary" @click="startReptileErrorTasks" :disabled="loading">开始爬取错误记录</Button>
           <Button type="primary" @click="batchSendEmail" :disabled="loading">批量发送邮件</Button>
+          <Button type="primary" @click="syncToRemote" :disabled="loading">同步远程数据库</Button>
         </Col>
       </Row>
     </Card>
     <Card shadow style="margin: 10px 0">
       <Row>
         <Col span="12">
-          <div>当前步骤:{{ curReptileStatus }}</div>
-          <div>当前关键词:{{ curKeywordsName }}</div>
-          <div>当前网站:{{ curRuleName }}</div>
-          <div>当前页数:{{ curReptilePage }}</div>
+          <div>邮箱数量:{{ emailCount }}</div>
         </Col>
         <Col span="12">
-          <div>邮箱数量:{{ emailCount }}</div>
           <div>错误记录数量:{{ errorTaskCount }}</div>
         </Col>
       </Row>
     </Card>
-    <Card shadow style="margin: 10px 0">
+    <!-- <Card shadow style="margin: 10px 0">
       <div class="table-container">
         <div>
           <Table
@@ -74,10 +71,21 @@
           ></Table>
         </div>
       </div>
-    </Card>
+    </Card>-->
     <Card shadow style="margin: 10px 0">
-      <div class="table-container">
-        <div>
+      <div class="table-container1">
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList0"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
           <Table
             border
             highlight-row
@@ -88,7 +96,7 @@
             :row-class-name="rowClass"
           ></Table>
         </div>
-        <div style="margin-left: 20px">
+        <div class="table-container">
           <Table
             border
             highlight-row
@@ -99,7 +107,7 @@
             :row-class-name="rowClass"
           ></Table>
         </div>
-        <div style="margin-left: 20px">
+        <div class="table-container">
           <Table
             border
             highlight-row
@@ -110,12 +118,78 @@
             :row-class-name="rowClass"
           ></Table>
         </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList4"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList5"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList6"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList7"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList8"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
+        <div class="table-container">
+          <Table
+            border
+            highlight-row
+            :columns="columns"
+            :data="errorTableList9"
+            ref="table"
+            size="small"
+            :row-class-name="rowClass"
+          ></Table>
+        </div>
       </div>
     </Card>
   </div>
 </template>
 <style>
-.table-container {
+.table-container1 {
   display: flex;
 }
 .table-row {
@@ -138,9 +212,16 @@ import Vue from 'vue'
 let pageTableList1 = []
 let pageTableList2 = []
 let pageTableList3 = []
+let errorTableList0 = []
 let errorTableList1 = []
 let errorTableList2 = []
 let errorTableList3 = []
+let errorTableList4 = []
+let errorTableList5 = []
+let errorTableList6 = []
+let errorTableList7 = []
+let errorTableList8 = []
+let errorTableList9 = []
 export default {
   name: 'progress__',
   data() {
@@ -152,12 +233,12 @@ export default {
       tableHeight: '500px',
       loading: false,
       columns: [
-        {
-          title: '序号',
-          key: 'index',
-          width: 70,
-          align: 'center'
-        },
+        // {
+        //   title: '序号',
+        //   key: 'index',
+        //   width: 70,
+        //   align: 'center'
+        // },
         {
           title: '处理结果',
           key: 'result',
@@ -165,7 +246,8 @@ export default {
           render: (h, params) => {
             return h('span', {
               style: {
-                color: (params.row.result && params.row.result.indexOf('@') !== -1) ? 'blue' : (params.row.result && params.row.result.indexOf('失败') !== -1) ? 'red' : 'black'
+                color: (params.row.result && params.row.result.indexOf('@') !== -1) ? 'blue' : (params.row.result && params.row.result.indexOf('失败') !== -1) ? 'red' : 'black',
+                wordWrap: 'noWrap'
               }
             }, params.row.result)
           }
@@ -180,9 +262,16 @@ export default {
       pageTableList1: [],
       pageTableList2: [],
       pageTableList3: [],
+      errorTableList0: [],
       errorTableList1: [],
       errorTableList2: [],
       errorTableList3: [],
+      errorTableList4: [],
+      errorTableList5: [],
+      errorTableList6: [],
+      errorTableList7: [],
+      errorTableList8: [],
+      errorTableList9: [],
       curReptilePage: 0,
       curKeywordsName: '',
       curRuleName: '',
@@ -193,6 +282,15 @@ export default {
   },
   computed: {},
   methods: {
+    syncToRemote() {
+      let obj = {
+        params: {
+        }
+      }
+      util.post.email.sync(obj).then((data) => {
+      }).catch((err) => {
+      })
+    },
     batchSendEmail() {
       let obj = {
         params: {
@@ -292,6 +390,26 @@ export default {
             pageTableList1 = []
             pageTableList2 = []
             pageTableList3 = []
+            this.errorTableList0 = []
+            this.errorTableList1 = []
+            this.errorTableList2 = []
+            this.errorTableList3 = []
+            this.errorTableList4 = []
+            this.errorTableList5 = []
+            this.errorTableList6 = []
+            this.errorTableList7 = []
+            this.errorTableList8 = []
+            this.errorTableList9 = []
+            errorTableList0 = []
+            errorTableList1 = []
+            errorTableList2 = []
+            errorTableList3 = []
+            errorTableList4 = []
+            errorTableList5 = []
+            errorTableList6 = []
+            errorTableList7 = []
+            errorTableList8 = []
+            errorTableList9 = []
           } else if (this.curReptilePage !== progress.page || this.curKeywordsName !== progress.keywordsName || this.curRuleName !== progress.ruleName) {
             this.curReptileStatus = '爬取关键词'
             this.curKeywordsName = progress.keywordsName
@@ -312,33 +430,56 @@ export default {
           }
           if (progress.type === 1) {
             let curIndex = -1;
-            if (progress.index % 3 === 1) {
-              curIndex = errorTableList1.findIndex(item => item.index === progress.index)
-            } else if (progress.index % 3 === 2) {
-              curIndex = errorTableList2.findIndex(item => item.index === progress.index)
-            } else {
-              curIndex = errorTableList3.findIndex(item => item.index === progress.index)
+            let lastNumber = (progress.index + '').substr(-1);
+            let list = errorTableList0
+            switch (lastNumber) {
+              case '0':
+                list = errorTableList0
+                break
+              case '1':
+                list = errorTableList1
+                break
+              case '2':
+                list = errorTableList2
+                break
+              case '3':
+                list = errorTableList3
+                break
+              case '4':
+                list = errorTableList4
+                break
+              case '5':
+                list = errorTableList5
+                break
+              case '6':
+                list = errorTableList6
+                break
+              case '7':
+                list = errorTableList7
+                break
+              case '8':
+                list = errorTableList8
+                break
+              case '9':
+                list = errorTableList9
+                break
             }
+            curIndex = list.findIndex(item => item.index === progress.index)
             if (curIndex !== -1) {
-              if (progress.index % 3 === 1) {
-                errorTableList1[curIndex] = Object.assign({}, errorTableList1[curIndex], progress)
-              } else if (progress.index % 3 === 2) {
-                errorTableList2[curIndex] = Object.assign({}, errorTableList2[curIndex], progress)
-              } else {
-                errorTableList3[curIndex] = Object.assign({}, errorTableList3[curIndex], progress)
-              }
+              list[curIndex] = Object.assign({}, list[curIndex], progress)
             } else {
-              if (progress.index % 3 === 1) {
-                errorTableList1.push(progress)
-              } else if (progress.index % 3 === 2) {
-                errorTableList2.push(progress)
-              } else {
-                errorTableList3.push(progress)
-              }
+              list.push(progress)
             }
+            this.errorTableList0 = [...errorTableList0.sort((a, b) => a.index - b.index)]
             this.errorTableList1 = [...errorTableList1.sort((a, b) => a.index - b.index)]
             this.errorTableList2 = [...errorTableList2.sort((a, b) => a.index - b.index)]
             this.errorTableList3 = [...errorTableList3.sort((a, b) => a.index - b.index)]
+            this.errorTableList4 = [...errorTableList4.sort((a, b) => a.index - b.index)]
+            this.errorTableList5 = [...errorTableList5.sort((a, b) => a.index - b.index)]
+            this.errorTableList6 = [...errorTableList6.sort((a, b) => a.index - b.index)]
+            this.errorTableList7 = [...errorTableList7.sort((a, b) => a.index - b.index)]
+            this.errorTableList8 = [...errorTableList8.sort((a, b) => a.index - b.index)]
+            this.errorTableList9 = [...errorTableList9.sort((a, b) => a.index - b.index)]
           } else if (progress.type === 0) { // page
             let curIndex = -1;
             if (progress.index % 3 === 1) {

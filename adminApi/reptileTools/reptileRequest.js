@@ -97,7 +97,7 @@ const reptileRequest = function (options) {
         // if (options.noIp) {
         //   delete reqOptions.proxy
         // }
-        // reqOptions.proxy = 'http://127.0.0.1:8888'
+        // reqOptions.proxy = 'http://127.0.0.1:21882'
         var req = request(
           reqOptions,
           function (error, response, body) {

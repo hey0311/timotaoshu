@@ -20,7 +20,7 @@ async function startErrorTasks() {
     // reject("mysql服务器爆棚，暂不允许爬取");
     // return;
     await reptileErrorTasks();
-    resolve("开始爬取");
+    resolve("已爬取");
   });
 }
 

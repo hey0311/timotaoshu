@@ -29,7 +29,25 @@ async function reptileShop({
   errorTaskId,
 }) {
   return new Promise(async (resolve, reject) => {
+    // 如果已经是爬取过的shopUrl,直接放弃
     try {
+      const currentPreShopUrl = uri.split('?')[0]
+      let sql = `select COUNT(*) from shopurl where shopurl="${currentPreShopUrl}"`
+      let result = tool.getData(await db.query(sql))
+      if (result) {
+        wss.broadcast({
+          type: REPTILE_STATUS.ERROR_TASKS,
+          page,
+          keywordsName: keywords.name,
+          ruleName: rule.name,
+          index: order,
+          result: '网址重复',
+        })
+        // 删掉
+        await deleteErrorTask(errorTaskId)
+        resolve('网址重复')
+        return
+      }
       let $ = null
       try {
         $ = await reptileRequest({ uri })
@@ -88,7 +106,30 @@ async function reptileShop({
         // })
         // console.log(`店铺地址${uri},${insertResult}`)
         // resolve(insertResult + deleteErrorTaskResult)
-        console.log(`有邮箱:${email}`)
+        console.log(`店铺地址${uri},有邮箱:${email}`)
+        // 直接插入数据库
+        await insertEmail({
+          type: 'email',
+          keywords,
+          rule,
+          shopUrl: uri,
+          email,
+          bizName,
+          firstName,
+          lastName,
+          phone,
+          order,
+          page,
+          reptileStatus,
+        })
+        wss.broadcast({
+          type: REPTILE_STATUS.ERROR_TASKS,
+          page,
+          keywordsName: keywords.name,
+          ruleName: rule.name,
+          index: order,
+          result: email,
+        })
         resolve({
           type: 'email',
           keywords,
@@ -105,8 +146,21 @@ async function reptileShop({
         })
       } else {
         console.log(`店铺地址${uri},无邮箱`)
+        wss.broadcast({
+          type: REPTILE_STATUS.ERROR_TASKS,
+          page,
+          keywordsName: keywords.name,
+          ruleName: rule.name,
+          index: order,
+          result: '无邮箱',
+        })
         resolve('无邮箱' + deleteErrorTaskResult)
       }
+      // 把shopUrl插入到shopurl表
+      try {
+        const preShopUrl = uri.split('?')[0]
+        await db.query(`INSERT INTO shopurl (shopurl) VALUES ("${preShopUrl}")`)
+      } catch (e) {}
     } catch (err) {
       console.log(
         '🚀 ~ file: reptileShop.js ~ line 112 ~ returnnewPromise ~ err',

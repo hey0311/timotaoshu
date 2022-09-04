@@ -1,13 +1,13 @@
 const mysql = require('mysql')
 const async = require('async')
-const config = require('../../config/sql')
+const config = require('../../config/sqlRemote')
 
 const pool = mysql.createPool(config)
 
 pool.getConnection(function (err, connection) {
-  if (err) console.log(`本地MySQL数据库建立连接失败。失败原因:${err}`)
+  if (err) console.log(`远程MySQL数据库建立连接失败。失败原因:${err}`)
   else {
-    console.log('本地数据库建立连接成功。')
+    console.log('远程数据库建立连接成功。')
     // connection.query( 'select * from user', function(err, data) {
     //     if(err) console.log('查询数据操作失败。');
     //     else{

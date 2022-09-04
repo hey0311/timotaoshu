@@ -1,0 +1,5 @@
+const moment = require('moment')
+const a = moment()
+const c = a.add(-3, 'days')
+const b = c.format('MMM DD,yyyy')
+console.log('🚀 ~ file: test.js ~ line 5 ~ b', b)

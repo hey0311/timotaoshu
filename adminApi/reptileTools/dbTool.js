@@ -40,10 +40,18 @@ async function insertEmail({
       // 先判断是否和表中的重复
       let sql = `select COUNT(*) from email where email="${email}"`
       let result = tool.getData(await db.query(sql))
+      console.log(
+        '🚀 ~ file: dbTool.js ~ line 43 ~ returnnewPromise ~ result',
+        result,
+        email
+      )
       if (result) {
         resolve('重复')
         return
       }
+      // mails[seqno].date = moment(headers.get('date')).format(
+      //   'YYYY-MM-DD HH:mm:ss'
+      // )
       let insertSql = `INSERT INTO email (email,keywordsId,ruleId,shopUrl,reptileTime,bizName,firstName,lastName,phone) VALUES `
       insertSql += `("${email}",${keywords.id},${rule.id},"${shopUrl}",now(),"${
         bizName || 'null'

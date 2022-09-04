@@ -6,16 +6,17 @@ const MIN_IP_NUM = 20
 async function reptileIp() {
   return new Promise(async (resolve, reject) => {
     // 判断状态
-    if (
-      global.reptileStaus !== REPTILE_STATUS.ALL_KEY_WORDS &&
-      global.reptileStaus !== REPTILE_STATUS.ERROR_TASKS
-    ) {
-      console.log('停止爬虫状态,不检查ip')
-      return
-    }
+    // if (
+    //   global.reptileStatus !== REPTILE_STATUS.ALL_KEY_WORDS &&
+    //   global.reptileStatus !== REPTILE_STATUS.ERROR_TASKS
+    // ) {
+    //   console.log('停止爬虫状态,不检查ip')
+    //   return
+    // }
     console.log('开始检查IP')
     // resolve()
     // return
+    await startReptile(1, 1)
     await check()
     console.log(`检查完毕`)
     let ipList = await redisData.ipList.getAllIpList()

@@ -57,6 +57,7 @@ export default {
   email: {
     list: '/email/list',
     count: '/email/count',
+    sync:'/email/sync'
   },
   keywords: {
     list: '/keywords/list',

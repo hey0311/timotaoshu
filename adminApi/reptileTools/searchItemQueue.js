@@ -20,10 +20,10 @@ let searchItemQueue = async.queue((obj, cb) => {
       // obj.error && (await obj.error('错误：' + err))
       await cb(err)
     })
-}, 50)
+}, 100)
 
 searchItemQueue.empty = function () {
-  console.log('searchItemQueue已空')
+  // console.log('searchItemQueue已空')
   // console.log("当最后一个任务交给worker执行时，会调用empty函数");
   // console.log("开始执行到最后一个");
 }

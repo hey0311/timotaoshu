@@ -46,19 +46,19 @@ async function startReptile(startPage, endPage, callback) {
             return
           }
           if (isTrue) {
-            console.log(
-              `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
-            )
+            // console.log(
+            //   `${data.protocol}://${data.ip}:${data.port}可以访问，当前第${overLength}条，共${length}条IP需要检查`
+            // )
             list.push(data)
           } else {
             try {
-              console.log(
-                `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
-              )
+              // console.log(
+              //   `${data.protocol}://${data.ip}:${data.port}不可以访问，当前第${overLength}条，共${length}条IP需要检查，不可访问原因：${err}`
+              // )
             } catch (err2) {
-              console.log(
-                `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
-              )
+              // console.log(
+              //   `当前第${overLength}条，共${length}条IP需要检查，不可访问原因：1、${err2}，2、${err}`
+              // )
             }
           }
           finish()
