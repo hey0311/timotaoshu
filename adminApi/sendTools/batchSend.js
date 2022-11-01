@@ -24,13 +24,15 @@ async function batchSend() {
   }
   // 随机取1个没发过的邮箱
   let email = await db.query(
-    `select * from email where sendStatus=0 order by rand() limit 1 and email not in (select email from emailblack)`
+    `select * from email where email not in (select email from emailblack) and sendStatus=0 order by rand() limit 1`
   )
+  console.log('🚀 ~ file: batchSend.js ~ line 29 ~ batchSend ~ email', email)
   if (email.length === 0) {
     // 如果没有新邮箱,找旧邮箱
     email = await db.query(
-      `select * from email where sendStatus=1 order by sendTime asc limit 1 and email not in (select email from emailblack)`
+      `select * from email where email not in (select email from emailblack) and sendStatus=1 order by sendTime asc limit 1`
     )
+    console.log('🚀 ~ file: batchSend.js ~ line 34 ~ batchSend ~ email', email)
   }
   // 检查黑名单
   const blackList = await db.query(`select * from emailblack`)
