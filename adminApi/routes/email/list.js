@@ -23,7 +23,7 @@ router.use('', oauth(4004), async function (req, res, next) {
       whereArr.push(`email like "%${email}%"`)
     }
     if (onlyShowSend === 'true') {
-      whereArr.push(`sendStatus=1`)
+      whereArr.push(`sendStatus>0`)
     }
     let limitSql = ` limit ${(page - 1) * limit},${limit}`
     if (whereArr.length > 0) {
