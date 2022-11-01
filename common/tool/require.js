@@ -7,7 +7,7 @@ let iconv = require('iconv-lite')
 let morgan = require('morgan')
 let path = require('path')
 let db = require('./mysql.js')
-let dbRemote = require('./mysqlRemote')
+// let dbRemote = require('./mysqlRemote')
 let tool = require('./tool.js')
 let oauth = require('./oauth.js')
 let log = require('tracer').colorConsole()
@@ -24,7 +24,7 @@ module.exports = {
   morgan,
   path,
   db,
-  dbRemote,
+  // dbRemote,
   tool,
   oauth,
   log,
