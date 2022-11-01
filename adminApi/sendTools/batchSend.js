@@ -24,12 +24,12 @@ async function batchSend() {
   }
   // 随机取1个没发过的邮箱
   let email = await db.query(
-    `select * from email where sendStatus=0 order by rand() limit 1`
+    `select * from email where sendStatus=0 order by rand() limit 1 and email not in (select email from emailblack)`
   )
   if (email.length === 0) {
     // 如果没有新邮箱,找旧邮箱
     email = await db.query(
-      `select * from email where sendStatus=1 order by sendTime asc limit 1`
+      `select * from email where sendStatus=1 order by sendTime asc limit 1 and email not in (select email from emailblack)`
     )
     return
   }
