@@ -31,7 +31,6 @@ async function batchSend() {
     email = await db.query(
       `select * from email where sendStatus=1 order by sendTime asc limit 1 and email not in (select email from emailblack)`
     )
-    return
   }
   // 检查黑名单
   const blackList = await db.query(`select * from emailblack`)
