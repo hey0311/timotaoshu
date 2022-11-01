@@ -2,7 +2,7 @@ const { fs, rp, timoRp, path, tool, log, db } = require('../tool/require')
 const nodemailer = require('nodemailer')
 const { sendEmail } = require('./sendEmail')
 
-const MAX_SEND_COUNT = 750
+const MAX_SEND_COUNT = 400
 async function batchSend() {
   // check,今天是否达到发送上限
   const date = new Date()
@@ -23,10 +23,14 @@ async function batchSend() {
     return
   }
   // 随机取1个没发过的邮箱
-  const email = await db.query(
+  let email = await db.query(
     `select * from email where sendStatus=0 order by rand() limit 1`
   )
   if (email.length === 0) {
+    // 如果没有新邮箱,找旧邮箱
+    email = await db.query(
+      `select * from email where sendStatus=1 order by sendTime asc limit 1`
+    )
     return
   }
   // 检查黑名单
@@ -64,8 +68,9 @@ async function batchSend() {
     if (sendResult.response && typeof sendResult.response === 'string') {
       sendResponse = sendResult.response.slice(0, 254)
     }
-    const updateResult = await db.query(
-      `update email set sendStatus=1,sendTime=now(),sendbox_id=${sendbox[0].id},template_id=${template[0].id},send_result="${sendResponse}" where id=${email[0].id}`
+    const sendStatus = email[0].sendStatus ? Number(email[0].sendStatus) + 1 : 1
+    await db.query(
+      `update email set sendStatus=${sendStatus},sendTime=now(),sendbox_id=${sendbox[0].id},template_id=${template[0].id},send_result="${sendResponse}" where id=${email[0].id}`
     )
   }
   console.log(`${email[0].email} already sent`)
