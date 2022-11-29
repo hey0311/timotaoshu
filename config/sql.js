@@ -1,8 +1,10 @@
+const { IS_LOCAL } = require('./config')
+
 module.exports = {
   // host: '43.134.102.124',
   host: '127.0.0.1',
   port: '3306',
-  user: 'heyong',
+  user: IS_LOCAL ? 'root' : 'heyong',
   password: 'Hey7520_1',
   database: 'timotaoshu',
   multipleStatements: true, //是否允许执行多条sql语句

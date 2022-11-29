@@ -60,10 +60,6 @@ async function reptileAllKeywords() {
     }
     // 补充searchItemQueue
     const keywordsQueueLen = keywordsQueue.length()
-    console.log(
-      '🚀 ~ file: reptileAllKeywords.js ~ line 61 ~ reptileAllKeywords ~ keywordsQueueLen',
-      keywordsQueueLen
-    )
     const keywordQueueNeedCount = MAX_KEYWORDS_NUM - keywordsQueueLen
     let sql = `select * from keywords`
     if (keywordsTaskIdList.length !== 0) {
@@ -79,6 +75,9 @@ async function reptileAllKeywords() {
       const keywordsProgressList = await db.query(
         `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
       )
+      if (keywordsProgressList.length !== 0) {
+        continue
+      }
       // 从第几页的进度开始
       if (
         keywordsProgressList.length === 0 ||
