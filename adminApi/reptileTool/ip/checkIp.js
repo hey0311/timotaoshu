@@ -85,10 +85,11 @@ async function checkIp(ipObj, target) {
   return new Promise((resolve, reject) => {
     // 如果当前时间超过enttime,直接放弃
     // if (ipObj.endtime) {
-    if (ipObj.endtime && new Date(ipObj.endtime) < Date.now()) {
-      resolve([ipObj, false, '已过期'])
-      return
-    }
+    // if (ipObj.endtime && new Date(ipObj.endtime) < Date.now()) {
+    //   console.log('ip过期:' + ipObj.ip + ':' + ipObj.port)
+    //   resolve([ipObj, false, '已过期'])
+    //   return
+    // }
     reptileRequest({
       uri: 'https://www.ebay.com',
       timeout: 10000, //10s没有返回则视为代理不行

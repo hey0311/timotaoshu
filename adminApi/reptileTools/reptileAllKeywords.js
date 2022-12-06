@@ -35,7 +35,7 @@ async function reptileAllKeywords() {
   // wss.broadcast(`开始爬取所有关键词`)
   global.reptileStatus = REPTILE_STATUS.ALL_KEY_WORDS
   console.log(`开始爬取所有关键词`)
-  // await reptileIp()
+  await reptileIp()
   // await fetchIpList()
   // reptileErrorTasks()
   try {

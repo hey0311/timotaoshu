@@ -22,7 +22,9 @@ async function reptileIp() {
     // resolve()
     // return
     // await startReptile(1, 1)
-    await check()
+    try {
+      await check()
+    } catch (e) {}
     console.log(`检查完毕`)
     let ipList = await redisData.ipList.getAllIpList()
     while (ipList.length < MIN_IP_NUM) {

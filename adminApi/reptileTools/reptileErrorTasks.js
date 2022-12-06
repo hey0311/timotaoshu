@@ -37,7 +37,7 @@ module.exports = reptileErrorTasks
 const MAX_TASK_LEN = 1000
 async function reptileErrorTasks() {
   // while (true) {
-  // await reptileIp()
+  await reptileIp()
   try {
     // 取出错误记录
     // const startTime = Date.now()
