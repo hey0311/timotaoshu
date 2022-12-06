@@ -21,6 +21,7 @@ const agent = new Agent({
 })
 const TIMEOUT = 10000
 const redisData = require('../../common/tool/redisData')
+const { USE_LOCAL_VPN } = require('../../config/config')
 // const { getRandomIp, setIpFail } = require('./ipTool')
 let timer = null
 const reptileRequest = function (options) {
@@ -50,7 +51,7 @@ const reptileRequest = function (options) {
         /*
          * 代理ip start
          * */
-        if (!options.noProxy && !options.proxy) {
+        if (!options.noProxy && !options.proxy && !USE_LOCAL_VPN) {
           if (global.server) {
             initOptions.proxy = global.serverProxy
           } else {
@@ -97,7 +98,9 @@ const reptileRequest = function (options) {
         // if (options.noIp) {
         //   delete reqOptions.proxy
         // }
-        // reqOptions.proxy = 'http://127.0.0.1:21882'
+        if (USE_LOCAL_VPN) {
+          reqOptions.proxy = 'http://127.0.0.1:21882'
+        }
         var req = request(
           reqOptions,
           function (error, response, body) {

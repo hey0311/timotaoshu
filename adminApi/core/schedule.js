@@ -46,7 +46,7 @@ function reptileKeywordsJob2() {
  */
 function reptileIpJob() {
   let rule = new schedule.RecurrenceRule()
-  rule.second = [0, 30]
+  rule.second = [0, 20, 40, 59]
   rule.minute = []
   for (let i = 0; i < 60; i++) {
     rule.minute.push(i)

@@ -2,7 +2,8 @@ const { oauth, tool, db, log, wss, rp } = require('../tool/require')
 const { check, startReptile } = require('../service/ip/')
 const redisData = require('../../common/tool/redisData')
 const { REPTILE_STATUS } = require('../../common/tool/constant')
-const MIN_IP_NUM = 20
+const { USE_LOCAL_VPN } = require('../../config/config')
+const MIN_IP_NUM = 30
 async function reptileIp() {
   return new Promise(async (resolve, reject) => {
     // 判断状态
@@ -12,11 +13,15 @@ async function reptileIp() {
     // ) {
     //   console.log('停止爬虫状态,不检查ip')
     //   return
+    if (USE_LOCAL_VPN) {
+      resolve()
+      return
+    }
     // }
     console.log('开始检查IP')
     // resolve()
     // return
-    await startReptile(1, 1)
+    // await startReptile(1, 1)
     await check()
     console.log(`检查完毕`)
     let ipList = await redisData.ipList.getAllIpList()

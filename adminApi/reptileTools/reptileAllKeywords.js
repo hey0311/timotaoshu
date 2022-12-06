@@ -70,14 +70,14 @@ async function reptileAllKeywords() {
     for (let i = 0; i < keywordsRecords.length; i++) {
       const keywords = keywordsRecords[i] //randomSelect(keywordsList)
       // 随机选择网站
-      const ruleConfig = randomSelect(ruleConfigList)
-      // const ruleConfig = ruleMap[9]
+      // const ruleConfig = randomSelect(ruleConfigList)
+      const ruleConfig = ruleMap[9]
       const keywordsProgressList = await db.query(
         `select * from keywordsprogress where keywordsId=${keywords.id} and ruleId=${ruleConfig.id}`
       )
-      if (keywordsProgressList.length !== 0) {
-        continue
-      }
+      // if (keywordsProgressList.length !== 0) {
+      //   continue
+      // }
       // 从第几页的进度开始
       if (
         keywordsProgressList.length === 0 ||
