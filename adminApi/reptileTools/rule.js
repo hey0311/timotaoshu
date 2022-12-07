@@ -252,6 +252,28 @@ function getRule(ruleConfig, keywords) {
       }
       return email
     },
+    getAboutTabText: ($) => {
+      return domCommon(null, '#str-tab-tab1、text', $)
+    },
+    isAccessDenied: ($) => {
+      const h1 = $('h1')
+      if (!h1) {
+        return false
+      }
+      const h1Text = $('h1').textContent
+      if (!h1Text) {
+        return false
+      }
+      return $('h1').textContent.indexOf('Access Denied') !== -1
+    },
+    ifVerifyPage: ($) => {
+      const elm = $('#areaTitle h1')
+      if (!elm) {
+        return false
+      }
+      const text = elm.text()
+      return text.indexOf('Please verify yourself to continue') !== -1
+    },
     getBizName: ($) => {
       const bizName = domCommon(null, '#business_name~span、text', $) || ''
       if (bizName && bizName.length > 50) {

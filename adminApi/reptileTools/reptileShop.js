@@ -31,23 +31,23 @@ async function reptileShop({
   return new Promise(async (resolve, reject) => {
     // 如果已经是爬取过的shopUrl,直接放弃
     try {
-      const currentPreShopUrl = uri.split('?')[0]
-      let sql = `select COUNT(*) from shopurl where shopurl="${currentPreShopUrl}"`
-      let result = tool.getData(await db.query(sql))
-      if (result) {
-        wss.broadcast({
-          type: REPTILE_STATUS.ERROR_TASKS,
-          page,
-          keywordsName: keywords.name,
-          ruleName: rule.name,
-          index: order,
-          result: '网址重复',
-        })
-        // 删掉
-        await deleteErrorTask(errorTaskId)
-        resolve('网址重复')
-        return
-      }
+      // const currentPreShopUrl = uri.split('?')[0]
+      // let sql = `select COUNT(*) from shopurl where shopurl="${currentPreShopUrl}"`
+      // let result = tool.getData(await db.query(sql))
+      // if (result) {
+      //   wss.broadcast({
+      //     type: REPTILE_STATUS.ERROR_TASKS,
+      //     page,
+      //     keywordsName: keywords.name,
+      //     ruleName: rule.name,
+      //     index: order,
+      //     result: '网址重复',
+      //   })
+      //   // 删掉
+      //   await deleteErrorTask(errorTaskId)
+      //   resolve('网址重复')
+      //   return
+      // }
       let $ = null
       try {
         $ = await reptileRequest({ uri })
@@ -145,15 +145,31 @@ async function reptileShop({
           reptileStatus,
         })
       } else {
-        console.log(`店铺地址${uri},无邮箱`)
-        wss.broadcast({
-          type: REPTILE_STATUS.ERROR_TASKS,
-          page,
-          keywordsName: keywords.name,
-          ruleName: rule.name,
-          index: order,
-          result: '无邮箱',
-        })
+        const aboutTitle = rule.getAboutTabText($)
+        const isAccessDenied = rule.isAccessDenied($)
+        const ifVerifyPage = rule.ifVerifyPage($)
+        if (ifVerifyPage) {
+          wss.broadcast({
+            type: REPTILE_STATUS.ERROR_TASKS,
+            page,
+            keywordsName: keywords.name,
+            ruleName: rule.name,
+            index: order,
+            result: '验证码',
+          })
+        } else {
+          wss.broadcast({
+            type: REPTILE_STATUS.ERROR_TASKS,
+            page,
+            keywordsName: keywords.name,
+            ruleName: rule.name,
+            index: order,
+            result: '无邮箱',
+          })
+        }
+        console.log(
+          `无邮箱,店铺地址${uri} ,标签:${aboutTitle},权限:${isAccessDenied},验证:${ifVerifyPage}`
+        )
         resolve('无邮箱' + deleteErrorTaskResult)
       }
       // 把shopUrl插入到shopurl表
