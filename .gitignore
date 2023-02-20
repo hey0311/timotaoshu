@@ -7,7 +7,6 @@
 node_modules
 package-lock.json
 yarn-error.log
-/config
 urlLog.log
 /yarn-error.log
 /adminApi/log
