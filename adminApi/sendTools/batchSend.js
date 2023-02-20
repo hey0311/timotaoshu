@@ -30,7 +30,7 @@ async function batchSend() {
   if (email.length === 0) {
     // 如果没有新邮箱,找旧邮箱
     email = await db.query(
-      `select * from email where email not in (select email from emailblack) and sendStatus=1 order by sendTime asc limit 1`
+      `select * from email where email not in (select email from emailblack) and sendStatus=2 order by sendTime asc limit 1`
     )
     console.log('🚀 ~ file: batchSend.js ~ line 34 ~ batchSend ~ email', email)
   }
