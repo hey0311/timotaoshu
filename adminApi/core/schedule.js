@@ -114,7 +114,7 @@ function freeMailJob() {
 // 发送邮件
 function sendMailJob() {
   let rule9 = new schedule.RecurrenceRule()
-  rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22]
+  rule9.hour = [15, 16, 17, 18, 19, 20, 21, 22, 23]
   rule9.minute = []
   let i9 = 0,
     length9 = 60
