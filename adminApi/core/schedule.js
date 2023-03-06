@@ -10,18 +10,19 @@ const receiveEmailService = require('../service/receiveEmail/receiveEmailService
 const sendToRobot = require('../service/receiveEmail/sendToRobot')
 const freeEmailBox = require('../service/receiveEmail/freeEmailBox')
 const { startErrorTasks } = require('../service/reptile')
-const { IS_LOCAL } = require('../../config/config')
+const { IS_LOCAL, ABLE_REPTILE } = require('../../config/config')
 
-if (IS_LOCAL) {
+if (IS_LOCAL && ABLE_REPTILE) {
   reptileIpJob()
   reptileErrorTaskJob()
   reptileKeywordsJob()
-} else {
+} 
+if(!IS_LOCAL){
   freeMailJob()
   sendRobotJob()
   sendMailJob()
-}
 logJob()
+}
 function reptileKeywordsJob2() {
   let rule7 = new schedule.RecurrenceRule()
   rule7.minute = []
