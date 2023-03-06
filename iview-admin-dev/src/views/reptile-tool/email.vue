@@ -17,6 +17,7 @@
         </Col>
         <Col span="14" class="tr">
           <Button type="primary" @click="getList">查询</Button>
+          <Button type="primary" :disabled="loading" @click="addEmail('add')" >添加</Button>
         </Col>
       </Row>
     </Card>
@@ -40,7 +41,7 @@
         @on-change="getList"
       ></Page>
     </Card>
-    <edit-channel :modal="modal" ref="editCannel"></edit-channel>
+    <add-email :modal="modal" ref="addEmail" @save="saveEmail"></add-email>
   </Layout>
 </template>
 <style scoped rel="stylesheet/less" type="text/less" lang="less">
@@ -58,17 +59,19 @@
 <script>
 import util from 'util'
 // import reptileConfig from './components/reptileConfig';
-import editChannel from 'modal/reptile-tool/editChannel.vue'
+// import editChannel from 'modal/reptile-tool/editChannel.vue'
 import uploadMixins from '@/mixins/uploadMixins'
 import config from '../../libs/config'
 import Cookies from 'js-cookie'
+import addEmail from 'modal/reptile-tool/addEmail.vue'
 
 export default {
   mixins: [uploadMixins],
   name: 'reptile',
   components: {
     // reptileConfig,
-    editChannel
+    // editChannel
+    addEmail
   },
   data() {
     return {
@@ -173,6 +176,37 @@ export default {
   },
   computed: {},
   methods: {
+    addEmail() {
+      this.modal.showModal = true
+      this.$refs.addEmail.$emit('reset', 'add', null)
+    },
+    saveEmail(id, name) {
+      console.log(name)
+      this.loading = true
+      util.post.email.save({
+        params: {
+          id,
+          name
+        }
+      }).then((data) => {
+        this.loading = false
+        console.log(data)
+        this.getList()
+        this.$Message.info(`${data}`)
+        this.$Modal.confirm({
+          title: `${data}`,
+          closable: true,
+          onOk: () => {
+            this.$Modal.remove()
+          },
+          onCancel: () => {
+            this.$Modal.remove()
+          }
+        })
+      }).catch((err) => {
+        this.loading = false
+      })
+    },
     batchSendEmail() {
       util.post.sendEmail.batch({ params: {} }).then(data => {
 
