@@ -31,7 +31,7 @@ router.use('', oauth(4004), async function (req, res, next) {
       countSql = countSql + ' where ' + whereArr.join(' and ')
     }
     sql += limitSql
-    countSql += limitSql
+    // countSql += limitSql
     let list = await db.query(sql)
     for (let i = 0; i < list.length; i++) {
       const email = list[i]
