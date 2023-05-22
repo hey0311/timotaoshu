@@ -48,6 +48,13 @@ async function batchSend() {
     console.log(`是黑名单,取消发送,${blackEmail}`)
     return
   }
+  // 如果不符合邮箱格式,看做发送成功吧
+   let reg = /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/
+  if(!reg.test(email[0].email)){
+    await db.query(
+      `update email set sendStatus=999,sendTime=now(),sendbox_id=0,template_id=0,send_result="wrong email" where id=${email[0].id}`
+    )
+  }
   // if(email[0].email===)
   // 随机取一个模板
   const template = await db.query(
