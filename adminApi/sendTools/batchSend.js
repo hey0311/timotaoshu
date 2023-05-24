@@ -56,7 +56,7 @@ async function batchSend() {
   if(!reg.test(email[0].email)){
     console.log('not email format')
     await db.query(
-      `update email set sendStatus=99,sendTime=now(),sendbox_id=0,template_id=0,send_result="wrong email" where id=${email[0].id}`
+      `update email set sendStatus=99,sendTime=now(),sendbox_id=1,template_id=1,send_result="wrong email" where id=${email[0].id}`
     )
     return
   }
