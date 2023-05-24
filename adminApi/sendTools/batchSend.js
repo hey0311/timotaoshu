@@ -28,7 +28,7 @@ async function batchSend() {
     email = await db.query(
       `select * from email where email not in (select email from emailblack) and sendStatus=${i} order by sendTime asc limit 1`
     )
-    console.log('🚀 ~ file: batchSend.js ~ line 29 ~ batchSend ~ email',i, email)
+    console.log('🚀 ~ file: batchSend.js ~ line 29 ~ batchSend ~ email - 0524',i, email)
     if (email.length !== 0) {
       // 如果没有新邮箱,找旧邮箱
       // email = await db.query(
@@ -48,12 +48,17 @@ async function batchSend() {
     console.log(`是黑名单,取消发送,${blackEmail}`)
     return
   }
+  if(email.length===0){
+    return
+  }
   // 如果不符合邮箱格式,看做发送成功吧
-   let reg = /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/
+  let reg = /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/
   if(!reg.test(email[0].email)){
+    console.log('not email format')
     await db.query(
-      `update email set sendStatus=999,sendTime=now(),sendbox_id=0,template_id=0,send_result="wrong email" where id=${email[0].id}`
+      `update email set sendStatus=99,sendTime=now(),sendbox_id=0,template_id=0,send_result="wrong email" where id=${email[0].id}`
     )
+    return
   }
   // if(email[0].email===)
   // 随机取一个模板
